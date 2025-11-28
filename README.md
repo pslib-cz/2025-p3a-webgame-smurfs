@@ -14,6 +14,6 @@ Game-play:
     - tic-tac-toe = Olík  
     - Alchemy (vaření lektvaru) = Niky  
     - rybaření/ opravování zvonu/ pečení  
-  - esc/ na stisk menu = reset
+  - esc/ na stisk menu = reset    
 Cíl
   - postavit si domeček  
