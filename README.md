@@ -1,5 +1,5 @@
 F  
-#Tiny Haven#  
+# Tiny Haven #  
 2D hra z pohledu 3. osoby  
 kostičkovaná grafika  
 reference ze Stardew Walley, FNAF Into the pit  
