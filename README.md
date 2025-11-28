@@ -4,16 +4,16 @@ F
 kostičkovaná grafika  
 reference ze Stardew Walley, FNAF Into the pit  
 Mapa  
-	-předkreslení jednotlivých komponent (tráva, strom, voda, dům)  
+    -předkreslení jednotlivých komponent (tráva, strom, voda, dům)  
 Game-play:  
-	-chození s protagonistou pomocí klikání na pozice na gridu  
-	-úkoly od šmoulů ve/mimo vesnici  
-		-konverzace mezi nimi  
-	  -minihry  
-		  -whack-a-mole = Adel  
-		  -tic-tac-toe = Olík  
-		  -Alchemy (vaření lektvaru) = Niky  
-		  -rybaření/ opravování zvonu/ pečení  
-	-esc/ na stisk menu = reset  
+    -chození s protagonistou pomocí klikání na pozice na gridu  
+    -úkoly od šmoulů ve/mimo vesnici  
+        -konverzace mezi nimi  
+    -minihry  
+        -whack-a-mole = Adel  
+        -tic-tac-toe = Olík  
+        -Alchemy (vaření lektvaru) = Niky  
+        -rybaření/ opravování zvonu/ pečení  
+    -esc/ na stisk menu = reset  
 cíl  
-	-postavit si domeček  
+    -postavit si domeček  
