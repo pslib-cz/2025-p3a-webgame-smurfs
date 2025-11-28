@@ -1,8 +1,8 @@
 F  
 # Tiny Haven #  
 2D hra z pohledu 3. osoby  
-kostičkovaná grafika  
-reference ze Stardew Walley, FNAF Into the pit  
+Kostičkovaná grafika  
+Reference ze Stardew Walley, FNAF Into the pit  
 Mapa  
   - předkreslení jednotlivých komponent (tráva, strom, voda, dům)  
 Game-play:  
@@ -14,6 +14,6 @@ Game-play:
     - tic-tac-toe = Olík  
     - Alchemy (vaření lektvaru) = Niky  
     - rybaření/ opravování zvonu/ pečení  
-  - esc/ na stisk menu = reset  
-cíl
+  - esc/ na stisk menu = reset
+Cíl
   - postavit si domeček  
