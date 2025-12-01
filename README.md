@@ -9,7 +9,7 @@ Game-play:
   - chození s protagonistou pomocí klikání na pozice na gridu  
   - úkoly od šmoulů ve/mimo vesnici  
   - konverzace mezi nimi  
-    - minihry  
+  - minihry  
     - whack-a-mole = Adel  
     - tic-tac-toe = Olík  
     - Alchemy (vaření lektvaru) = Niky  
