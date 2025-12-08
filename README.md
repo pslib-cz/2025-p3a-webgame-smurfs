@@ -1,20 +1,29 @@
 F  
 # Tiny Haven #  
-2D hra z pohledu 3. osoby  
-Kostičkovaná grafika  
-Reference ze Stardew Walley, FNAF Into the pit  
-Mapa  
-  - předkreslení jednotlivých komponent (tráva, strom, voda, dům)  
-Game-play:  
-  - chození s protagonistou pomocí klikání na pozice na gridu  
-  - úkoly od šmoulů ve/mimo vesnici  
-  - konverzace mezi nimi  
-  - minihry  
-    - whack-a-mole = Adel  
-    - tic-tac-toe = Olík  
-    - Alchemy (vaření lektvaru) = Niky  
-    - rybaření/ opravování zvonu/ pečení  
-  - esc/ na stisk menu = reset
+##  Katalog požadavků
 
-Cíl
-  - postavit si domeček  
+### Základ
+- 2D hra z pohledu třetí osoby  
+- Kostičkovaná/pixelová grafika  
+- Mapa a kamera sledují hráče
+
+### Mapa
+- Gridový systém  
+- Komponenty:
+    - tráva  
+    - strom  
+    - voda  
+    - dům  
+- Interakce s NPC a objekty
+
+### Gameplay
+- Pohyb klikáním na pozice na gridu  
+- Úkoly od vesničanů (ve vesnici i mimo ni)  
+- Konverzace s NPC  
+- Minihry:
+    - Whack-a-mole (Adel)  
+    - Tic-tac-toe (Olík)  
+    - Alchymie – vaření lektvaru (Niky)  
+    - Rybaření / oprava zvonu / pečení  
+- ESC = menu / reset minihry  
+- **Cíl:** postavit vlastní domeček
