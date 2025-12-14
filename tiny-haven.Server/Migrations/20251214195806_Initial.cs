@@ -2,10 +2,12 @@
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace tiny_haven.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -139,6 +141,20 @@ namespace tiny_haven.Server.Migrations
                         column: x => x.QuestId,
                         principalTable: "Quests",
                         principalColumn: "QuestId");
+                });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "CategoryId", "Name" },
+                values: new object[] { 1, "Default" });
+
+            migrationBuilder.InsertData(
+                table: "Assets",
+                columns: new[] { "AssetId", "CategoryId", "Collision", "ImageUrl", "Name", "SpanX", "SpanY" },
+                values: new object[,]
+                {
+                    { 1, 1, true, "images/assets/wooden_crate.png", "Wooden Crate", 1, 1 },
+                    { 2, 1, true, "images/labubu.png", "Labubu", 1, 1 }
                 });
 
             migrationBuilder.CreateIndex(

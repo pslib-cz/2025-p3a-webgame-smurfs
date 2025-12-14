@@ -10,8 +10,8 @@ using tiny_haven.Server.Data;
 namespace tiny_haven.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251214170704_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251214195806_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,6 +50,28 @@ namespace tiny_haven.Server.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Assets");
+
+                    b.HasData(
+                        new
+                        {
+                            AssetId = 1,
+                            CategoryId = 1,
+                            Collision = true,
+                            ImageUrl = "images/assets/wooden_crate.png",
+                            Name = "Wooden Crate",
+                            SpanX = 1,
+                            SpanY = 1
+                        },
+                        new
+                        {
+                            AssetId = 2,
+                            CategoryId = 1,
+                            Collision = true,
+                            ImageUrl = "images/labubu.png",
+                            Name = "Labubu",
+                            SpanX = 1,
+                            SpanY = 1
+                        });
                 });
 
             modelBuilder.Entity("tiny_haven.Server.Models.Category", b =>
@@ -66,6 +88,13 @@ namespace tiny_haven.Server.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            Name = "Default"
+                        });
                 });
 
             modelBuilder.Entity("tiny_haven.Server.Models.InteractionMap", b =>
