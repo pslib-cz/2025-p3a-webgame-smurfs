@@ -66,9 +66,9 @@ export interface Quest {
   questId: number;
   name: string;
   description: string;
-  itemQuanity: number;
+  itemQuantity: number;
   rewardAmount: number;
-  stage: number | null;
+  nextQuestId: number | null;
 
   // Foreign Key
   assetId: number;

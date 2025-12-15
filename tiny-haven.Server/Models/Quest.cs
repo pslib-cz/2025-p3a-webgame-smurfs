@@ -13,11 +13,9 @@ namespace tiny_haven.Server.Models
 
         public string Description { get; set; }
 
-        public int ItemQuanity { get; set; }
+        public int ItemQuantity { get; set; }
 
         public int RewardAmount { get; set; }
-
-        public int? Stage { get; set; }
 
 
         // Foreign Key
@@ -25,6 +23,11 @@ namespace tiny_haven.Server.Models
 
         [ForeignKey("AssetId")]
         public Asset Asset { get; set; }
+
+        public int? NextQuestId { get; set; }
+
+        [ForeignKey("NextQuestId")]
+        public virtual Quest NextQuest { get; set; }
 
 
         // Navigation property
