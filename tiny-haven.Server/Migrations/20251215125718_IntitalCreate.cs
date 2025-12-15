@@ -7,7 +7,7 @@
 namespace tiny_haven.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class TestPlaceholderImage : Migration
+    public partial class IntitalCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -152,16 +152,25 @@ namespace tiny_haven.Server.Migrations
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "CategoryId", "Name" },
-                values: new object[] { 1, "Nature" });
+                values: new object[,]
+                {
+                    { 1, "Nature" },
+                    { 2, "Buildings" },
+                    { 3, "Characters" }
+                });
 
             migrationBuilder.InsertData(
                 table: "Assets",
                 columns: new[] { "AssetId", "CategoryId", "Collision", "ImageUrl", "Name", "SpanX", "SpanY" },
                 values: new object[,]
                 {
-                    { 1, 1, true, null, "Wooden_Crate", 1, 1 },
-                    { 2, 1, true, null, "Labubu", 1, 1 },
-                    { 3, 1, false, "images/bush_smurfberries.svg", "bush_smurfberries", 1, 1 }
+                    { 1, 1, false, "images/bush_smurfberries.svg", "bush_smurfberries", 1, 1 },
+                    { 2, 2, true, "images/house_red.svg", "house_red", 2, 2 },
+                    { 3, 2, true, "images/house_blue.svg", "house_blue", 2, 2 },
+                    { 4, 3, true, "images/smurf.svg", "smurf", 1, 1 },
+                    { 5, 3, true, "images/gargamel.svg", "gargamel", 3, 4 },
+                    { 6, 1, false, "images/stone.svg", "stone", 1, 1 },
+                    { 7, 1, false, "images/wood.svg", "wood", 1, 1 }
                 });
 
             migrationBuilder.CreateIndex(

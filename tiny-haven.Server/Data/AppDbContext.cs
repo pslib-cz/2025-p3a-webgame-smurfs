@@ -21,6 +21,15 @@ namespace tiny_haven.Server.Data
                 {
                     CategoryId = 1,
                     Name = "Nature"
+                },
+                new Category
+                {
+                    CategoryId = 2,
+                    Name = "Buildings"
+                },
+                new Category                 {
+                    CategoryId = 3,
+                    Name = "Characters"
                 }
             );
 
@@ -28,28 +37,67 @@ namespace tiny_haven.Server.Data
                 new Asset
                 {
                     AssetId = 1,
-                    Name = "Wooden_Crate",
+                    Name = "bush_smurfberries",
+                    ImageUrl = "images/bush_smurfberries.svg",
                     SpanX = 1,
                     SpanY = 1,
-                    Collision = true,
+                    Collision = false,
                     CategoryId = 1
                 },
-
                 new Asset
                 {
                     AssetId = 2,
-                    Name = "Labubu",
-                    SpanX = 1,
-                    SpanY = 1,
+                    Name = "house_red",
+                    ImageUrl = "images/house_red.svg",
+                    SpanX = 2,
+                    SpanY = 2,
                     Collision = true,
-                    CategoryId = 1
+                    CategoryId = 2
                 },
-
                 new Asset
                 {
                     AssetId = 3,
-                    Name = "bush_smurfberries",
-                    ImageUrl = "images/bush_smurfberries.svg",
+                    Name = "house_blue",
+                    ImageUrl = "images/house_blue.svg",
+                    SpanX = 2,
+                    SpanY = 2,
+                    Collision = true,
+                    CategoryId = 2
+                },
+                new Asset
+                {
+                    AssetId = 4,
+                    Name = "smurf",
+                    ImageUrl = "images/smurf.svg",
+                    SpanX = 1,
+                    SpanY = 1,
+                    Collision = true,
+                    CategoryId = 3
+                },
+                new Asset                 {
+                    AssetId = 5,
+                    Name = "gargamel",
+                    ImageUrl = "images/gargamel.svg",
+                    SpanX = 3,
+                    SpanY = 4,
+                    Collision = true,
+                    CategoryId = 3
+                },
+                new Asset
+                {
+                    AssetId = 6,
+                    Name = "stone",
+                    ImageUrl = "images/stone.svg",
+                    SpanX = 1,
+                    SpanY = 1,
+                    Collision = false,
+                    CategoryId = 1
+                },
+                new Asset
+                {
+                    AssetId = 7,
+                    Name = "wood",
+                    ImageUrl = "images/wood.svg",
                     SpanX = 1,
                     SpanY = 1,
                     Collision = false,

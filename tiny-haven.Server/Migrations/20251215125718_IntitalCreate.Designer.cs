@@ -10,8 +10,8 @@ using tiny_haven.Server.Data;
 namespace tiny_haven.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251215102441_TestPlaceholderImage")]
-    partial class TestPlaceholderImage
+    [Migration("20251215125718_IntitalCreate")]
+    partial class IntitalCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,27 +56,69 @@ namespace tiny_haven.Server.Migrations
                         {
                             AssetId = 1,
                             CategoryId = 1,
-                            Collision = true,
-                            Name = "Wooden_Crate",
+                            Collision = false,
+                            ImageUrl = "images/bush_smurfberries.svg",
+                            Name = "bush_smurfberries",
                             SpanX = 1,
                             SpanY = 1
                         },
                         new
                         {
                             AssetId = 2,
-                            CategoryId = 1,
+                            CategoryId = 2,
                             Collision = true,
-                            Name = "Labubu",
+                            ImageUrl = "images/house_red.svg",
+                            Name = "house_red",
+                            SpanX = 2,
+                            SpanY = 2
+                        },
+                        new
+                        {
+                            AssetId = 3,
+                            CategoryId = 2,
+                            Collision = true,
+                            ImageUrl = "images/house_blue.svg",
+                            Name = "house_blue",
+                            SpanX = 2,
+                            SpanY = 2
+                        },
+                        new
+                        {
+                            AssetId = 4,
+                            CategoryId = 3,
+                            Collision = true,
+                            ImageUrl = "images/smurf.svg",
+                            Name = "smurf",
                             SpanX = 1,
                             SpanY = 1
                         },
                         new
                         {
-                            AssetId = 3,
+                            AssetId = 5,
+                            CategoryId = 3,
+                            Collision = true,
+                            ImageUrl = "images/gargamel.svg",
+                            Name = "gargamel",
+                            SpanX = 3,
+                            SpanY = 4
+                        },
+                        new
+                        {
+                            AssetId = 6,
                             CategoryId = 1,
                             Collision = false,
-                            ImageUrl = "images/bush_smurfberries.svg",
-                            Name = "bush_smurfberries",
+                            ImageUrl = "images/stone.svg",
+                            Name = "stone",
+                            SpanX = 1,
+                            SpanY = 1
+                        },
+                        new
+                        {
+                            AssetId = 7,
+                            CategoryId = 1,
+                            Collision = false,
+                            ImageUrl = "images/wood.svg",
+                            Name = "wood",
                             SpanX = 1,
                             SpanY = 1
                         });
@@ -102,6 +144,16 @@ namespace tiny_haven.Server.Migrations
                         {
                             CategoryId = 1,
                             Name = "Nature"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            Name = "Buildings"
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            Name = "Characters"
                         });
                 });
 
