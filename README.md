@@ -1,4 +1,4 @@
-F  
+> Tým: F
 # Tiny Haven # 
 ## Návrh příběhu
 Hráč se probouzí u malé vesnice Tiny Haven, kde jej přivítají drobné bytosti 
