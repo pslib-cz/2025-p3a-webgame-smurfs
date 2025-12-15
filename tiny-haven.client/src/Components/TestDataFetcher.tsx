@@ -57,6 +57,7 @@ export const TestDataFetcher: React.FC = () => {
                                     <strong>ID: {asset.assetId} - {asset.name}</strong><br />
                                     <small>Span: {asset.spanX}x{asset.spanY}</small><br />
                                     <small>Image: {asset.imageUrl || 'None'}</small>
+                                    <img src={asset.imageUrl ?? "/images/placeholder-image.svg"} />
                                 </li>
                             ))}
                         </ul>

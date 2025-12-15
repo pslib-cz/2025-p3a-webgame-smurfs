@@ -20,7 +20,7 @@ namespace tiny_haven.Server.Data
                 new Category
                 {
                     CategoryId = 1,
-                    Name = "Default"
+                    Name = "Nature"
                 }
             );
 
@@ -28,8 +28,7 @@ namespace tiny_haven.Server.Data
                 new Asset
                 {
                     AssetId = 1,
-                    Name = "Wooden Crate",
-                    ImageUrl = "images/assets/wooden_crate.png",
+                    Name = "Wooden_Crate",
                     SpanX = 1,
                     SpanY = 1,
                     Collision = true,
@@ -40,10 +39,20 @@ namespace tiny_haven.Server.Data
                 {
                     AssetId = 2,
                     Name = "Labubu",
-                    ImageUrl = "images/labubu.png",
                     SpanX = 1,
                     SpanY = 1,
                     Collision = true,
+                    CategoryId = 1
+                },
+
+                new Asset
+                {
+                    AssetId = 3,
+                    Name = "bush_smurfberries",
+                    ImageUrl = "images/bush_smurfberries.svg",
+                    SpanX = 1,
+                    SpanY = 1,
+                    Collision = false,
                     CategoryId = 1
                 }
             );

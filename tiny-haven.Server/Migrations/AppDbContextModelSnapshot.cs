@@ -54,8 +54,7 @@ namespace tiny_haven.Server.Migrations
                             AssetId = 1,
                             CategoryId = 1,
                             Collision = true,
-                            ImageUrl = "images/assets/wooden_crate.png",
-                            Name = "Wooden Crate",
+                            Name = "Wooden_Crate",
                             SpanX = 1,
                             SpanY = 1
                         },
@@ -64,8 +63,17 @@ namespace tiny_haven.Server.Migrations
                             AssetId = 2,
                             CategoryId = 1,
                             Collision = true,
-                            ImageUrl = "images/labubu.png",
                             Name = "Labubu",
+                            SpanX = 1,
+                            SpanY = 1
+                        },
+                        new
+                        {
+                            AssetId = 3,
+                            CategoryId = 1,
+                            Collision = false,
+                            ImageUrl = "images/bush_smurfberries.svg",
+                            Name = "bush_smurfberries",
                             SpanX = 1,
                             SpanY = 1
                         });
@@ -90,7 +98,7 @@ namespace tiny_haven.Server.Migrations
                         new
                         {
                             CategoryId = 1,
-                            Name = "Default"
+                            Name = "Nature"
                         });
                 });
 

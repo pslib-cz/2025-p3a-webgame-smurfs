@@ -10,8 +10,8 @@ using tiny_haven.Server.Data;
 namespace tiny_haven.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251214195806_Initial")]
-    partial class Initial
+    [Migration("20251215102441_TestPlaceholderImage")]
+    partial class TestPlaceholderImage
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,8 +57,7 @@ namespace tiny_haven.Server.Migrations
                             AssetId = 1,
                             CategoryId = 1,
                             Collision = true,
-                            ImageUrl = "images/assets/wooden_crate.png",
-                            Name = "Wooden Crate",
+                            Name = "Wooden_Crate",
                             SpanX = 1,
                             SpanY = 1
                         },
@@ -67,8 +66,17 @@ namespace tiny_haven.Server.Migrations
                             AssetId = 2,
                             CategoryId = 1,
                             Collision = true,
-                            ImageUrl = "images/labubu.png",
                             Name = "Labubu",
+                            SpanX = 1,
+                            SpanY = 1
+                        },
+                        new
+                        {
+                            AssetId = 3,
+                            CategoryId = 1,
+                            Collision = false,
+                            ImageUrl = "images/bush_smurfberries.svg",
+                            Name = "bush_smurfberries",
                             SpanX = 1,
                             SpanY = 1
                         });
@@ -93,7 +101,7 @@ namespace tiny_haven.Server.Migrations
                         new
                         {
                             CategoryId = 1,
-                            Name = "Default"
+                            Name = "Nature"
                         });
                 });
 
@@ -186,7 +194,7 @@ namespace tiny_haven.Server.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ItemQuanity")
+                    b.Property<int>("ItemQuantity")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -194,15 +202,17 @@ namespace tiny_haven.Server.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("RewardAmount")
+                    b.Property<int?>("NextQuestId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("Stage")
+                    b.Property<int>("RewardAmount")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("QuestId");
 
                     b.HasIndex("AssetId");
+
+                    b.HasIndex("NextQuestId");
 
                     b.ToTable("Quests");
                 });
@@ -262,7 +272,14 @@ namespace tiny_haven.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("tiny_haven.Server.Models.Quest", "NextQuest")
+                        .WithMany()
+                        .HasForeignKey("NextQuestId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("Asset");
+
+                    b.Navigation("NextQuest");
                 });
 
             modelBuilder.Entity("tiny_haven.Server.Models.Asset", b =>

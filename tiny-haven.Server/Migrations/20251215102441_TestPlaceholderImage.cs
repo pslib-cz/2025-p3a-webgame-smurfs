@@ -7,7 +7,7 @@
 namespace tiny_haven.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class TestPlaceholderImage : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -91,10 +91,10 @@ namespace tiny_haven.Server.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
-                    ItemQuanity = table.Column<int>(type: "INTEGER", nullable: false),
+                    ItemQuantity = table.Column<int>(type: "INTEGER", nullable: false),
                     RewardAmount = table.Column<int>(type: "INTEGER", nullable: false),
-                    Stage = table.Column<int>(type: "INTEGER", nullable: true),
-                    AssetId = table.Column<int>(type: "INTEGER", nullable: false)
+                    AssetId = table.Column<int>(type: "INTEGER", nullable: false),
+                    NextQuestId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -105,6 +105,12 @@ namespace tiny_haven.Server.Migrations
                         principalTable: "Assets",
                         principalColumn: "AssetId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Quests_Quests_NextQuestId",
+                        column: x => x.NextQuestId,
+                        principalTable: "Quests",
+                        principalColumn: "QuestId",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -146,15 +152,16 @@ namespace tiny_haven.Server.Migrations
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "CategoryId", "Name" },
-                values: new object[] { 1, "Default" });
+                values: new object[] { 1, "Nature" });
 
             migrationBuilder.InsertData(
                 table: "Assets",
                 columns: new[] { "AssetId", "CategoryId", "Collision", "ImageUrl", "Name", "SpanX", "SpanY" },
                 values: new object[,]
                 {
-                    { 1, 1, true, "images/assets/wooden_crate.png", "Wooden Crate", 1, 1 },
-                    { 2, 1, true, "images/labubu.png", "Labubu", 1, 1 }
+                    { 1, 1, true, null, "Wooden_Crate", 1, 1 },
+                    { 2, 1, true, null, "Labubu", 1, 1 },
+                    { 3, 1, false, "images/bush_smurfberries.svg", "bush_smurfberries", 1, 1 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -186,6 +193,11 @@ namespace tiny_haven.Server.Migrations
                 name: "IX_Quests_AssetId",
                 table: "Quests",
                 column: "AssetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Quests_NextQuestId",
+                table: "Quests",
+                column: "NextQuestId");
         }
 
         /// <inheritdoc />
