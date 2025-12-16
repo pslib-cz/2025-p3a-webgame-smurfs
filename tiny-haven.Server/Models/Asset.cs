@@ -19,6 +19,8 @@ namespace tiny_haven.Server.Models
 
         public bool Collision { get; set; }
 
+        public bool Visible { get; set; }
+
 
         // Foreign Key
         public int CategoryId { get; set; }
@@ -29,6 +31,11 @@ namespace tiny_haven.Server.Models
 
         // Navigation properties
         public ICollection<LocationMap> LocationMaps { get; set; }
-        public ICollection<Quest> Quests { get; set; }
+
+        [InverseProperty("WantedItem")]
+        public ICollection<Quest> WantedInQuests { get; set; }
+
+        [InverseProperty("RewardItem")]
+        public ICollection<Quest> RewardInQuests { get; set; }
     }
 }

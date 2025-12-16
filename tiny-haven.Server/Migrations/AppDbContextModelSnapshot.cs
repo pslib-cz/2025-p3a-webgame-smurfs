@@ -42,83 +42,14 @@ namespace tiny_haven.Server.Migrations
                     b.Property<int>("SpanY")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("Visible")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("AssetId");
 
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Assets");
-
-                    b.HasData(
-                        new
-                        {
-                            AssetId = 1,
-                            CategoryId = 1,
-                            Collision = false,
-                            ImageUrl = "images/bush_smurfberries.svg",
-                            Name = "bush_smurfberries",
-                            SpanX = 1,
-                            SpanY = 1
-                        },
-                        new
-                        {
-                            AssetId = 2,
-                            CategoryId = 2,
-                            Collision = true,
-                            ImageUrl = "images/house_red.svg",
-                            Name = "house_red",
-                            SpanX = 2,
-                            SpanY = 2
-                        },
-                        new
-                        {
-                            AssetId = 3,
-                            CategoryId = 2,
-                            Collision = true,
-                            ImageUrl = "images/house_blue.svg",
-                            Name = "house_blue",
-                            SpanX = 2,
-                            SpanY = 2
-                        },
-                        new
-                        {
-                            AssetId = 4,
-                            CategoryId = 3,
-                            Collision = true,
-                            ImageUrl = "images/smurf.svg",
-                            Name = "smurf",
-                            SpanX = 1,
-                            SpanY = 1
-                        },
-                        new
-                        {
-                            AssetId = 5,
-                            CategoryId = 3,
-                            Collision = true,
-                            ImageUrl = "images/gargamel.svg",
-                            Name = "gargamel",
-                            SpanX = 3,
-                            SpanY = 4
-                        },
-                        new
-                        {
-                            AssetId = 6,
-                            CategoryId = 1,
-                            Collision = false,
-                            ImageUrl = "images/stone.svg",
-                            Name = "stone",
-                            SpanX = 1,
-                            SpanY = 1
-                        },
-                        new
-                        {
-                            AssetId = 7,
-                            CategoryId = 1,
-                            Collision = false,
-                            ImageUrl = "images/wood.svg",
-                            Name = "wood",
-                            SpanX = 1,
-                            SpanY = 1
-                        });
                 });
 
             modelBuilder.Entity("tiny_haven.Server.Models.Category", b =>
@@ -135,23 +66,6 @@ namespace tiny_haven.Server.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            CategoryId = 1,
-                            Name = "Nature"
-                        },
-                        new
-                        {
-                            CategoryId = 2,
-                            Name = "Buildings"
-                        },
-                        new
-                        {
-                            CategoryId = 3,
-                            Name = "Characters"
-                        });
                 });
 
             modelBuilder.Entity("tiny_haven.Server.Models.InteractionMap", b =>
@@ -160,13 +74,10 @@ namespace tiny_haven.Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("InteractionTypeId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("LocationId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("QuestId")
+                    b.Property<int>("QuestId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("xOffsetEnd")
@@ -183,29 +94,11 @@ namespace tiny_haven.Server.Migrations
 
                     b.HasKey("InteractionId");
 
-                    b.HasIndex("InteractionTypeId");
-
                     b.HasIndex("LocationId");
 
                     b.HasIndex("QuestId");
 
                     b.ToTable("InteractionMaps");
-                });
-
-            modelBuilder.Entity("tiny_haven.Server.Models.InteractionType", b =>
-                {
-                    b.Property<int>("InteractionTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("InteractionTypeId");
-
-                    b.ToTable("InteractionTypes");
                 });
 
             modelBuilder.Entity("tiny_haven.Server.Models.LocationMap", b =>
@@ -236,14 +129,11 @@ namespace tiny_haven.Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AssetId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ItemQuantity")
+                    b.Property<int?>("ItemQuantity")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -254,14 +144,26 @@ namespace tiny_haven.Server.Migrations
                     b.Property<int?>("NextQuestId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("RewardAmount")
+                    b.Property<int?>("RewardAmount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("RewardItemId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("WantedItemId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("QuestId");
 
-                    b.HasIndex("AssetId");
-
                     b.HasIndex("NextQuestId");
+
+                    b.HasIndex("RewardItemId");
+
+                    b.HasIndex("WantedItemId");
 
                     b.ToTable("Quests");
                 });
@@ -279,12 +181,6 @@ namespace tiny_haven.Server.Migrations
 
             modelBuilder.Entity("tiny_haven.Server.Models.InteractionMap", b =>
                 {
-                    b.HasOne("tiny_haven.Server.Models.InteractionType", "InteractionType")
-                        .WithMany("InteractionMaps")
-                        .HasForeignKey("InteractionTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("tiny_haven.Server.Models.LocationMap", "LocationMap")
                         .WithMany("InteractionMaps")
                         .HasForeignKey("LocationId")
@@ -293,9 +189,9 @@ namespace tiny_haven.Server.Migrations
 
                     b.HasOne("tiny_haven.Server.Models.Quest", "Quest")
                         .WithMany("InteractionMaps")
-                        .HasForeignKey("QuestId");
-
-                    b.Navigation("InteractionType");
+                        .HasForeignKey("QuestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("LocationMap");
 
@@ -315,37 +211,38 @@ namespace tiny_haven.Server.Migrations
 
             modelBuilder.Entity("tiny_haven.Server.Models.Quest", b =>
                 {
-                    b.HasOne("tiny_haven.Server.Models.Asset", "Asset")
-                        .WithMany("Quests")
-                        .HasForeignKey("AssetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("tiny_haven.Server.Models.Quest", "NextQuest")
                         .WithMany()
                         .HasForeignKey("NextQuestId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.Navigation("Asset");
+                    b.HasOne("tiny_haven.Server.Models.Asset", "RewardItem")
+                        .WithMany("RewardInQuests")
+                        .HasForeignKey("RewardItemId");
+
+                    b.HasOne("tiny_haven.Server.Models.Asset", "WantedItem")
+                        .WithMany("WantedInQuests")
+                        .HasForeignKey("WantedItemId");
 
                     b.Navigation("NextQuest");
+
+                    b.Navigation("RewardItem");
+
+                    b.Navigation("WantedItem");
                 });
 
             modelBuilder.Entity("tiny_haven.Server.Models.Asset", b =>
                 {
                     b.Navigation("LocationMaps");
 
-                    b.Navigation("Quests");
+                    b.Navigation("RewardInQuests");
+
+                    b.Navigation("WantedInQuests");
                 });
 
             modelBuilder.Entity("tiny_haven.Server.Models.Category", b =>
                 {
                     b.Navigation("Assets");
-                });
-
-            modelBuilder.Entity("tiny_haven.Server.Models.InteractionType", b =>
-                {
-                    b.Navigation("InteractionMaps");
                 });
 
             modelBuilder.Entity("tiny_haven.Server.Models.LocationMap", b =>

@@ -15,19 +15,13 @@ namespace tiny_haven.Server.Models
 
 
         // Foreign Keys
-        public int InteractionTypeId { get; set; }
-
-        [ForeignKey("InteractionTypeId")]
-        public InteractionType InteractionType { get; set; }
-
-
         public int LocationId { get; set; }
 
         [ForeignKey("LocationId")]
         public LocationMap LocationMap { get; set; }
 
 
-        public int? QuestId { get; set; }
+        public int QuestId { get; set; }
 
         [ForeignKey("QuestId")]
         public Quest? Quest { get; set; }
