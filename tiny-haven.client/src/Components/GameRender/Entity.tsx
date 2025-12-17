@@ -1,5 +1,5 @@
 import type { LocationMap } from "../../Types/database-types"
-import style from "./css/Entity.module.css"
+import style from "./Entity.module.css"
 
 type EntityProps = {
     data: LocationMap;

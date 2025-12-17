@@ -5,7 +5,7 @@
 namespace tiny_haven.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class RedoDatabase : Migration
+    public partial class createDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

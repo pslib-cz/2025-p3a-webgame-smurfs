@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { type Asset, type Category } from '../Types/database-types';
+import { type Asset, type Category } from '../../Types/database-types';
 
 export const TestDataFetcher: React.FC = () => {
     // State to store data

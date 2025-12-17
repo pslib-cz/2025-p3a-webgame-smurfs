@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import styles from "./css/MapDisplay.module.css"
+import styles from "./MapDisplay.module.css"
 import ErrorFallback from "./FetchFallback"
 import { ErrorBoundary } from 'react-error-boundary';
 import { TileMap } from "./TileMap";

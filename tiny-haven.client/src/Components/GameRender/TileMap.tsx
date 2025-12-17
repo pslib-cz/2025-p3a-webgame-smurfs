@@ -1,6 +1,5 @@
 import { use } from "react";
-import type { InteractionMap, LocationMap } from "../../Types/database-types"
-import styles from "./css/TileMap.module.css"
+import styles from "./TileMap.module.css"
 import { Entity } from "./Entity";
 
 const locationMapFetch = fetch("/api/LocationMaps").then(x => x.json())

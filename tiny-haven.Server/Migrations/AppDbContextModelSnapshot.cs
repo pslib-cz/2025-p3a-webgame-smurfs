@@ -201,7 +201,7 @@ namespace tiny_haven.Server.Migrations
             modelBuilder.Entity("tiny_haven.Server.Models.LocationMap", b =>
                 {
                     b.HasOne("tiny_haven.Server.Models.Asset", "Asset")
-                        .WithMany("LocationMaps")
+                        .WithMany()
                         .HasForeignKey("AssetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -233,8 +233,6 @@ namespace tiny_haven.Server.Migrations
 
             modelBuilder.Entity("tiny_haven.Server.Models.Asset", b =>
                 {
-                    b.Navigation("LocationMaps");
-
                     b.Navigation("RewardInQuests");
 
                     b.Navigation("WantedInQuests");

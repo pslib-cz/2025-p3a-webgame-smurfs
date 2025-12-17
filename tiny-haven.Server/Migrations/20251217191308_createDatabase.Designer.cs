@@ -10,8 +10,8 @@ using tiny_haven.Server.Data;
 namespace tiny_haven.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251216130026_RedoDatabase")]
-    partial class RedoDatabase
+    [Migration("20251217191308_createDatabase")]
+    partial class createDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -204,7 +204,7 @@ namespace tiny_haven.Server.Migrations
             modelBuilder.Entity("tiny_haven.Server.Models.LocationMap", b =>
                 {
                     b.HasOne("tiny_haven.Server.Models.Asset", "Asset")
-                        .WithMany("LocationMaps")
+                        .WithMany()
                         .HasForeignKey("AssetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -236,8 +236,6 @@ namespace tiny_haven.Server.Migrations
 
             modelBuilder.Entity("tiny_haven.Server.Models.Asset", b =>
                 {
-                    b.Navigation("LocationMaps");
-
                     b.Navigation("RewardInQuests");
 
                     b.Navigation("WantedInQuests");
