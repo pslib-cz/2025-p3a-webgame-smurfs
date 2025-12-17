@@ -1,5 +1,5 @@
 import { use } from "react";
-import type { InteractionMap, LocationMap } from "../Types/database-types"
+import type { InteractionMap, LocationMap } from "../../Types/database-types"
 import styles from "./css/TileMap.module.css"
 import { Entity } from "./Entity";
 
