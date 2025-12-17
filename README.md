@@ -1,6 +1,6 @@
 > Tým: F
 <h1>
-    <img src="tiny-haven.Server/wwwroot/images/smurf.svg" style="height: 32px;"/>
+    <img src="tiny-haven.Server/wwwroot/images/characters/smurf.svg" style="height: 32px;"/>
     Tiny Haven
 </h1>
 
