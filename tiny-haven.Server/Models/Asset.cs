@@ -30,7 +30,8 @@ namespace tiny_haven.Server.Models
 
 
         // Navigation properties
-        public ICollection<LocationMap> LocationMaps { get; set; }
+        //[InverseProperty("Asset")]
+        //public ICollection<LocationMap> LocationMaps { get; set; }
 
         [InverseProperty("WantedItem")]
         public ICollection<Quest> WantedInQuests { get; set; }

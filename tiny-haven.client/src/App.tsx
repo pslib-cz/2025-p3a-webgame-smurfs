@@ -1,16 +1,10 @@
 import './App.css';
-import { TestDataFetcher } from "./Components/TestDataFetcher";
+import { MapDisplay } from './Components/MapDisplay';
 
 function App() {
     return (
         <div className="App">
-            <header className="App-header">
-                <h1>My Game Editor</h1>
-            </header>
-            
-            <main>
-                <TestDataFetcher />
-            </main>
+            <MapDisplay/>
         </div>
     );
 }
