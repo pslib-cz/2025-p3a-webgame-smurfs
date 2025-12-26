@@ -1,76 +1,56 @@
-export interface Category {
+// Categories DTO
+export interface CategoryDTO {
   categoryId: number;
   name: string;
-
-  // Navigation property
-  assets?: Asset[];
 }
 
-export interface Asset {
+// Assets DTO
+export interface AssetDTO {
   assetId: number;
   name: string;
-  imageUrl?: string | null;
+  imageUrl: string | null;
   spanX: number;
   spanY: number;
   collision: boolean;
   visible: boolean;
-
-  // Foreign key
-  categoryId: number;
-  category?: Category;
-
-  // Navigation property
-  locationMaps?: LocationMap[];
-  wantedInQuests?: Quest[];
-  rewardInQuests?: Quest[];
+  categoryName: string;
 }
 
-export interface LocationMap {
+// Location maps DTO
+export interface LocationMapDTO {
   locationId: number;
   locationX: number;
   locationY: number;
-
-  // Foreign key
-  assetId: number;
-  asset?: Asset;
-
-  // Navigation property
-  interactionMaps?: InteractionMap[];
+  imageUrl: string | null;
+  name: string;
+  spanX: number;
+  spanY: number;
+  collision: boolean;
+  visible: boolean;
 }
 
-export interface Quest {
+// Quests DTO
+export interface QuestDTO {
   questId: number;
   name: string;
   description: string;
   type: string;
-  itemQuantity?: number | null;
-  rewardAmount?: number | null;
-
-  // Foreign key
-  wantedItemId?: number | null;
-  wantedItem?: Asset;
-
-  rewardItemId?: number | null;
-  rewardItem?: Asset;
-
-  nextQuestId?: number | null;
-  nextQuest?: Quest;
-
-  // Navigation property
-  interactionMaps?: InteractionMap[];
+  wantedItemId: number | null;
+  rewardItemId: number | null;
+  itemQuantity: number | null;
+  rewardAmount: number | null;
+  nextQuestId: number | null;
 }
 
-export interface InteractionMap {
+// Interaction maps DTO
+export interface InteractionMapDTO {
   interactionId: number;
   xOffsetStart: number;
   xOffsetEnd: number;
   yOffsetStart: number;
   yOffsetEnd: number;
-
-  // Foreign key
-  locationId: number;
-  locationMap?: LocationMap;
-  
-  questId: number;
-  quest?: Quest | null;
+  type: string;
+  locationX: number;
+  locationY: number;
+  quest: QuestDTO;
 }

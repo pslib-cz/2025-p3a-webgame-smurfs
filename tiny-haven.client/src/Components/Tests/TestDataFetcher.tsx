@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { type Asset, type Category } from '../../Types/database-types';
+import { type AssetDTO } from '../../Types/database-types';
 
 export const TestDataFetcher: React.FC = () => {
     // State to store data
-    const [assets, setAssets] = useState<Asset[]>([]);
-    const [categories, setCategories] = useState<Category[]>([]);
+    const [assets, setAssets] = useState<AssetDTO[]>([]);
     
     // State for UI handling
     const [loading, setLoading] = useState<boolean>(true);
@@ -14,20 +13,17 @@ export const TestDataFetcher: React.FC = () => {
         const fetchData = async () => {
             try {
                 // Fetch both endpoints in parallel
-                const [assetsResponse, categoriesResponse] = await Promise.all([
-                    fetch('/api/assets'),
-                    fetch('/api/categories')
+                const [assetsResponse] = await Promise.all([
+                    fetch('/api/Assets')
                 ]);
 
-                if (!assetsResponse.ok || !categoriesResponse.ok) {
+                if (!assetsResponse.ok) {
                     throw new Error('Failed to fetch data from server');
                 }
 
                 const assetsData = await assetsResponse.json();
-                const categoriesData = await categoriesResponse.json();
 
                 setAssets(assetsData);
-                setCategories(categoriesData);
             } catch (err) {
                 console.error(err);
                 setError(err instanceof Error ? err.message : 'An unknown error occurred');
@@ -57,21 +53,7 @@ export const TestDataFetcher: React.FC = () => {
                                     <strong>ID: {asset.assetId} - {asset.name}</strong><br />
                                     <small>Span: {asset.spanX}x{asset.spanY}</small><br />
                                     <small>Image: {asset.imageUrl || 'None'}</small>
-                                    <img src={asset.imageUrl ?? "/images/placeholder-image.svg"} />
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                </div>
-
-                {/* Render Categories */}
-                <div>
-                    <h3>Categories List</h3>
-                    {categories.length === 0 ? <p>No categories found.</p> : (
-                        <ul>
-                            {categories.map((cat) => (
-                                <li key={cat.categoryId}>
-                                    <strong>ID: {cat.categoryId} - {cat.name}</strong>
+                                    <img src={asset.imageUrl ?? "/images/game_assets/placeholder-image.svg"} />
                                 </li>
                             ))}
                         </ul>

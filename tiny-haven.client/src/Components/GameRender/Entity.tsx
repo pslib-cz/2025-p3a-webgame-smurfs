@@ -1,8 +1,8 @@
-import type { LocationMap } from "../../Types/database-types"
+import type { LocationMapDTO } from "../../Types/database-types"
 import style from "./Entity.module.css"
 
 type EntityProps = {
-    data: LocationMap;
+    data: LocationMapDTO;
 }
 
 export const Entity: React.FC<EntityProps> = ({ data }) => {
@@ -10,10 +10,10 @@ export const Entity: React.FC<EntityProps> = ({ data }) => {
         <figure 
             className={style.entity}
             style={{
-                gridColumn: `${data.locationX} / span ${data.asset?.spanX}`,
-                gridRow: `${data.locationY} / span ${data.asset?.spanY}`
+                gridColumn: `${data.locationX} / span ${data.spanX}`,
+                gridRow: `${data.locationY} / span ${data.spanY}`
             }}>
-                <img src={data.asset?.imageUrl ?? "images/placeholder-image.svg"} alt={data.asset?.name} />
+                <img src={data.imageUrl ?? "images/placeholder-image.svg"} alt={data.name} />
         </figure>
     )
 }

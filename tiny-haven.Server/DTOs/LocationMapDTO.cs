@@ -6,6 +6,7 @@
         public int LocationX { get; set; }
         public int LocationY { get; set; }
         public string? ImageUrl { get; set; }
+        public string Name { get; set; }
         public int SpanX { get; set; }
         public int SpanY { get; set; }
         public bool Collision { get; set; }
