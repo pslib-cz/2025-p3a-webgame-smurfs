@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using tiny_haven.Server.Data;
+using tiny_haven.Server.DTOs;
 using tiny_haven.Server.Models;
 
 namespace tiny_haven.Server.Controllers
@@ -23,30 +24,47 @@ namespace tiny_haven.Server.Controllers
 
         // GET: api/Assets
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Asset>>> GetAssets()
+        public async Task<ActionResult<IEnumerable<AssetDTO>>> GetAssets()
+        {
+            return await _context.Assets
+                            .Select(a => new AssetDTO
+                            {
+                                AssetId = a.AssetId,
+                                Name = a.Name,
+                                ImageUrl = a.ImageUrl,
+                                SpanX = a.SpanX,
+                                SpanY = a.SpanY,
+                                Collision = a.Collision,
+                                Visible = a.Visible,
+                                CategoryName = a.Category.Name
+                            })
+                            .ToListAsync();
+        }
+
+        [HttpGet("test")]
+        public async Task<ActionResult<IEnumerable<Asset>>> GetAssetsRaw()
         {
             return await _context.Assets.ToListAsync();
         }
 
         // GET: api/Assets/5
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<Asset>> GetAssetById(int id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<AssetDTO>> GetAsset(int id)
         {
-            var asset = await _context.Assets.FindAsync(id);
-
-            if (asset == null)
-            {
-                return NotFound();
-            }
-
-            return asset;
-        }
-
-        // GET: api/Assets/apple
-        [HttpGet("{name}")]
-        public async Task<ActionResult<Asset>> GetAssetByName(string name)
-        {
-            var asset = await _context.Assets.FirstOrDefaultAsync(a => a.Name == name);
+            var asset = await _context.Assets
+                                .Where(a => a.AssetId == id)
+                                .Select(a => new AssetDTO
+                                {
+                                    AssetId = a.AssetId,
+                                    Name = a.Name,
+                                    ImageUrl = a.ImageUrl,
+                                    SpanX = a.SpanX,
+                                    SpanY = a.SpanY,
+                                    Collision = a.Collision,
+                                    Visible = a.Visible,
+                                    CategoryName = a.Category.Name
+                                })
+                                .FirstOrDefaultAsync();
 
             if (asset == null)
             {

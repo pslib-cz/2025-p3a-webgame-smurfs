@@ -24,6 +24,6 @@ namespace tiny_haven.Server.Models
         public int QuestId { get; set; }
 
         [ForeignKey("QuestId")]
-        public Quest? Quest { get; set; }
+        public Quest Quest { get; set; }
     }
 }
