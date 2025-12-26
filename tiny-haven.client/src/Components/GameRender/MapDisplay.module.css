@@ -1,8 +1,6 @@
 .mapDisplay {
-    width: 2880px;
-    height: 1600px;
-    max-width: 2880px;
-    max-height: 1600px;
-
-    background-color: #789969;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
 }

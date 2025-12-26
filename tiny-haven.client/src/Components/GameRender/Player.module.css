@@ -1,6 +1,5 @@
-.entity {
+.player {
     margin: 0;
-    position: relative;
 
     img {
         width: 100%;
