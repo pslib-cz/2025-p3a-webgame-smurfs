@@ -1,10 +1,11 @@
-import { use, useMemo, useState } from "react";
+import { use, useMemo, useState,useEffect, useRef } from "react";
 import styles from "./TileMap.module.css"
 import { Entity } from "./Entity";
 import { Player } from "./Player";
 import type { CollisionMap, PlayerLocation } from "../../Types/player-data";
 import { GRID_COLLUMNS, GRID_ROWS, TILE_SIZE, ZOOM_LEVEL } from "../Data/GameData";
 import type { LocationMapDTO } from "../../Types/database-types";
+import { MapDisplay } from "./MapDisplay";
 
 const locationMapFetch = fetch("/api/LocationMaps").then(x => x.json())
 const InteractionMapFetch = fetch("/api/InteractionMaps").then(x => x.json())
@@ -36,12 +37,85 @@ export const TileMap = () => {
             }
         });
 
+
+        useEffect(() => {
+            const down = (e: KeyboardEvent) => {
+              if (e.key === "w") keys.current.w = true;
+              if (e.key === "a") keys.current.a = true;
+              if (e.key === "s") keys.current.s = true;
+              if (e.key === "d") keys.current.d = true;
+            };
+        
+            const up = (e: KeyboardEvent) => {
+              if (e.key === "w") keys.current.w = false;
+              if (e.key === "a") keys.current.a = false;
+              if (e.key === "s") keys.current.s = false;
+              if (e.key === "d") keys.current.d = false;
+            };
+        
+            window.addEventListener("keydown", down);
+            window.addEventListener("keyup", up);
+        
+            return () => {
+              window.removeEventListener("keydown", down);
+              window.removeEventListener("keyup", up);
+            };
+          }, []);
+
+          
+          useEffect(() => {
+            const id = setInterval(() => {
+                let dx = 0;
+                let dy = 0;
+        
+                if (keys.current.w) dy -= 1;
+                if (keys.current.s) dy += 1;
+                if (keys.current.a) dx -= 1;
+                if (keys.current.d) dx += 1;
+        
+                if (dx === 0 && dy === 0) return;
+        
+                setLocation((p) => {
+                    const nx = p.x + dx;
+                    const ny = p.y + dy;
+        
+                    // hranice mapy
+                    if (
+                        nx < 0 ||
+                        ny < 0 ||
+                        nx >= GRID_COLLUMNS ||
+                        ny >= GRID_ROWS
+                    ) {
+                        return p;
+                    }
+        
+                    // kolize z TVÉ collisionMap
+                    if (collisionMap[ny]?.[nx]) {
+                        return p;
+                    }
+        
+                    return { x: nx, y: ny };
+                });
+            }, STEP_TIME);
+        
+            return () => clearInterval(id);
+        }, [collisionMap]);
+        
+        
         return map;
 
     }, [locationMapData]);
 
     const [location, setLocation] = useState<PlayerLocation>({x: 90, y: 50})
 
+    const STEP_TIME = 200;
+
+    const keys = useRef({
+        w: false,
+        a: false,
+        s: false,
+        d: false,
+      });
 
     const pixelX = location.x * TILE_SIZE;
     const pixelY = location.y * TILE_SIZE;
