@@ -5,7 +5,7 @@ import { Player } from "./Player";
 import { type CollisionMap } from "../../Types/player-data";
 import { GRID_COLLUMNS, GRID_ROWS, STEP_TIME, TILE_SIZE, ZOOM_LEVEL } from "../../Data/GameData";
 import type { LocationMapDTO } from "../../Types/database-types";
-import { usePlayerMovement } from "../Hooks/usePlayerMovement";
+import { usePlayerMovement } from "../../Hooks/usePlayerMovement";
 
 const locationMapFetch = fetch("/api/LocationMaps").then(x => x.json())
 // const InteractionMapFetch = fetch("/api/InteractionMaps").then(x => x.json())
