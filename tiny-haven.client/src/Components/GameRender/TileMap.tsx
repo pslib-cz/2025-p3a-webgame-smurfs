@@ -7,6 +7,7 @@ import { GRID_COLLUMNS, GRID_ROWS, STEP_TIME, TILE_SIZE, ZOOM_LEVEL } from "../.
 import type { LocationMapDTO } from "../../Types/database-types";
 import { usePlayerMovement } from "../../Hooks/usePlayerMovement";
 
+
 const locationMapFetch = fetch("/api/LocationMaps").then(x => x.json())
 // const InteractionMapFetch = fetch("/api/InteractionMaps").then(x => x.json())
 const playerAssetFetch = fetch("api/Assets/2").then(x => x.json())

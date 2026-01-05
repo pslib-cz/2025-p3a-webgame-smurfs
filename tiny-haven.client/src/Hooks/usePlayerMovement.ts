@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { STEP_TIME, GRID_ROWS, GRID_COLLUMNS } from '../../Data/GameData';
-import type { CollisionMap, FacingDirection } from '../../Types/player-data';
+import { STEP_TIME, GRID_ROWS, GRID_COLLUMNS } from '../Data/GameData';
+import type { CollisionMap, FacingDirection } from '../Types/player-data';
 
 export const usePlayerMovement = (
     initialLocation: { x: number, y: number },
