@@ -1,37 +1,34 @@
 import type { AssetDTO } from "../../Types/database-types";
-import type { PlayerLocation } from "../../Types/player-data"
+import type { FacingDirection, PlayerLocation } from "../../Types/player-data"
+import { STEP_TIME } from "../../Data/GameData";
 import style from "./Player.module.css"
 
 type PlayerProps = {
     data: AssetDTO;
     location: PlayerLocation;
+    facing: FacingDirection;
 }
 
-export const Player: React.FC<PlayerProps> = ({ data, location }) => {
+export const Player: React.FC<PlayerProps> = ({ data, location, facing }) => {
+    const pixelX = (location.x - 1) * 16;
+    const pixelY = (location.y - 1) * 16;
 
-    // const moveRight = () => {
-    //     // 2. Use functional update to access 'prev' state
-    //     setPlayer(prev => ({
-    //     ...prev,     // Keep 'y' exactly as it was
-    //     x: prev.x + 10 
-    //     }));
-    // };
-
-    // const moveUp = () => {
-    //     setPlayer(prev => ({
-    //     ...prev,     // Keep 'x' exactly as it was
-    //     y: prev.y + 10 
-    //     }));
-    // };
+    const width = (data.spanX ?? 1) * 16;
+    const height = (data.spanY ?? 1) * 16;
 
     return (
         <figure 
             className={style.player}
             style={{
-                gridColumn: `${location.x} / span ${data.spanX}`,
-                gridRow: `${location.y} / span ${data.spanY}`
+                width: `${width}px`,
+                height: `${height}px`,
+                transform: `translate3d(${pixelX}px, ${pixelY}px, 0)`,
+                transition: `transform ${STEP_TIME}ms linear`
             }}>
-                <img src={data.imageUrl ?? "images/placeholder-image.svg"} alt={data.name} />
+                <img src={data.imageUrl ?? "images/placeholder-image.svg"} alt={data.name} 
+                    style={{
+                        transform: `scaleX(${facing === 'left' ? -1 : 1})`,
+                    }}/>
         </figure>
     )
 }

@@ -4,3 +4,5 @@ export interface PlayerLocation {
 }
 
 export type CollisionMap = boolean[][];
+
+export type FacingDirection = 'left' | 'right';
