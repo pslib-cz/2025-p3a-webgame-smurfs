@@ -57,7 +57,7 @@ export const usePlayerMovement = (
                 const ny = prev.y + dy;
 
                 // Hranice mapy
-                if (nx < 0 || ny < 0 || nx >= GRID_COLLUMNS || ny >= GRID_ROWS) return prev;
+                if (nx < 1 || ny < 1 || nx > GRID_COLLUMNS || ny > GRID_ROWS) return prev;
 
                 // Kolize
                 if (collisionMap[ny - 1]?.[nx - 1]) return prev;
