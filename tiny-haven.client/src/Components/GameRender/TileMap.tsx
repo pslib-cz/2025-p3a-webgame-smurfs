@@ -9,12 +9,12 @@ import { usePlayerMovement } from "../../Hooks/usePlayerMovement";
 
 
 const locationMapFetch = fetch("/api/LocationMaps").then(x => x.json())
-// const InteractionMapFetch = fetch("/api/InteractionMaps").then(x => x.json())
+const InteractionMapFetch = fetch("/api/InteractionMaps").then(x => x.json())
 const playerAssetFetch = fetch("api/Assets/2").then(x => x.json())
 
 export const TileMap = () => {
     const locationMapData = use(locationMapFetch);
-    // const interactionMapData = use(InteractionMapFetch);
+    const interactionMapData = use(InteractionMapFetch);
     const playerAsset = use(playerAssetFetch)
 
     const collisionMap: CollisionMap = useMemo(() => {
@@ -42,6 +42,8 @@ export const TileMap = () => {
         return map;
 
     }, [locationMapData]);
+
+    
 
     const { location, facing } = usePlayerMovement({ x: 90, y: 50 }, collisionMap);
     
