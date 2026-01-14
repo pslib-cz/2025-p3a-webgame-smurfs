@@ -41,12 +41,6 @@ namespace tiny_haven.Server.Controllers
                             .ToListAsync();
         }
 
-        [HttpGet("test")]
-        public async Task<ActionResult<IEnumerable<Asset>>> GetAssetsRaw()
-        {
-            return await _context.Assets.ToListAsync();
-        }
-
         // GET: api/Assets/5
         [HttpGet("{id}")]
         public async Task<ActionResult<AssetDTO>> GetAsset(int id)

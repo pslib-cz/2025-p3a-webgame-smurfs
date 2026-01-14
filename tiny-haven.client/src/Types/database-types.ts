@@ -54,3 +54,9 @@ export interface InteractionMapDTO {
   locationY: number;
   quest: QuestDTO;
 }
+
+export interface GameConfigDTO {
+  tileSize: number;
+  gridColumns: number;
+  gridRows: number;
+}

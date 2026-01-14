@@ -43,8 +43,6 @@ export const TileMap = () => {
 
     }, [locationMapData]);
 
-    
-
     const { location, facing } = usePlayerMovement({ x: 90, y: 50 }, collisionMap);
     
 
