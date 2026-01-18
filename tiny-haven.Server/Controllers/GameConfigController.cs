@@ -22,7 +22,8 @@ namespace tiny_haven.Server.Controllers
             {
                 TileSize = _configuration.GetValue<int>("GameSettings:TileSize"),
                 GridRows = _configuration.GetValue<int>("GameSettings:GridRows"),
-                GridColumns = _configuration.GetValue<int>("GameSettings:GridColumns")
+                GridColumns = _configuration.GetValue<int>("GameSettings:GridColumns"),
+                InventorySize = _configuration.GetValue<int>("GameSettings:InventorySize")
             };
 
             return Ok(config);

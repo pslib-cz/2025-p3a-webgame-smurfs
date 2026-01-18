@@ -21,6 +21,7 @@ export interface LocationMapDTO {
   locationId: number;
   locationX: number;
   locationY: number;
+  assetId: number;
   imageUrl: string | null;
   name: string;
   spanX: number;
@@ -55,8 +56,15 @@ export interface InteractionMapDTO {
   quest: QuestDTO;
 }
 
+// Collision map DTO
+export interface CollisionMap {
+  collisionMap: boolean[][];
+}
+
+// Game config DTO
 export interface GameConfigDTO {
   tileSize: number;
   gridColumns: number;
   gridRows: number;
+  inventorySize: number;
 }

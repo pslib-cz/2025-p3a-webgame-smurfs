@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { STEP_TIME, GRID_ROWS, GRID_COLLUMNS } from '../Data/GameData';
-import type { CollisionMap, FacingDirection } from '../Types/player-data';
+import { STEP_TIME } from '../Data/GameData';
+import type { FacingDirection } from '../Types/player-data'
 
 export const usePlayerMovement = (
     initialLocation: { x: number, y: number },
-    collisionMap: CollisionMap
+    collisionMap: boolean[][],
+    maxColumns: number,
+    maxRows: number
 ) => {
     const [location, setLocation] = useState(initialLocation);
     const [facing, setFacing] = useState<FacingDirection>('right');
@@ -53,11 +55,11 @@ export const usePlayerMovement = (
             if (dx === 0 && dy === 0) return;
 
             setLocation((prev) => {
-                const nx = prev.x + dx;
-                const ny = prev.y + dy;
+                const nx: number = prev.x + dx;
+                const ny: number = prev.y + dy;
 
                 // Hranice mapy
-                if (nx < 1 || ny < 1 || nx > GRID_COLLUMNS || ny > GRID_ROWS) return prev;
+                if (nx < 1 || ny < 1 || nx > maxColumns || ny > maxRows) return prev;
 
                 // Kolize
                 if (collisionMap[ny - 1]?.[nx - 1]) return prev;

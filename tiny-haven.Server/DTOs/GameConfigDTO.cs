@@ -5,5 +5,6 @@
         public int TileSize { get; set; }
         public int GridColumns { get; set; }
         public int GridRows { get; set; }
+        public int InventorySize { get; set; }
     }
 }
