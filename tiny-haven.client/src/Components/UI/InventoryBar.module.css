@@ -7,10 +7,18 @@
     bottom: 2rem;
     transform: translateX(-50%);
 
+    column-gap: 0.5rem;
+
     .slot {
-        background-color: #ffe4c4;
+        background-image: url("/images/game_assets/ui/hud-bg-small.png");
+        background-position: center;
+        background-size: contain;
         position: relative;
-        border: 2px solid #997243;
+        image-rendering: pixelated;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
         img {
             width: 75%;
@@ -21,8 +29,17 @@
 
         .badge {
             position: absolute;
-            right: 0.3rem;
-            bottom: 0.1rem;
+            right: 25%;
+            bottom: 25%;
+            transform: translate(75%, 50%);
+            z-index: 1;
+
+            font-size: 1.2rem;
+            text-shadow: 
+                1px 1px 0 white,
+                -1px 1px 0 white,
+                1px -1px 0 white,
+                -1px -1px 0 white;
         }
     }
 }

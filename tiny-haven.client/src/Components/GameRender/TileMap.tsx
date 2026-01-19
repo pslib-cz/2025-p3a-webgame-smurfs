@@ -1,4 +1,4 @@
-import { use } from "react";
+import { use, useContext } from "react";
 import styles from "./TileMap.module.css"
 import { Entity } from "./Entity";
 import { Player } from "./Player";
@@ -14,8 +14,9 @@ export const TileMap = () => {
     const playerAsset = use(playerAssetPromise);
     const collisionMap = use(collisionMapPromise);
 
-    const { location, facing } = usePlayerMovement({ x: 90, y: 50 }, collisionMap, gridColumns, gridRows);
     
+
+    const { location, facing } = usePlayerMovement({ x: 90, y: 50 }, collisionMap, gridColumns, gridRows);
 
     const pixelX = location.x * tileSize;
     const pixelY = location.y * tileSize;
