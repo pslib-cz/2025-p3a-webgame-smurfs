@@ -48,5 +48,35 @@ namespace tiny_haven.Server.Controllers
             var data = await _collisionMap.GetCollisionMapAsync();
             return Ok(data);
         }
+
+        // GET: api/map/interactions
+        [HttpGet("interactions")]
+        public async Task<ActionResult<IEnumerable<InteractionMapDTO>>> GetInteractionMaps()
+        {
+            return await _context.InteractionMaps
+                            .Select(im => new InteractionMapDTO
+                            {
+                                InteractionId = im.InteractionId,
+                                xOffsetStart = im.xOffsetStart,
+                                xOffsetEnd = im.xOffsetEnd,
+                                yOffsetStart = im.yOffsetStart,
+                                yOffsetEnd = im.yOffsetEnd,
+                                LocationX = im.LocationMap.LocationX,
+                                LocationY = im.LocationMap.LocationY,
+                                Quest = new QuestDTO
+                                {
+                                    QuestId = im.Quest.QuestId,
+                                    Name = im.Quest.Name,
+                                    Description = im.Quest.Description,
+                                    Type = im.Quest.Type,
+                                    WantedItemId = im.Quest.WantedItemId,
+                                    RewardItemId = im.Quest.RewardItemId,
+                                    ItemQuantity = im.Quest.ItemQuantity,
+                                    RewardAmount = im.Quest.RewardAmount,
+                                    NextQuestId = im.Quest.NextQuestId
+                                }
+                            })
+                            .ToListAsync();
+        }
     }
 }

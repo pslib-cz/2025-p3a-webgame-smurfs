@@ -7,7 +7,6 @@
         public int xOffsetEnd { get; set; }
         public int yOffsetStart { get; set; }
         public int yOffsetEnd { get; set; }
-        public string Type { get; set; }
         public int LocationX { get; set; }
         public int LocationY { get; set; }
         public QuestDTO Quest { get; set; }
