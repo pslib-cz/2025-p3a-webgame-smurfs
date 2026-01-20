@@ -5,8 +5,6 @@ import { Player } from "./Player";
 import { STEP_TIME, ZOOM_LEVEL } from "../../Data/GameData";
 import { useGameSettings } from "../../Contexts/GameSettingsContext";
 import { collisionMapPromise, locationMapPromise, playerAssetPromise } from "../../api/gameResources";
-import type { InteractionTile } from "./interaction.ts";
-import { addItemToInventory } from "../../Contexts/InventoryContext";
 
 export const TileMap = () => {
     const { tileSize, gridRows, gridColumns } = useGameSettings();
@@ -14,30 +12,6 @@ export const TileMap = () => {
     const locationMapData = use(locationMapPromise);
     const playerAsset = use(playerAssetPromise);
     const collisionMap = use(collisionMapPromise);
-
-    //---//
-
-    const [interactionMap, setInteractionMap] =
-    useState<(InteractionTile | null)[][]>(() =>
-        Array.from({ length: gridRows }, () =>
-            Array.from({ length: gridColumns }, () => null)
-        )
-    );
-
-    const onPickup = (tile: InteractionTile, x: number, y: number) => {
-        const success = addItemToInventory(
-            { assetId: tile.assetId },
-            tile.amount ?? 1
-        );
-    
-        if (!success) return;
-    
-        const newMap = interactionMap.map(row => [...row]);
-        newMap[y][x] = null;
-        setInteractionMap(newMap);
-    };
-
-    //---//
 
 
     const pixelX = location.x * tileSize;
