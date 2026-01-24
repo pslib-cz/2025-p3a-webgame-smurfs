@@ -1,0 +1,15 @@
+import { usePlayerBalance } from "../../Contexts/PlayerBalanceContext";
+import styles from "./BalanceDisplay.module.css";
+
+export const BalanceDisplay = () => {
+    const { formattedBalance } = usePlayerBalance();
+
+    return (
+        <div className={styles.display}>
+            <img src="/images/game_assets/ui/berry.svg" alt="Smurf berry" />
+            <p>
+                {formattedBalance}
+            </p>
+        </div>
+    )
+}

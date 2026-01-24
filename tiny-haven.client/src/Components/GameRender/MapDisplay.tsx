@@ -6,6 +6,8 @@ import { TileMap } from "./TileMap";
 import { GameSettingsProvider } from "../../Contexts/GameSettingsContext";
 import { InventoryProvider } from "../../Contexts/InventoryContext";
 import { InventoryBar } from "../UI/InventoryBar";
+import { PlayerBalanceProvider } from "../../Contexts/PlayerBalanceContext";
+import { BalanceDisplay } from "../UI/BalanceDisplay";
 
 export const MapDisplay = () => {
     return (
@@ -14,16 +16,22 @@ export const MapDisplay = () => {
                 <Suspense fallback={<p>Loading configuration...</p>}>
                     <GameSettingsProvider>
 
-                        <InventoryProvider>
+                        <PlayerBalanceProvider>
 
-                            <ErrorBoundary FallbackComponent={ErrorFallback}>
-                                <Suspense fallback={<p>Loading...</p>}>
-                                    <TileMap/>
-                                    <InventoryBar/>
-                                </Suspense>
-                            </ErrorBoundary>
+                            <InventoryProvider>
 
-                        </InventoryProvider>
+                                <ErrorBoundary FallbackComponent={ErrorFallback}>
+                                    <Suspense fallback={<p>Loading...</p>}>
+                                        <TileMap/>
+                                        <InventoryBar/>
+                                        <BalanceDisplay/>
+                                    </Suspense>
+                                </ErrorBoundary>
+
+                            </InventoryProvider>
+
+                        </PlayerBalanceProvider>
+
                     </GameSettingsProvider>
                 </Suspense>
             </ErrorBoundary>

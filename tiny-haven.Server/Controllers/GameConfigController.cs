@@ -23,7 +23,8 @@ namespace tiny_haven.Server.Controllers
                 TileSize = _configuration.GetValue<int>("GameSettings:TileSize"),
                 GridRows = _configuration.GetValue<int>("GameSettings:GridRows"),
                 GridColumns = _configuration.GetValue<int>("GameSettings:GridColumns"),
-                InventorySize = _configuration.GetValue<int>("GameSettings:InventorySize")
+                InventorySize = _configuration.GetValue<int>("GameSettings:InventorySize"),
+                StartingBalance = _configuration.GetValue<int>("GameSettings:StartingBalance")
             };
 
             return Ok(config);

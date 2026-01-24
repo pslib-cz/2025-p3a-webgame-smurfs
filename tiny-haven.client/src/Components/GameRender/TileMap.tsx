@@ -1,10 +1,11 @@
-import { use, useState } from "react";
+import { use } from "react";
 import styles from "./TileMap.module.css"
 import { Entity } from "./Entity";
 import { Player } from "./Player";
 import { STEP_TIME, ZOOM_LEVEL } from "../../Data/GameData";
 import { useGameSettings } from "../../Contexts/GameSettingsContext";
 import { collisionMapPromise, locationMapPromise, playerAssetPromise } from "../../api/gameResources";
+import { usePlayerMovement } from "../../Hooks/usePlayerMovement";
 
 export const TileMap = () => {
     const { tileSize, gridRows, gridColumns } = useGameSettings();
@@ -13,6 +14,7 @@ export const TileMap = () => {
     const playerAsset = use(playerAssetPromise);
     const collisionMap = use(collisionMapPromise);
 
+    const { location, facing } = usePlayerMovement({ x: 90, y: 50 }, collisionMap, gridColumns, gridRows);
 
     const pixelX = location.x * tileSize;
     const pixelY = location.y * tileSize;

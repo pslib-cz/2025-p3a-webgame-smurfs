@@ -11,11 +11,13 @@ interface InventoryContextType {
 
 const InventoryContext = createContext<InventoryContextType | null>(null);
 
+const STORAGE_KEY = 'player_inventory';
+
 export const InventoryProvider = ({ children }: { children: React.ReactNode }) => {
     const { inventorySize } = useGameSettings();
 
     const [slots, setSlots] = useState<InventorySlot[]>(() => {
-        const saved = localStorage.getItem('playerInventory');
+        const saved = localStorage.getItem(STORAGE_KEY);
         let initialSlots: InventorySlot[] = [];
 
         if (saved) {
@@ -46,7 +48,7 @@ export const InventoryProvider = ({ children }: { children: React.ReactNode }) =
 
     // Uložení inventáře
     useEffect(() => {
-        localStorage.setItem('playerInventory', JSON.stringify(slots));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(slots));
     }, [slots]);
 
     // addItemToInventory(asset, množství)
