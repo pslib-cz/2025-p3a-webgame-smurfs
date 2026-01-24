@@ -6,6 +6,8 @@ import { STEP_TIME, ZOOM_LEVEL } from "../../Data/GameData";
 import { useGameSettings } from "../../Contexts/GameSettingsContext";
 import { collisionMapPromise, locationMapPromise, playerAssetPromise } from "../../api/gameResources";
 import { usePlayerMovement } from "../../Hooks/usePlayerMovement";
+import { useInventory } from "../../Contexts/InventoryContext";
+import { usePlayerBalance } from "../../Contexts/PlayerBalanceContext";
 
 export const TileMap = () => {
     const { tileSize, gridRows, gridColumns } = useGameSettings();
@@ -14,7 +16,10 @@ export const TileMap = () => {
     const playerAsset = use(playerAssetPromise);
     const collisionMap = use(collisionMapPromise);
 
-    const { location, facing } = usePlayerMovement({ x: 90, y: 50 }, collisionMap, gridColumns, gridRows);
+    const { location, facing } = usePlayerMovement( collisionMap, gridColumns, gridRows );
+
+    const playerInventory = useInventory();
+    const playerBalance = usePlayerBalance();
 
     const pixelX = location.x * tileSize;
     const pixelY = location.y * tileSize;

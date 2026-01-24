@@ -21,8 +21,8 @@
         align-items: center;
 
         img {
-            width: 75%;
-            height: 75%;
+            height: 100%;
+            aspect-ratio: 1 / 1;
             object-fit: contain;
             object-position: center;
         }
