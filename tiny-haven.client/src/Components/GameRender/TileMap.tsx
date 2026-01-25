@@ -45,7 +45,7 @@ export const TileMap = () => {
                         <div key={`${x}-${y}`} style={{
                             gridColumn: x + 1,
                             gridRow: y + 1,
-                            background: 'rgba(255, 0, 0, 0.3)',
+                            background: 'rgba(255, 0, 0, 0.2)',
                             border: "1px solid rgba(255, 0, 0, 0.3)",
                             zIndex: 999
                        }} />

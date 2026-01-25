@@ -17,6 +17,12 @@ export const InventoryBar = () => {
                     <div key={slot.slotIndex} className={styles.slot}>
 
                         {hasItem && slot.asset && (
+                            <span className={styles.tooltip}>
+                                {slot.asset.name}
+                            </span>
+                        )}
+
+                        {hasItem && slot.asset && (
                             <img 
                                 src={slot.asset.imageUrl}
                                 alt={slot.asset.name}
