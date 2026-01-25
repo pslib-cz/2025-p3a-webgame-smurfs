@@ -9,12 +9,16 @@ namespace tiny_haven.Server.Services
         private readonly AppDbContext _context;
         private readonly IMemoryCache _cache;
         private readonly IConfiguration _config;
+        private readonly MaterialService _materialService;
 
-        public CollisionMap(AppDbContext context, IMemoryCache cache, IConfiguration config)
+        private readonly int[] _waterIds = { 9, 10, 11, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 42, 43, 44 };
+
+        public CollisionMap(AppDbContext context, IMemoryCache cache, IConfiguration config, MaterialService materialService)
         {
             _context = context;
             _cache = cache;
             _config = config;
+            _materialService = materialService;
         }
 
         public async Task<bool[][]> GetCollisionMapAsync()
@@ -38,6 +42,26 @@ namespace tiny_haven.Server.Services
 
             bool[][] map = new bool[rows][];
             for (int i = 0; i < rows; i++) map[i] = new bool[cols];
+
+            var tileGrid = _materialService.TileGrid;
+            int maxCsvX = tileGrid.GetLength(0);
+            int maxCsvY = tileGrid.GetLength(1);
+
+            for (int y = 0; y < rows; y++)
+            {
+                for (int x = 0; x < cols; x++)
+                {
+                    if (x < maxCsvX && y < maxCsvY)
+                    {
+                        int tileId = tileGrid[x, y];
+
+                        if (_waterIds.Contains(tileId))
+                        {
+                            map[y][x] = true;
+                        }
+                    }
+                }
+            }
 
             var entities = await _context.LocationMaps
                 .Include(x => x.Asset)
