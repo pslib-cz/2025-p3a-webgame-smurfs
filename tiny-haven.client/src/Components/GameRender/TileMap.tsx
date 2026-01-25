@@ -7,6 +7,10 @@ import { useGameSettings } from "../../Contexts/GameSettingsContext";
 import { collisionMapPromise, locationMapPromise, playerAssetPromise, InteractionMapPromise } from "../../api/gameResources";
 import { usePlayerMovement } from "../../Hooks/usePlayerMovement"
 import { useInteractions } from "../../Hooks/useInteractions";
+<<<<<<< HEAD
+=======
+import { useQuestActions } from "../../Hooks/useQuestActions";
+>>>>>>> 005c459 (Pickup)
 
 export const TileMap = () => {
     const { tileSize, gridRows, gridColumns } = useGameSettings();
@@ -18,6 +22,11 @@ export const TileMap = () => {
     const { location, facing } = usePlayerMovement({ x: 90, y: 50 }, collisionMap, gridColumns, gridRows);
 
     //---//
+<<<<<<< HEAD
+=======
+    //Interaction mapa
+
+>>>>>>> 005c459 (Pickup)
     const interactions = use(InteractionMapPromise);
 
     const activeInteraction = useInteractions(
@@ -38,6 +47,27 @@ export const TileMap = () => {
         return () => window.removeEventListener("keydown", handleKeyDown);
       }, [activeInteraction]);
 
+<<<<<<< HEAD
+=======
+
+      const { handleQuest } = useQuestActions();
+
+
+      // ..........Pickup item........... //
+
+
+    useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key.toLowerCase() === "e" && activeInteraction) {
+        handleQuest(activeInteraction);
+        }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [activeInteraction]);
+
+>>>>>>> 005c459 (Pickup)
     //---//
 
     const pixelX = location.x * tileSize;

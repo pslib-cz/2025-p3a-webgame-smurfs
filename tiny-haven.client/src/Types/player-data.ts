@@ -16,3 +16,11 @@ export interface InventorySlot {
 }
 
 export type FacingDirection = 'left' | 'right';
+
+export interface Quest {
+    id: string;
+    name: string;
+    type: "pickupItem" | "talk" | "trigger";
+    assetId?: number;
+    amount?: number;
+  }
