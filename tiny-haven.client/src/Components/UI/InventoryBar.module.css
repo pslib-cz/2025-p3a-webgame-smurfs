@@ -21,8 +21,8 @@
         align-items: center;
 
         img {
-            width: 75%;
-            height: 75%;
+            height: 100%;
+            aspect-ratio: 1 / 1;
             object-fit: contain;
             object-position: center;
         }
@@ -41,5 +41,22 @@
                 1px -1px 0 white,
                 -1px -1px 0 white;
         }
+
+        .tooltip {
+            position: absolute;
+            left: 50%;
+            bottom: calc(100% + 0.5rem);
+            transform: translateX(-50%);
+            z-index: 1;
+
+            opacity: 0;
+
+            font-size: 1.2rem;
+            color: white;
+        }
+    }
+
+    .slot:hover .tooltip {
+        opacity: 1;
     }
 }

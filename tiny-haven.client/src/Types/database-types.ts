@@ -67,4 +67,5 @@ export interface GameConfigDTO {
   gridColumns: number;
   gridRows: number;
   inventorySize: number;
+  startingBalance: number;
 }

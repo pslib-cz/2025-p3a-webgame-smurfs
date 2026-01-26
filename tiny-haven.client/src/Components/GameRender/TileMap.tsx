@@ -4,6 +4,10 @@ import { Entity } from "./Entity";
 import { Player } from "./Player";
 import { STEP_TIME, ZOOM_LEVEL } from "../../Data/GameData";
 import { useGameSettings } from "../../Contexts/GameSettingsContext";
+import { collisionMapPromise, locationMapPromise, playerAssetPromise } from "../../api/gameResources";
+import { usePlayerMovement } from "../../Hooks/usePlayerMovement";
+import { useInventory } from "../../Contexts/InventoryContext";
+import { usePlayerBalance } from "../../Contexts/PlayerBalanceContext";
 import { collisionMapPromise, locationMapPromise, playerAssetPromise, InteractionMapPromise, assetsPromise } from "../../api/gameResources";
 import { usePlayerMovement } from "../../Hooks/usePlayerMovement"
 import { useInteractions } from "../../Hooks/useInteractions";
@@ -17,6 +21,10 @@ export const TileMap = () => {
     const collisionMap = use(collisionMapPromise);
     const assetsData = use(assetsPromise);
 
+    const { location, facing } = usePlayerMovement( collisionMap, gridColumns, gridRows );
+
+    const playerInventory = useInventory();
+    const playerBalance = usePlayerBalance();
     const { location, facing } = usePlayerMovement({ x: 90, y: 50 }, collisionMap, gridColumns, gridRows);
 
     //---//
@@ -86,7 +94,7 @@ export const TileMap = () => {
                         <div key={`${x}-${y}`} style={{
                             gridColumn: x + 1,
                             gridRow: y + 1,
-                            background: 'rgba(255, 0, 0, 0.3)',
+                            background: 'rgba(255, 0, 0, 0.2)',
                             border: "1px solid rgba(255, 0, 0, 0.3)",
                             zIndex: 999
                        }} />
