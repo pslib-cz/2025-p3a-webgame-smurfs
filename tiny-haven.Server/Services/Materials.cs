@@ -5,7 +5,7 @@
         private readonly IWebHostEnvironment _env;
         public int[,] TileGrid { get; private set; }
 
-        private const uint ROTATION_MASK = 0x0FFFFFFF;
+        private const uint ROTATION_MASK = 0x1FFFFFFF;
 
         public MaterialService(IWebHostEnvironment env)
         {
