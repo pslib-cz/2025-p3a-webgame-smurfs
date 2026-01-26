@@ -4,13 +4,10 @@ import { Entity } from "./Entity";
 import { Player } from "./Player";
 import { STEP_TIME, ZOOM_LEVEL } from "../../Data/GameData";
 import { useGameSettings } from "../../Contexts/GameSettingsContext";
-import { collisionMapPromise, locationMapPromise, playerAssetPromise, InteractionMapPromise } from "../../api/gameResources";
+import { collisionMapPromise, locationMapPromise, playerAssetPromise, InteractionMapPromise, assetsPromise } from "../../api/gameResources";
 import { usePlayerMovement } from "../../Hooks/usePlayerMovement"
 import { useInteractions } from "../../Hooks/useInteractions";
-<<<<<<< HEAD
-=======
 import { useQuestActions } from "../../Hooks/useQuestActions";
->>>>>>> 005c459 (Pickup)
 
 export const TileMap = () => {
     const { tileSize, gridRows, gridColumns } = useGameSettings();
@@ -18,27 +15,25 @@ export const TileMap = () => {
     const locationMapData = use(locationMapPromise);
     const playerAsset = use(playerAssetPromise);
     const collisionMap = use(collisionMapPromise);
+    const assetsData = use(assetsPromise);
 
     const { location, facing } = usePlayerMovement({ x: 90, y: 50 }, collisionMap, gridColumns, gridRows);
 
     //---//
-<<<<<<< HEAD
-=======
     //Interaction mapa
 
->>>>>>> 005c459 (Pickup)
     const interactions = use(InteractionMapPromise);
 
     const activeInteraction = useInteractions(
         location.x,
         location.y,
         interactions
-      );
+    );
 
       useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
           if (e.key.toLowerCase() === "e" && activeInteraction) {
-            console.log("Spouštím quest:", activeInteraction.questId);
+            console.log("Spouštím quest:", activeInteraction.quest.name);
             // tady později fetch na backend
           }
         };
@@ -47,19 +42,17 @@ export const TileMap = () => {
         return () => window.removeEventListener("keydown", handleKeyDown);
       }, [activeInteraction]);
 
-<<<<<<< HEAD
-=======
 
-      const { handleQuest } = useQuestActions();
+      const { handleQuest } = useQuestActions(assetsData);
 
 
       // ..........Pickup item........... //
 
 
-    useEffect(() => {
+      useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key.toLowerCase() === "e" && activeInteraction) {
-        handleQuest(activeInteraction);
+        handleQuest(activeInteraction.quest);
         }
     };
 
@@ -67,7 +60,6 @@ export const TileMap = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
     }, [activeInteraction]);
 
->>>>>>> 005c459 (Pickup)
     //---//
 
     const pixelX = location.x * tileSize;
