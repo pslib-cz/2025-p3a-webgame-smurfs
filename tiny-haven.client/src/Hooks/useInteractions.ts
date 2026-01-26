@@ -1,19 +1,6 @@
 import { useEffect, useState } from "react";
 import type { InteractionMapDTO } from "../Types/database-types";
 
-// export interface Interaction {
-//   questId: string;
-//   questName: string;
-//   questType: string;
-//   position: { x: number; y: number };
-//   offset: {
-//     beforeX: number;
-//     afterX: number;
-//     beforeY: number;
-//     afterY: number;
-//   };
-// }
-
 export function useInteractions(
   playerX: number,
   playerY: number,

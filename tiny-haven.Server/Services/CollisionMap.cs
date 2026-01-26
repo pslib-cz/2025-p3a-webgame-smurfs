@@ -35,6 +35,19 @@ namespace tiny_haven.Server.Services
             return map;
         }
 
+        private bool IsCollisionTile(string assetName, int x, int y, int spanX, int spanY)
+        {
+            if (assetName == "oak_tree")
+            {
+                bool isEdgeX = (x == 0 || x == spanX - 1);
+                bool isEdgeY = (y == spanY - 1);
+
+                if (isEdgeX && isEdgeY) return false;
+            }
+
+            return true;
+        }
+
         private async Task<bool[][]> GenerateMapFromDbAsync()
         {
             int rows = _config.GetValue<int>("GameSettings:GridRows");
@@ -83,7 +96,10 @@ namespace tiny_haven.Server.Services
                         int tX = (entity.LocationX - 1) + cx;
                         if (tX < 0 || tX >= cols) continue;
 
-                        map[tY][tX] = true;
+                        if (IsCollisionTile(entity.Asset.Name, cx, cy, entity.Asset.SpanX, entity.Asset.SpanY))
+                        {
+                            map[tY][tX] = true;
+                        }
                     }
                 }
             }

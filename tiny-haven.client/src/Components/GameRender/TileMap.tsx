@@ -4,8 +4,6 @@ import { Entity } from "./Entity";
 import { Player } from "./Player";
 import { STEP_TIME, ZOOM_LEVEL } from "../../Data/GameData";
 import { useGameSettings } from "../../Contexts/GameSettingsContext";
-import { collisionMapPromise, locationMapPromise, playerAssetPromise } from "../../api/gameResources";
-import { usePlayerMovement } from "../../Hooks/usePlayerMovement";
 import { useInventory } from "../../Contexts/InventoryContext";
 import { usePlayerBalance } from "../../Contexts/PlayerBalanceContext";
 import { collisionMapPromise, locationMapPromise, playerAssetPromise, InteractionMapPromise, assetsPromise } from "../../api/gameResources";
@@ -25,7 +23,6 @@ export const TileMap = () => {
 
     const playerInventory = useInventory();
     const playerBalance = usePlayerBalance();
-    const { location, facing } = usePlayerMovement({ x: 90, y: 50 }, collisionMap, gridColumns, gridRows);
 
     //---//
     //Interaction mapa
@@ -88,7 +85,7 @@ export const TileMap = () => {
 
             <Player data={playerAsset} location={location} facing={facing}/>
 
-            {collisionMap.map((row: Boolean[], y: number) => (
+            {/* {collisionMap.map((row: Boolean[], y: number) => (
                 row.map((collision: Boolean, x: number) => (
                     collision && (
                         <div key={`${x}-${y}`} style={{
@@ -100,7 +97,7 @@ export const TileMap = () => {
                        }} />
                     )
                 ))
-            ))}
+            ))} */}
 
             {activeInteraction && (
             <div

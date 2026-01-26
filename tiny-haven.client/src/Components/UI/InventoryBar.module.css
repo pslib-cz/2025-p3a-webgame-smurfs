@@ -29,9 +29,9 @@
 
         .badge {
             position: absolute;
-            right: 25%;
+            right: 10%;
             bottom: 25%;
-            transform: translate(75%, 50%);
+            transform: translateY(50%);
             z-index: 1;
 
             font-size: 1.2rem;
