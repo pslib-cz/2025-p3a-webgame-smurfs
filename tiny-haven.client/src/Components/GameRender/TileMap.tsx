@@ -10,6 +10,7 @@ import { collisionMapPromise, locationMapPromise, playerAssetPromise, Interactio
 import { usePlayerMovement } from "../../Hooks/usePlayerMovement"
 import { useInteractions } from "../../Hooks/useInteractions";
 import { useQuestActions } from "../../Hooks/useQuestActions";
+import { useInteractionContext } from "../../Contexts/InteractionContext";
 
 export const TileMap = () => {
     const { tileSize, gridRows, gridColumns } = useGameSettings();
@@ -29,11 +30,17 @@ export const TileMap = () => {
 
     const interactions = use(InteractionMapPromise);
 
+    const { setActiveInteraction } = useInteractionContext();
+
     const activeInteraction = useInteractions(
-        location.x,
-        location.y,
-        interactions
+    location.x,
+    location.y,
+    interactions
     );
+
+    useEffect(() => {
+    setActiveInteraction(activeInteraction);
+    }, [activeInteraction]);
 
       useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -99,23 +106,23 @@ export const TileMap = () => {
                 ))
             ))} */}
 
-            {activeInteraction && (
+            {/* //{activeInteraction && (
             <div
                 style={{
                 position: "absolute",
-                top: "50%",
                 left: "50%",
-                transform: "translate(-50%, -80px)",
+                bottom: "45%",
+                transform: "translateX(100%)",
                 background: "rgba(0,0,0,0.6)",
                 color: "white",
-                padding: "6px 10px",
-                borderRadius: "6px",
-                fontSize: "14px"
+                padding: "2px 4px",
+                borderRadius: "2px",
+                fontSize: "6px"
                 }}
             >
-                <b>E</b>
+                <b>Press [ E ]</b>
             </div>
-            )}
+            )} */}
         </div>
     )
 }
