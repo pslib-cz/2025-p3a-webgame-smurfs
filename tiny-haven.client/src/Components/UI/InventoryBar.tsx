@@ -1,7 +1,6 @@
 import { useGameSettings } from "../../Contexts/GameSettingsContext";
-import { useInventory } from "../../Contexts/InventoryContext"
-import type { AssetInventory } from "../../Types/player-data";
-import styles from "./InventoryBar.module.css"
+import { useInventory } from "../../Contexts/InventoryContext";
+import styles from "./InventoryBar.module.css";
 
 export const InventoryBar = () => {
     const { slots } = useInventory();
@@ -16,9 +15,12 @@ export const InventoryBar = () => {
 
                 return (
                     <div key={slot.slotIndex} className={styles.slot}>
-                        {/* <span className={styles.badge}>
-                            9
-                        </span> */}
+
+                        {hasItem && slot.asset && (
+                            <span className={styles.tooltip}>
+                                {slot.asset.name}
+                            </span>
+                        )}
 
                         {hasItem && slot.asset && (
                             <img 
@@ -32,6 +34,7 @@ export const InventoryBar = () => {
                                 {slot.amount}
                             </span>
                         )}
+                        
                     </div>
                 )
             })}

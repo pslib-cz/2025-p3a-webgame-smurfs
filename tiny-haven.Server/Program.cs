@@ -13,6 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 builder.Services.AddMemoryCache();
+builder.Services.AddScoped<MaterialService>();
 builder.Services.AddScoped<ICollisionMap, CollisionMap>();
 
 var app = builder.Build();

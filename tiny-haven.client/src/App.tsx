@@ -1,5 +1,5 @@
 import './App.css';
-import { MapDisplay } from './Components/GameRender/MapDisplay';
+import { MapDisplay } from './Pages/Game';
 
 function App() {
     return (

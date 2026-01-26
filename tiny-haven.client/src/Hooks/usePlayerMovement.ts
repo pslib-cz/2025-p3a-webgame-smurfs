@@ -1,15 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
-import { STEP_TIME } from '../Data/GameData';
 import type { FacingDirection } from '../Types/player-data'
+import { usePlayerLocation } from '../Contexts/PlayerLocationContext';
+
+const STEP_TIME = 200;
 
 export const usePlayerMovement = (
-    initialLocation: { x: number, y: number },
     collisionMap: boolean[][],
     maxColumns: number,
     maxRows: number
 ) => {
-    const [location, setLocation] = useState(initialLocation);
-    const [facing, setFacing] = useState<FacingDirection>('right');
+    const { location, setLocation } = usePlayerLocation();
+    const [ facing, setFacing ] = useState<FacingDirection>('right');
     
     const keys = useRef({ w: false, a: false, s: false, d: false });
 
@@ -41,14 +42,8 @@ export const usePlayerMovement = (
             let dy = 0;
 
             // Logika pro směr (Facing)
-            if (keys.current.a) {
-                dx -= 1;
-                setFacing('left');
-            }
-            if (keys.current.d) {
-                dx += 1;
-                setFacing('right');
-            }
+            if (keys.current.a) { dx -= 1; setFacing('left'); }
+            if (keys.current.d) { dx += 1; setFacing('right'); }
             if (keys.current.w) dy -= 1;
             if (keys.current.s) dy += 1;
 
@@ -69,8 +64,7 @@ export const usePlayerMovement = (
         }, STEP_TIME);
 
         return () => clearInterval(moveInterval);
-    }, [collisionMap]);
-    console.log('Location:', location, 'Facing:', facing);
+    }, [collisionMap, maxColumns, maxRows, setLocation]);
 
     return { location, facing };
 };
