@@ -10,6 +10,8 @@ import { PlayerBalanceProvider } from "../Contexts/PlayerBalanceContext";
 import { BalanceDisplay } from "../Components/UI/BalanceDisplay";
 import { PlayerLocationProvider } from "../Contexts/PlayerLocationContext";
 import { DebugInfo } from "../Components/UI/DebugInfo";
+import { InteractionProvider } from "../Contexts/InteractionContext";
+import { InteractionButton } from "../Components/GameRender/InteractionButton"
 
 export const MapDisplay = () => {
     return (
@@ -21,14 +23,20 @@ export const MapDisplay = () => {
                             <PlayerBalanceProvider>
                                 <InventoryProvider>
 
-                                    <ErrorBoundary FallbackComponent={ErrorFallback}>
-                                        <Suspense fallback={<p>Loading...</p>}>
-                                            <TileMap/>
-                                            <InventoryBar/>
-                                            <BalanceDisplay/>
-                                            <DebugInfo/>
-                                        </Suspense>
-                                    </ErrorBoundary>
+                                    <InteractionProvider>
+
+                                        <ErrorBoundary FallbackComponent={ErrorFallback}>
+                                            <Suspense fallback={<p>Loading...</p>}>
+                                                <TileMap/>
+                                                <InventoryBar/>
+                                                <BalanceDisplay/>
+                                                <DebugInfo/>
+                                            </Suspense>
+                                        </ErrorBoundary>
+
+                                        <InteractionButton />
+
+                                    </InteractionProvider>
 
                                 </InventoryProvider>
                             </PlayerBalanceProvider>
