@@ -85,7 +85,7 @@ export const TileMap = () => {
 
             <Player data={playerAsset} location={location} facing={facing}/>
 
-            {/* {collisionMap.map((row: Boolean[], y: number) => (
+            {collisionMap.map((row: Boolean[], y: number) => (
                 row.map((collision: Boolean, x: number) => (
                     collision && (
                         <div key={`${x}-${y}`} style={{
@@ -97,7 +97,7 @@ export const TileMap = () => {
                        }} />
                     )
                 ))
-            ))} */}
+            ))}
 
             {activeInteraction && (
             <div

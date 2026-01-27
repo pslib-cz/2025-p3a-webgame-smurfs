@@ -14,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<MaterialService>();
+builder.Services.AddTransient<MapSeederService>();
 builder.Services.AddScoped<ICollisionMap, CollisionMap>();
 
 var app = builder.Build();
@@ -25,6 +26,14 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var seeder = scope.ServiceProvider.GetRequiredService<MapSeederService>();
+    await seeder.SeedMapAsync();
+
+    var materials = scope.ServiceProvider.GetRequiredService<MaterialService>();
 }
 
 app.UseHttpsRedirection();

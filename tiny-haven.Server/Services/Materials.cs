@@ -1,11 +1,14 @@
-﻿namespace tiny_haven.Server.Services
+﻿using System.Text.Json;
+using tiny_haven.Server.DTOs;
+
+namespace tiny_haven.Server.Services
 {
     public class MaterialService
     {
         private readonly IWebHostEnvironment _env;
         public int[,] TileGrid { get; private set; }
 
-        private const uint ROTATION_MASK = 0x1FFFFFFF;
+        private const long ROTATION_MASK = 0x1FFFFFFF;
 
         public MaterialService(IWebHostEnvironment env)
         {
@@ -15,46 +18,39 @@
 
         private void LoadMap()
         {
-            string filePath = Path.Combine(_env.ContentRootPath, "Data", "Map", "materials.csv");
+            string mapPath = Path.Combine(_env.ContentRootPath, "Data", "Map", "map.json");
 
-            if (File.Exists(filePath))
+            if (!File.Exists(mapPath))
             {
-                TileGrid = LoadMapFromCsv(filePath);
+                TileGrid = new int[0, 0];
+                return;
             }
-            else
+
+            string jsonContent = File.ReadAllText(mapPath);
+            var mapData = JsonSerializer.Deserialize<TiledMapDto>(jsonContent, new JsonSerializerOptions
             {
-                TileGrid = new int[1, 1];
-            }
-        }
+                PropertyNameCaseInsensitive = true
+            });
 
-        private int[,] LoadMapFromCsv(string filePath)
-        {
-            var lines = File.ReadAllLines(filePath)
-                            .Where(l => !string.IsNullOrWhiteSpace(l))
-                            .ToArray();
+            if (mapData == null) return;
 
-            if (lines.Length == 0) return new int[0, 0];
+            TileGrid = new int[mapData.Width, mapData.Height];
 
-            int height = lines.Length;
-            int width = lines[0].Split(',').Length;
+            var groundLayer = mapData.Layers.FirstOrDefault(l => l.Type == "tilelayer");
 
-            int[,] mapGrid = new int[width, height];
-
-            for (int y = 0; y < height; y++)
+            if (groundLayer != null && groundLayer.Data != null)
             {
-                var rowValues = lines[y].Split(',', System.StringSplitOptions.RemoveEmptyEntries);
-
-                for (int x = 0; x < rowValues.Length; x++)
+                for (int i = 0; i < groundLayer.Data.Count; i++)
                 {
-                    if (long.TryParse(rowValues[x], out long rawGid))
-                    {
-                        long cleanGid = rawGid & ROTATION_MASK;
+                    int x = i % mapData.Width;
+                    int y = i / mapData.Width;
 
-                        mapGrid[x, y] = (int)cleanGid;
-                    }
+                    long rawGid = groundLayer.Data[i];
+                    int cleanGid = (int)(rawGid & ROTATION_MASK);
+
+                    TileGrid[x, y] = cleanGid;
                 }
             }
-            return mapGrid;
         }
     }
 }

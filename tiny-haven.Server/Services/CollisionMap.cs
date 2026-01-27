@@ -11,7 +11,7 @@ namespace tiny_haven.Server.Services
         private readonly IConfiguration _config;
         private readonly MaterialService _materialService;
 
-        private readonly int[] _waterIds = { 9, 10, 11, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 42, 43, 44 };
+        private readonly int[] _waterIds = { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 42, 43, 44 };
 
         public CollisionMap(AppDbContext context, IMemoryCache cache, IConfiguration config, MaterialService materialService)
         {
@@ -60,6 +60,10 @@ namespace tiny_haven.Server.Services
             int maxCsvX = tileGrid.GetLength(0);
             int maxCsvY = tileGrid.GetLength(1);
 
+            DebugTileAt(72, 39);
+            DebugTileAt(74, 37);
+            DebugTileAt(80, 34);
+
             for (int y = 0; y < rows; y++)
             {
                 for (int x = 0; x < cols; x++)
@@ -105,6 +109,46 @@ namespace tiny_haven.Server.Services
             }
 
             return map;
+        }
+
+        public void DebugTileAt(int gameX, int gameY)
+        {
+            // 1. Convert Game Coordinate (e.g. 68) to Array Index (e.g. 67)
+            // Your game uses 1-based coords, so we subtract 1.
+            int arrayX = gameX - 1;
+            int arrayY = gameY - 1;
+
+            var grid = _materialService.TileGrid;
+
+            // 2. Safety Check
+            if (arrayX < 0 || arrayX >= grid.GetLength(0) ||
+                arrayY < 0 || arrayY >= grid.GetLength(1))
+            {
+                Console.WriteLine($"❌ DEBUG [{gameX},{gameY}]: Coordinate out of bounds!");
+                return;
+            }
+
+            // 3. Get the ID
+            int foundId = grid[arrayX, arrayY];
+            bool isCollision = _waterIds.Contains(foundId);
+
+            // 4. Print the Result
+            Console.WriteLine($"\n🔍 --- DEBUG INSPECTOR [{gameX}, {gameY}] ---");
+            Console.WriteLine($"   Array Index: [{arrayX}, {arrayY}]");
+            Console.WriteLine($"   Tile ID Found: {foundId}");
+
+            if (isCollision)
+            {
+                Console.WriteLine($"   Status: ✅ BLOCKED (ID {foundId} is in your list)");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"   Status: ⚠️ WALKABLE (ID {foundId} is missing!)");
+                Console.WriteLine($"   >>> ACTION: Add {foundId} to your _waterIds array.");
+                Console.ResetColor();
+            }
+            Console.WriteLine("------------------------------------------\n");
         }
     }
 }
