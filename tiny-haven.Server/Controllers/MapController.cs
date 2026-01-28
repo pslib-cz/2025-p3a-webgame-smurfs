@@ -13,11 +13,15 @@ namespace tiny_haven.Server.Controllers
     {
         private readonly AppDbContext _context;
         private readonly ICollisionMap _collisionMap;
+        private readonly IMaterials _materials;
+        private readonly ISpawningLogic _spawner;
 
-        public MapController(AppDbContext context, ICollisionMap collisionMap)
+        public MapController(AppDbContext context, ICollisionMap collisionMap, IMaterials materials, ISpawningLogic spawner)
         {
             _context = context;
             _collisionMap = collisionMap;
+            _materials = materials;
+            _spawner = spawner;
         }
 
         // GET: api/map/locations
@@ -77,6 +81,55 @@ namespace tiny_haven.Server.Controllers
                                 }
                             })
                             .ToListAsync();
+        }
+
+        [HttpPost("generateItems")]
+        public async Task<IActionResult> GenerateItems([FromBody] SpawnRequestDto request)
+        {
+            var itemConfig = await _context.ItemConfigs.
+                                            Where(i => i.AssetId == request.ItemId)
+                                            .FirstOrDefaultAsync();
+            if (itemConfig == null) return NotFound($"Item with AssetId {request.ItemId} not found.");
+
+            int targetCategoryId = itemConfig.AllowedMaterialId;
+
+            var allowedTileIds = await _context.Materials
+                .Where(m => m.MaterialCategoryId == targetCategoryId)
+                .Select(m => m.MaterialId)
+                .ToListAsync();
+
+            var collisionMap = await _collisionMap.GetCollisionMapAsync();
+            var materialMap = _materials.TileGrid;
+
+            var occupiedSet = new HashSet<(int, int)>();
+            foreach (var loc in request.ExistingItemLocations)
+                occupiedSet.Add((loc.X, loc.Y));
+
+            var newItems = new List<PointDto>();
+
+            for (int i = 0; i < (itemConfig.GeneratingLimit - request.CurrentAmount); i++)
+            {
+                int projectedTotal = request.CurrentAmount + newItems.Count;
+
+                if (projectedTotal >= itemConfig.GeneratingLimit) break;
+
+                if (!_spawner.ShouldSpawn(projectedTotal, itemConfig.GeneratingLimit)) continue;
+
+                var validCoord = _spawner.FindValidLocation(
+                    collisionMap,
+                    materialMap,
+                    occupiedSet,
+                    allowedTileIds
+                );
+
+                if (validCoord != null)
+                {
+                    newItems.Add(validCoord);
+                    occupiedSet.Add((validCoord.X, validCoord.Y));
+                }
+            }
+
+            return Ok(new { Success = newItems.Count > 0, NewItems = newItems });
         }
     }
 }

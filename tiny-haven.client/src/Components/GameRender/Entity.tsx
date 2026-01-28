@@ -11,9 +11,10 @@ export const Entity: React.FC<EntityProps> = ({ data }) => {
             className={style.entity}
             style={{
                 gridColumn: `${data.locationX} / span ${data.spanX}`,
-                gridRow: `${data.locationY} / span ${data.spanY}`
+                gridRow: `${data.locationY} / span ${data.spanY}`,
+                zIndex: `calc(${data.locationY} + 10)`
             }}>
-                <img src={data.imageUrl ?? "images/placeholder-image.svg"} alt={data.name} />
+                <img src={data.imageUrl ?? "images/placeholder-image.svg"} alt={data.name} loading="lazy"/>
         </figure>
     )
 }

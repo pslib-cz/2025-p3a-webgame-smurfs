@@ -11,6 +11,8 @@ import { usePlayerMovement } from "../../Hooks/usePlayerMovement"
 import { useInteractions } from "../../Hooks/useInteractions";
 import { useQuestActions } from "../../Hooks/useQuestActions";
 import { useInteractionContext } from "../../Contexts/InteractionContext";
+import { useGenerateItems } from "../../Contexts/RandomItemsContext";
+import { Item } from "./Item";
 
 export const TileMap = () => {
     const { tileSize, gridRows, gridColumns } = useGameSettings();
@@ -19,6 +21,8 @@ export const TileMap = () => {
     const playerAsset = use(playerAssetPromise);
     const collisionMap = use(collisionMapPromise);
     const assetsData = use(assetsPromise);
+
+    const { itemsMap } = useGenerateItems();
 
     const { location, facing } = usePlayerMovement( collisionMap, gridColumns, gridRows );
 
@@ -89,6 +93,26 @@ export const TileMap = () => {
             {locationMapData.map((entity: any) => (
                 <Entity key={entity.locationId} data={entity}/>
             ))}
+
+            {itemsMap.map((column, x) => (
+            
+            // Loop through Rows (Y) inside that column
+            column.map((itemId, y) => {
+                
+                // If empty (0), render nothing
+                if (itemId === 0) return null;
+
+                return (
+                    <Item 
+                        key={`item_${x}_${y}`}
+                        id={itemId}
+                        x={x + 1}
+                        y={y + 1}
+                        assets={assetsData} 
+                    />
+                );
+            })
+        ))}
 
             <Player data={playerAsset} location={location} facing={facing}/>
 

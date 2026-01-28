@@ -69,3 +69,22 @@ export interface GameConfigDTO {
   inventorySize: number;
   startingBalance: number;
 }
+
+// Pont DTO
+export interface PointDto {
+    x: number;
+    y: number;
+}
+
+// Spawn request DTO
+export interface SpawnRequestDto {
+    itemId: number;
+    currentAmount: number;
+    existingItemLocations: PointDto[];
+}
+
+// Spawn result DTO
+export interface SpawnResultDto {
+    success: boolean;
+    newItems: PointDto[];
+}

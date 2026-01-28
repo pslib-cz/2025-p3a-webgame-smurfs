@@ -38,5 +38,8 @@ namespace tiny_haven.Server.Models
 
         [InverseProperty("RewardItem")]
         public ICollection<Quest> RewardInQuests { get; set; }
+
+        [InverseProperty("Asset")]
+        public ICollection<ItemConfig> ItemConfigs { get; set; }
     }
 }

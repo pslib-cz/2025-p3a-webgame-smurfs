@@ -12,6 +12,8 @@ import { PlayerLocationProvider } from "../Contexts/PlayerLocationContext";
 import { DebugInfo } from "../Components/UI/DebugInfo";
 import { InteractionProvider } from "../Contexts/InteractionContext";
 import { InteractionButton } from "../Components/GameRender/InteractionButton"
+import { RandomItemProvider } from "../Contexts/RandomItemsContext";
+import GameLoader from "../Components/GameRender/GameLoader";
 
 export const MapDisplay = () => {
     return (
@@ -19,28 +21,33 @@ export const MapDisplay = () => {
             <ErrorBoundary FallbackComponent={ErrorFallback}>
                 <Suspense fallback={<p>Loading configuration...</p>}>
                     <GameSettingsProvider>
-                        <PlayerLocationProvider>
-                            <PlayerBalanceProvider>
-                                <InventoryProvider>
+                        <RandomItemProvider>
 
-                                    <InteractionProvider>
+                            <PlayerLocationProvider>
+                                <PlayerBalanceProvider>
+                                    <InventoryProvider>
 
-                                        <ErrorBoundary FallbackComponent={ErrorFallback}>
-                                            <Suspense fallback={<p>Loading...</p>}>
-                                                <TileMap/>
-                                                <InventoryBar/>
-                                                <BalanceDisplay/>
-                                                <DebugInfo/>
-                                            </Suspense>
-                                        </ErrorBoundary>
+                                        <InteractionProvider>
 
-                                        <InteractionButton />
+                                            <ErrorBoundary FallbackComponent={ErrorFallback}>
+                                                <Suspense fallback={<p>Loading...</p>}>
+                                                    <GameLoader/>
+                                                    <TileMap/>
+                                                    <InventoryBar/>
+                                                    <BalanceDisplay/>
+                                                    <DebugInfo/>
+                                                </Suspense>
+                                            </ErrorBoundary>
 
-                                    </InteractionProvider>
+                                            <InteractionButton />
 
-                                </InventoryProvider>
-                            </PlayerBalanceProvider>
-                        </PlayerLocationProvider>
+                                        </InteractionProvider>
+
+                                    </InventoryProvider>
+                                </PlayerBalanceProvider>
+                            </PlayerLocationProvider>
+
+                        </RandomItemProvider>
                     </GameSettingsProvider>
                 </Suspense>
             </ErrorBoundary>
