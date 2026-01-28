@@ -1,20 +1,52 @@
-import React, { createContext, useContext, useState } from 'react';
+import { createContext, use, useContext, useMemo, useState } from 'react';
 import { useGameSettings } from './GameSettingsContext'; 
-import { type SpawnRequestDto, type SpawnResultDto, type PointDto } from '../Types/database-types';
+import { type SpawnRequestDto, type SpawnResultDto, type PointDto, type AssetDTO, type RenderableItem } from '../Types/database-types';
+import { assetsPromise } from '../api/gameResources';
 
 interface RandomItemsContextType {
-    itemsMap: number[][]; 
+    itemsMap: number[][];
+    generatedItems: RenderableItem[];
     spawnItems: (itemId: number) => Promise<void>;
 }
 
 const RandomItemsContext = createContext<RandomItemsContextType | undefined>(undefined);
 
 export const RandomItemProvider = ({ children }: { children: React.ReactNode }) => {
+    const assets = use(assetsPromise);
     const { gridColumns, gridRows } = useGameSettings();
 
+    // Generate array
     const [itemsMap, setItemsMap] = useState<number[][]>(() => {
         return Array.from({ length: gridColumns }, () => Array(gridRows).fill(0));
     });
+
+    const generatedItems = useMemo(() => {
+        const list: RenderableItem[] = [];
+        
+        for (let x = 0; x < gridColumns; x++) {
+            for (let y = 0; y < gridRows; y++) {
+                const itemId = itemsMap[x][y];
+                
+                if (itemId > 0) {
+                    const asset = assets.find((a: AssetDTO) => a.assetId === itemId);
+                    
+                    if (asset) {
+                        list.push({
+                            id: `item_${x}_${y}`,
+                            x: x + 1,
+                            y: y + 1,
+                            assetId: itemId,
+                            name: asset.name,
+                            imageUrl: asset.imageUrl ?? "images/placeholder.svg",
+                            spanX: asset.spanX,
+                            spanY: asset.spanY
+                        });
+                    }
+                }
+            }
+        }
+        return list;
+    }, [itemsMap, assets, gridColumns, gridRows]);
 
     const spawnItems = async (itemId: number) => {
         let currentAmount = 0;
@@ -49,9 +81,10 @@ export const RandomItemProvider = ({ children }: { children: React.ReactNode }) 
             if (data.success && data.newItems.length > 0) {
                 setItemsMap(prev => {
                     const newMap = prev.map(col => [...col]); 
-                    data.newItems.forEach(pt => {
-                        if (pt.x >= 0 && pt.x < gridColumns && pt.y >= 0 && pt.y < gridRows) {
-                            newMap[pt.x][pt.y] = itemId;
+                    
+                    data.newItems.forEach((item: any) => {
+                        if (item.x >= 0 && item.x < gridColumns && item.y >= 0 && item.y < gridRows) {
+                            newMap[item.x][item.y] = item.assetId; 
                         }
                     });
                     return newMap;
@@ -63,7 +96,7 @@ export const RandomItemProvider = ({ children }: { children: React.ReactNode }) 
     };
 
     return (
-        <RandomItemsContext.Provider value={{ itemsMap, spawnItems }}>
+        <RandomItemsContext.Provider value={{ itemsMap, generatedItems, spawnItems }}>
             {children}
         </RandomItemsContext.Provider>
     );

@@ -22,7 +22,7 @@ export const TileMap = () => {
     const collisionMap = use(collisionMapPromise);
     const assetsData = use(assetsPromise);
 
-    const { itemsMap } = useGenerateItems();
+    const { generatedItems } = useGenerateItems();
 
     const { location, facing } = usePlayerMovement( collisionMap, gridColumns, gridRows );
 
@@ -94,29 +94,13 @@ export const TileMap = () => {
                 <Entity key={entity.locationId} data={entity}/>
             ))}
 
-            {itemsMap.map((column, x) => (
-            
-            // Loop through Rows (Y) inside that column
-            column.map((itemId, y) => {
-                
-                // If empty (0), render nothing
-                if (itemId === 0) return null;
-
-                return (
-                    <Item 
-                        key={`item_${x}_${y}`}
-                        id={itemId}
-                        x={x + 1}
-                        y={y + 1}
-                        assets={assetsData} 
-                    />
-                );
-            })
-        ))}
+            {generatedItems.map(item => (
+                <Item key={item.id} data={item}/>
+            ))}
 
             <Player data={playerAsset} location={location} facing={facing}/>
 
-            {collisionMap.map((row: Boolean[], y: number) => (
+            {/* {collisionMap.map((row: Boolean[], y: number) => (
                 row.map((collision: Boolean, x: number) => (
                     collision && (
                         <div key={`${x}-${y}`} style={{
@@ -128,7 +112,7 @@ export const TileMap = () => {
                        }} />
                     )
                 ))
-            ))}
+            ))} */}
 
             {/* //{activeInteraction && (
             <div

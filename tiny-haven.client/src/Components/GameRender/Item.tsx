@@ -1,24 +1,20 @@
-import type { AssetDTO } from "../../Types/database-types";
+import type { RenderableItem } from "../../Types/database-types";
 import style from "./Item.module.css"
 
 type ItemProps = {
-    id: number;
-    x: number;
-    y: number;
-    assets: AssetDTO[];
+    data: RenderableItem;
 }
 
-export const Item: React.FC<ItemProps> = ({ id, x, y, assets }) => {
-    const asset = assets.find(a => a.assetId == id)
+export const Item: React.FC<ItemProps> = ({ data }) => {
     
     return (
         <figure 
             className={style.entity}
             style={{
-                gridColumn: `${x} / span ${asset?.spanX}`,
-                gridRow: `${y} / span ${asset?.spanY}`
+                gridColumn: `${data.x} / span ${data.spanX}`,
+                gridRow: `${data.y} / span ${data.spanY}`
             }}>
-                <img src={asset?.imageUrl ?? "images/placeholder-image.svg"} alt={asset?.name} loading="lazy"/>
+                <img src={data.imageUrl ?? "images/game_assets/placeholder-image.svg"} alt={data.name} loading="lazy"/>
         </figure>
     )
 }

@@ -19,28 +19,17 @@ namespace tiny_haven.Server.Services
 
         public bool ShouldSpawn(int current, int max)
         {
-            double percent = (double)current / max;
-            double chance = 1.0;
+            if (max <= 0) return false;
 
-            if (percent >= 0.90) chance = 0.10;
-            else if (percent >= 0.80) chance = 0.20;
-            else if (percent >= 0.70) chance = 0.30;
-            else if (percent >= 0.60) chance = 0.40;
-            else if (percent >= 0.50) chance = 0.50;
-            else if (percent >= 0.40) chance = 0.60;
-            else if (percent >= 0.30) chance = 0.70;
-            else if (percent >= 0.20) chance = 0.80;
-            else if (percent >= 0.10) chance = 0.90;
-            else if (percent >= 0.0) chance = 1.0;
+            double percent = (double)current / max;
+            double chance = Math.Ceiling((1.0 - percent) * 10) / 10;
+
+            chance = Math.Clamp(chance, 0.1, 1.0);
 
             return _rng.NextDouble() < chance;
         }
 
-        public PointDto? FindValidLocation(
-            bool[][] collisionMap,
-            int[,] materialMap,
-            HashSet<(int, int)> occupiedCoords,
-            List<int> allowedTileIds)
+        public PointDto? FindValidLocation( bool[][] collisionMap, int[,] materialMap, HashSet<(int, int)> occupiedCoords, List<int> allowedTileIds)
         {
             int rows = _config.GetValue<int>("GameSettings:GridRows");
             int cols = _config.GetValue<int>("GameSettings:GridColumns");
@@ -51,15 +40,17 @@ namespace tiny_haven.Server.Services
                 int x = _rng.Next(0, cols);
                 int y = _rng.Next(0, rows);
 
+                // Out of bounds check
                 if (x >= cols || y >= rows) continue;
 
+                // Collision check
                 if (collisionMap[y][x]) continue;
 
-                int tileOnMap = materialMap[x, y];
-
-                if (allowedSet.Count > 0 && !allowedSet.Contains(tileOnMap))
+                // Material check
+                if (allowedSet.Count > 0 && !allowedSet.Contains(materialMap[x, y]))
                     continue;
 
+                // Occupied check
                 if (occupiedCoords.Contains((x, y))) continue;
 
                 return new PointDto { X = x, Y = y };

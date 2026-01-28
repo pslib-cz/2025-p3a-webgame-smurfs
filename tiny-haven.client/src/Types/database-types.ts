@@ -83,8 +83,26 @@ export interface SpawnRequestDto {
     existingItemLocations: PointDto[];
 }
 
+export type RenderableItem = {
+    id: string;
+    x: number;
+    y: number;
+    assetId: number;
+    name: string;
+    imageUrl: string;
+    spanX: number;
+    spanY: number;
+}
+
+// GeneratedItemDto
+export interface GeneratedItemDto {
+    x: number;
+    y: number;
+    asset: AssetDTO;
+}
+
 // Spawn result DTO
 export interface SpawnResultDto {
     success: boolean;
-    newItems: PointDto[];
+    newItems: GeneratedItemDto[];
 }

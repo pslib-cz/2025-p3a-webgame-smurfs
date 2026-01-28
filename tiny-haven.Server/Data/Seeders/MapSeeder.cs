@@ -3,7 +3,7 @@ using tiny_haven.Server.Data;
 using tiny_haven.Server.DTOs;
 using tiny_haven.Server.Models;
 
-namespace tiny_haven.Server.Services
+namespace tiny_haven.Server.Data.Seeders
 {
     public class MapSeederService
     {

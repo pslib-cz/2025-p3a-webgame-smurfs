@@ -86,31 +86,33 @@ namespace tiny_haven.Server.Controllers
         [HttpPost("generateItems")]
         public async Task<IActionResult> GenerateItems([FromBody] SpawnRequestDto request)
         {
+            // Retrieve item configuration
             var itemConfig = await _context.ItemConfigs.
                                             Where(i => i.AssetId == request.ItemId)
                                             .FirstOrDefaultAsync();
             if (itemConfig == null) return NotFound($"Item with AssetId {request.ItemId} not found.");
 
-            int targetCategoryId = itemConfig.AllowedMaterialId;
-
+            // Get allowed tile IDs for spawning
             var allowedTileIds = await _context.Materials
-                .Where(m => m.MaterialCategoryId == targetCategoryId)
+                .Where(m => m.MaterialCategoryId == itemConfig.AllowedMaterialId)
                 .Select(m => m.MaterialId)
                 .ToListAsync();
 
+            // Get maps
             var collisionMap = await _collisionMap.GetCollisionMapAsync();
             var materialMap = _materials.TileGrid;
 
+            // Prepare occupied locations set
             var occupiedSet = new HashSet<(int, int)>();
             foreach (var loc in request.ExistingItemLocations)
                 occupiedSet.Add((loc.X, loc.Y));
 
-            var newItems = new List<PointDto>();
+            // Generate new item locations
+            var newItems = new List<GeneratedItemDto>();
 
             for (int i = 0; i < (itemConfig.GeneratingLimit - request.CurrentAmount); i++)
             {
                 int projectedTotal = request.CurrentAmount + newItems.Count;
-
                 if (projectedTotal >= itemConfig.GeneratingLimit) break;
 
                 if (!_spawner.ShouldSpawn(projectedTotal, itemConfig.GeneratingLimit)) continue;
@@ -124,7 +126,14 @@ namespace tiny_haven.Server.Controllers
 
                 if (validCoord != null)
                 {
-                    newItems.Add(validCoord);
+                    var newItem = new GeneratedItemDto
+                    {
+                        X = validCoord.X,
+                        Y = validCoord.Y,
+                        AssetId = request.ItemId
+                    };
+
+                    newItems.Add(newItem);
                     occupiedSet.Add((validCoord.X, validCoord.Y));
                 }
             }
