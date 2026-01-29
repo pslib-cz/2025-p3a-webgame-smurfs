@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { LocationMapDTO } from "../../Types/database-types"
 import style from "./Entity.module.css"
 
@@ -5,7 +6,7 @@ type EntityProps = {
     data: LocationMapDTO;
 }
 
-export const Entity: React.FC<EntityProps> = ({ data }) => {
+export const Entity = memo(({ data }: EntityProps) => {
     return (
         <figure 
             className={style.entity}
@@ -16,5 +17,11 @@ export const Entity: React.FC<EntityProps> = ({ data }) => {
             }}>
                 <img src={data.imageUrl ?? "images/placeholder-image.svg"} alt={data.name} loading="lazy"/>
         </figure>
-    )
-}
+    );
+}, (prevProps, nextProps) => {
+    return (
+        prevProps.data.locationId === nextProps.data.locationId &&
+        prevProps.data.locationX === nextProps.data.locationX &&
+        prevProps.data.locationY === nextProps.data.locationY
+    );
+});

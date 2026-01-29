@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { RenderableItem } from "../../Types/database-types";
 import style from "./Item.module.css"
 
@@ -5,7 +6,7 @@ type ItemProps = {
     data: RenderableItem;
 }
 
-export const Item: React.FC<ItemProps> = ({ data }) => {
+export const Item = memo(({ data }: ItemProps) => {
     
     return (
         <figure 
@@ -17,4 +18,10 @@ export const Item: React.FC<ItemProps> = ({ data }) => {
                 <img src={data.imageUrl ?? "images/game_assets/placeholder-image.svg"} alt={data.name} loading="lazy"/>
         </figure>
     )
-}
+}, (prevProps, nextProps) => {
+    return (
+        prevProps.data.id === nextProps.data.id &&
+        prevProps.data.x === nextProps.data.x &&
+        prevProps.data.y === nextProps.data.y
+    );
+});

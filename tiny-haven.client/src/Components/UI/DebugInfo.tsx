@@ -21,7 +21,7 @@ export const DebugInfo = () => {
     }
 
     const Stone: AssetInventory = {
-        assetId: 3,
+        assetId: 8,
         imageUrl: "/images/game_assets/nature/stone.svg",
         name: "Stone"
     }
@@ -46,7 +46,7 @@ export const DebugInfo = () => {
                 <button onClick={() => addItemToInventory(Stone)}>+ Stone</button>
                 <button onClick={() => removeItemFromInventory(1)}>- Berry</button>
                 <button onClick={() => removeItemFromInventory(9)}>- Wood</button>
-                <button onClick={() => removeItemFromInventory(3)}>- Stone</button>
+                <button onClick={() => removeItemFromInventory(8)}>- Stone</button>
             </div>
 
             <div style={{

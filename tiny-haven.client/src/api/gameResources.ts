@@ -9,3 +9,6 @@ export const InteractionMapPromise = fetch("/api/map/interactions").then(x => x.
 // Fetch assets
 export const assetsPromise = fetch("/api/Assets").then(x => x.json());
 export const playerAssetPromise = fetch("/api/Assets/2").then(x => x.json());
+
+// Fetch quests
+export const questsPromise = fetch("api/Quests").then(x => x.json())

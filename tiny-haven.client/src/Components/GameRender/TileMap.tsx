@@ -6,13 +6,14 @@ import { STEP_TIME, ZOOM_LEVEL } from "../../Data/GameData";
 import { useGameSettings } from "../../Contexts/GameSettingsContext";
 import { useInventory } from "../../Contexts/InventoryContext";
 import { usePlayerBalance } from "../../Contexts/PlayerBalanceContext";
-import { collisionMapPromise, locationMapPromise, playerAssetPromise, InteractionMapPromise, assetsPromise } from "../../api/gameResources";
+import { collisionMapPromise, locationMapPromise, playerAssetPromise, assetsPromise } from "../../api/gameResources";
 import { usePlayerMovement } from "../../Hooks/usePlayerMovement"
 import { useInteractions } from "../../Hooks/useInteractions";
 import { useQuestActions } from "../../Hooks/useQuestActions";
 import { useInteractionContext } from "../../Contexts/InteractionContext";
 import { useGenerateItems } from "../../Contexts/RandomItemsContext";
 import { Item } from "./Item";
+import { useInteractionMap } from "../../Contexts/InteractionMapContext";
 
 export const TileMap = () => {
     const { tileSize, gridRows, gridColumns } = useGameSettings();
@@ -32,7 +33,7 @@ export const TileMap = () => {
     //---//
     //Interaction mapa
 
-    const interactions = use(InteractionMapPromise);
+    const { interactions } = useInteractionMap();
 
     const { setActiveInteraction } = useInteractionContext();
 
@@ -68,7 +69,7 @@ export const TileMap = () => {
       useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key.toLowerCase() === "e" && activeInteraction) {
-        handleQuest(activeInteraction.quest);
+        handleQuest(activeInteraction);
         }
     };
 

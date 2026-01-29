@@ -15,6 +15,7 @@ import { InteractionButton } from "../Components/GameRender/InteractionButton"
 import { RandomItemProvider } from "../Contexts/RandomItemsContext";
 import GameLoader from "../Components/GameRender/GameLoader";
 import { SuspenseFallback } from "../Components/Fallback/SuspenseFallback";
+import { InteractionMapProvider } from "../Contexts/InteractionMapContext";
 
 export const MapDisplay = () => {
     return (
@@ -24,29 +25,37 @@ export const MapDisplay = () => {
                     <GameSettingsProvider>
                         <RandomItemProvider>
 
-                            <PlayerLocationProvider>
-                                <PlayerBalanceProvider>
-                                    <InventoryProvider>
+                            <ErrorBoundary FallbackComponent={ErrorFallback}>
+                                <Suspense fallback={<SuspenseFallback message="Loading interactions..."/>}>
+                                    <InteractionMapProvider>
 
-                                        <InteractionProvider>
+                                        <PlayerLocationProvider>
+                                            <PlayerBalanceProvider>
+                                                <InventoryProvider>
 
-                                            <ErrorBoundary FallbackComponent={ErrorFallback}>
-                                                <Suspense fallback={<SuspenseFallback message="Loading assets..." />}>
-                                                    <GameLoader/>
-                                                    <TileMap/>
-                                                    <InventoryBar/>
-                                                    <BalanceDisplay/>
-                                                    <DebugInfo/>
-                                                </Suspense>
-                                            </ErrorBoundary>
+                                                    <InteractionProvider>
 
-                                            <InteractionButton />
+                                                        <ErrorBoundary FallbackComponent={ErrorFallback}>
+                                                            <Suspense fallback={<SuspenseFallback message="Loading assets..." />}>
+                                                                <GameLoader/>
+                                                                <TileMap/>
+                                                                <InventoryBar/>
+                                                                <BalanceDisplay/>
+                                                                <DebugInfo/>
+                                                            </Suspense>
+                                                        </ErrorBoundary>
 
-                                        </InteractionProvider>
+                                                        <InteractionButton />
 
-                                    </InventoryProvider>
-                                </PlayerBalanceProvider>
-                            </PlayerLocationProvider>
+                                                    </InteractionProvider>
+
+                                                </InventoryProvider>
+                                            </PlayerBalanceProvider>
+                                        </PlayerLocationProvider>
+
+                                    </InteractionMapProvider>
+                                </Suspense>
+                            </ErrorBoundary>
 
                         </RandomItemProvider>
                     </GameSettingsProvider>

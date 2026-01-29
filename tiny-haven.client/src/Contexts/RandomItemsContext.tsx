@@ -7,6 +7,7 @@ interface RandomItemsContextType {
     itemsMap: number[][];
     generatedItems: RenderableItem[];
     spawnItems: (itemId: number) => Promise<void>;
+    despawnItem: (x: number, y: number) => void;
 }
 
 const RandomItemsContext = createContext<RandomItemsContextType | undefined>(undefined);
@@ -95,8 +96,23 @@ export const RandomItemProvider = ({ children }: { children: React.ReactNode }) 
         }
     };
 
+    const despawnItem = (x: number, y: number) => {
+        setItemsMap(prev => {
+            const newMap = prev.map(col => [...col]);
+            
+            const targetX = x - 1; 
+            const targetY = y - 1;
+
+            if (newMap[targetX] && newMap[targetX][targetY] !== undefined) {
+                newMap[targetX][targetY] = 0;
+            }
+            
+            return newMap;
+        });
+    };
+
     return (
-        <RandomItemsContext.Provider value={{ itemsMap, generatedItems, spawnItems }}>
+        <RandomItemsContext.Provider value={{ itemsMap, generatedItems, spawnItems, despawnItem }}>
             {children}
         </RandomItemsContext.Provider>
     );
