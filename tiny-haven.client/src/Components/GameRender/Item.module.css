@@ -8,5 +8,7 @@
         object-fit: contain;
         object-position: center;
         display: block;
+
+        /* filter: drop-shadow(0 0 20px black); */
     }
 }

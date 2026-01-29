@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 using tiny_haven.Server.Data;
 using tiny_haven.Server.DTOs;
 using tiny_haven.Server.Models;
@@ -30,15 +31,14 @@ namespace tiny_haven.Server.Data.Seeders
 
             if (mapData == null) return;
 
+            // Lookup table for GID to AssetId
             var gidToAssetId = new Dictionary<uint, int>();
-
             foreach (var tileset in mapData.Tilesets)
             {
                 if (tileset.Tiles == null) continue;
                 foreach (var tile in tileset.Tiles)
                 {
                     uint globalId = (uint)(tileset.FirstGid + tile.Id);
-
                     var prop = tile.Properties?.FirstOrDefault(p => p.Name == "game ID");
                     if (prop != null && prop.Value.ValueKind == JsonValueKind.Number)
                     {
@@ -51,10 +51,12 @@ namespace tiny_haven.Server.Data.Seeders
             {
                 var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-                context.LocationMaps.RemoveRange(context.LocationMaps);
-                await context.SaveChangesAsync();
+                // Fetch existing LocationMap entries
+                var existingLocations = await context.LocationMaps
+                    .ToDictionaryAsync(x => x.LocationId);
 
-                var newLocations = new List<LocationMap>();
+                // Check existing IDs
+                var processedIds = new HashSet<int>();
 
                 foreach (var layer in mapData.Layers)
                 {
@@ -64,27 +66,61 @@ namespace tiny_haven.Server.Data.Seeders
                         {
                             uint cleanGid = obj.Gid & ROTATION_MASK;
 
-                            if (gidToAssetId.TryGetValue(cleanGid, out int assetId))
-                            {
-                                int gridX = (int)Math.Round(obj.X / mapData.TileWidth) + 1;
-                                int gridY = (int)Math.Round(obj.Y / mapData.TileHeight) + 1;
+                            if (!gidToAssetId.TryGetValue(cleanGid, out int assetId))
+                                continue;
 
-                                newLocations.Add(new LocationMap
+                            int tiledObjectId = obj.Id;
+                            processedIds.Add(tiledObjectId);
+
+                            // Convert pixel coordinates to grid coordinates
+                            int gridX = (int)Math.Round(obj.X / mapData.TileWidth) + 1;
+                            int gridY = (int)Math.Round(obj.Y / mapData.TileHeight) + 1;
+
+                            // Insert or Update
+                            if (existingLocations.TryGetValue(tiledObjectId, out var existingEntity))
+                            {
+                                // Update
+                                bool hasChanged = existingEntity.LocationX != gridX ||
+                                                  existingEntity.LocationY != gridY ||
+                                                  existingEntity.AssetId != assetId;
+
+                                if (hasChanged)
                                 {
+                                    existingEntity.LocationX = gridX;
+                                    existingEntity.LocationY = gridY;
+                                    existingEntity.AssetId = assetId;
+                                }
+                            }
+                            else
+                            {
+                                // Insert
+                                var newEntity = new LocationMap
+                                {
+                                    LocationId = tiledObjectId,
                                     AssetId = assetId,
                                     LocationX = gridX,
                                     LocationY = gridY
-                                });
+                                };
+                                context.LocationMaps.Add(newEntity);
                             }
                         }
                     }
                 }
 
-                if (newLocations.Any())
+                // Delet removed entries
+                var idsToDelete = existingLocations.Keys
+                    .Where(id => !processedIds.Contains(id))
+                    .ToList();
+
+                if (idsToDelete.Any())
                 {
-                    await context.LocationMaps.AddRangeAsync(newLocations);
-                    await context.SaveChangesAsync();
+                    var entitiesToDelete = existingLocations.Values
+                        .Where(e => idsToDelete.Contains(e.LocationId));
+
+                    context.LocationMaps.RemoveRange(entitiesToDelete);
                 }
+
+                await context.SaveChangesAsync();
             }
         }
     }

@@ -13,13 +13,15 @@ namespace tiny_haven.Server.Controllers
     {
         private readonly AppDbContext _context;
         private readonly ICollisionMap _collisionMap;
+        private readonly IObjectMap _objectMap;
         private readonly IMaterials _materials;
         private readonly ISpawningLogic _spawner;
 
-        public MapController(AppDbContext context, ICollisionMap collisionMap, IMaterials materials, ISpawningLogic spawner)
+        public MapController(AppDbContext context, ICollisionMap collisionMap, IObjectMap objectMap, IMaterials materials, ISpawningLogic spawner)
         {
             _context = context;
             _collisionMap = collisionMap;
+            _objectMap = objectMap;
             _materials = materials;
             _spawner = spawner;
         }
@@ -99,7 +101,7 @@ namespace tiny_haven.Server.Controllers
                 .ToListAsync();
 
             // Get maps
-            var collisionMap = await _collisionMap.GetCollisionMapAsync();
+            var objectMap = await _objectMap.GetObjectMapAsync();
             var materialMap = _materials.TileGrid;
 
             // Prepare occupied locations set
@@ -118,7 +120,7 @@ namespace tiny_haven.Server.Controllers
                 if (!_spawner.ShouldSpawn(projectedTotal, itemConfig.GeneratingLimit)) continue;
 
                 var validCoord = _spawner.FindValidLocation(
-                    collisionMap,
+                    objectMap,
                     materialMap,
                     occupiedSet,
                     allowedTileIds

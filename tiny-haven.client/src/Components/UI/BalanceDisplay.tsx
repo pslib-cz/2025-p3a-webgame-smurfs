@@ -1,4 +1,5 @@
 import { usePlayerBalance } from "../../Contexts/PlayerBalanceContext";
+import "../../styles/globals.css"
 import styles from "./BalanceDisplay.module.css";
 
 export const BalanceDisplay = () => {

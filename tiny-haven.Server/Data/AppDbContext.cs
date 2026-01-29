@@ -24,9 +24,12 @@ namespace tiny_haven.Server.Data
                 .HasForeignKey(q => q.NextQuestId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            //modelBuilder.Entity<Asset>()
-            //    .HasIndex(a => a.Name)
-            //    .IsUnique();
+            modelBuilder.Entity<LocationMap>(entity =>
+            {
+                entity.HasKey(e => e.LocationId);
+                entity.Property(e => e.LocationId)
+                      .ValueGeneratedNever();
+            });
         }
     }
 }

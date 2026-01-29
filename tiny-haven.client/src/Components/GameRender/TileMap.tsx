@@ -113,24 +113,6 @@ export const TileMap = () => {
                     )
                 ))
             ))} */}
-
-            {/* //{activeInteraction && (
-            <div
-                style={{
-                position: "absolute",
-                left: "50%",
-                bottom: "45%",
-                transform: "translateX(100%)",
-                background: "rgba(0,0,0,0.6)",
-                color: "white",
-                padding: "2px 4px",
-                borderRadius: "2px",
-                fontSize: "6px"
-                }}
-            >
-                <b>Press [ E ]</b>
-            </div>
-            )} */}
         </div>
     )
 }

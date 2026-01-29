@@ -16,6 +16,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<IMaterials, MaterialService>();
 builder.Services.AddTransient<MapSeederService>();
+builder.Services.AddScoped<IObjectMap, ObjectMap>();
 builder.Services.AddScoped<ICollisionMap, CollisionMap>();
 builder.Services.AddScoped<ISpawningLogic, SpawningLogic>();
 

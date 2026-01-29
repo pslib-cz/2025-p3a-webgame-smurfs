@@ -7,7 +7,7 @@ namespace tiny_haven.Server.Services
         bool ShouldSpawn(int currentAmount, int maxLimit);
 
         PointDto? FindValidLocation(
-            bool[][] collisionMap,
+            bool[][] objectMap,
             int[,] materialMap,
             HashSet<(int, int)> occupiedCoords,
             List<int> allowedTileIds

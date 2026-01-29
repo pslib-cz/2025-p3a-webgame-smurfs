@@ -45,9 +45,8 @@ namespace tiny_haven.Server.Services
 
             if (assetName == "house_red" || assetName == "house_blue")
             {
-                bool isEdgeX = (x == 0 || x == 1);
                 bool isEdgeY = (y == spanY - 1);
-                if (!(isEdgeX && isEdgeY)) return false;
+                if (!(isEdgeY)) return false;
             }
 
             return true;

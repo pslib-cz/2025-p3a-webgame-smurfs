@@ -29,7 +29,7 @@ namespace tiny_haven.Server.Services
             return _rng.NextDouble() < chance;
         }
 
-        public PointDto? FindValidLocation( bool[][] collisionMap, int[,] materialMap, HashSet<(int, int)> occupiedCoords, List<int> allowedTileIds)
+        public PointDto? FindValidLocation(bool[][] objectMap, int[,] materialMap, HashSet<(int, int)> occupiedCoords, List<int> allowedTileIds)
         {
             int rows = _config.GetValue<int>("GameSettings:GridRows");
             int cols = _config.GetValue<int>("GameSettings:GridColumns");
@@ -44,7 +44,7 @@ namespace tiny_haven.Server.Services
                 if (x >= cols || y >= rows) continue;
 
                 // Collision check
-                if (collisionMap[y][x]) continue;
+                if (objectMap[y][x]) continue;
 
                 // Material check
                 if (allowedSet.Count > 0 && !allowedSet.Contains(materialMap[x, y]))
