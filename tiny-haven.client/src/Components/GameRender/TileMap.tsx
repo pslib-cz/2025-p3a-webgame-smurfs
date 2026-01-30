@@ -4,9 +4,9 @@ import { Entity } from "./Entity";
 import { Player } from "./Player";
 import { STEP_TIME, ZOOM_LEVEL } from "../../Data/GameData";
 import { useGameSettings } from "../../Contexts/GameSettingsContext";
-import { useInventory } from "../../Contexts/InventoryContext";
-import { usePlayerBalance } from "../../Contexts/PlayerBalanceContext";
-import { collisionMapPromise, locationMapPromise, playerAssetPromise, assetsPromise } from "../../api/gameResources";
+//import { useInventory } from "../../Contexts/InventoryContext";
+//import { usePlayerBalance } from "../../Contexts/PlayerBalanceContext";
+import { collisionMapPromise, locationMapPromise, playerAssetPromise, InteractionMapPromise, assetsPromise } from "../../api/gameResources";
 import { usePlayerMovement } from "../../Hooks/usePlayerMovement"
 import { useInteractions } from "../../Hooks/useInteractions";
 import { useQuestActions } from "../../Hooks/useQuestActions";
@@ -27,8 +27,8 @@ export const TileMap = () => {
 
     const { location, facing } = usePlayerMovement( collisionMap, gridColumns, gridRows );
 
-    const playerInventory = useInventory();
-    const playerBalance = usePlayerBalance();
+    //const playerInventory = useInventory();
+    //const playerBalance = usePlayerBalance();
 
     //---//
     //Interaction mapa
