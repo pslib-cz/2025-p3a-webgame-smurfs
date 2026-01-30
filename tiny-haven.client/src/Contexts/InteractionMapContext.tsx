@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useMemo, use } from 'react';
 import { type InteractionMapDTO, type QuestDTO } from '../Types/database-types';
-import { useGenerateItems } from './RandomItemsContext'; 
+import { useRandomItems } from './RandomItemsContext'; 
 import { InteractionMapPromise, questsPromise } from '../api/gameResources';
 
 interface InteractionMapContextType {
@@ -13,7 +13,7 @@ export const InteractionMapProvider = ({ children }: { children: React.ReactNode
     const dbInteractions = use(InteractionMapPromise) as InteractionMapDTO[];
     const dbQuests = use(questsPromise) as QuestDTO[];
 
-    const { generatedItems } = useGenerateItems(); 
+    const { generatedItems } = useRandomItems(); 
 
     // Lookup AssetId to QuestId
     const itemToQuestLookup = useMemo(() => {

@@ -1,13 +1,13 @@
 import { useInventory } from "../Contexts/InventoryContext";
 import { usePlayerBalance } from "../Contexts/PlayerBalanceContext";
-import { useGenerateItems } from "../Contexts/RandomItemsContext";
+import { useRandomItems } from "../Contexts/RandomItemsContext";
 import type { AssetDTO, InteractionMapDTO } from "../Types/database-types";
 import type { AssetInventory } from "../Types/player-data";
 
 export const useQuestActions = (assets: AssetDTO[]) => {
   const { addItemToInventory } = useInventory();
   const { addToBalance } = usePlayerBalance();
-  const { despawnItem } = useGenerateItems();
+  const { despawnItem } = useRandomItems();
 
   const handleQuest = (interaction: InteractionMapDTO) => {
     const { quest } = interaction;

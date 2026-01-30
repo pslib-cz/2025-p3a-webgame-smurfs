@@ -8,7 +8,7 @@ type EntityProps = {
 
 export const Entity = memo(({ data }: EntityProps) => {
     return (
-        <figure 
+        <div 
             className={style.entity}
             style={{
                 gridColumn: `${data.locationX} / span ${data.spanX}`,
@@ -16,7 +16,7 @@ export const Entity = memo(({ data }: EntityProps) => {
                 zIndex: `calc(${data.locationY} + 10)`
             }}>
                 <img src={data.imageUrl ?? "images/placeholder-image.svg"} alt={data.name} loading="lazy"/>
-        </figure>
+        </div>
     );
 }, (prevProps, nextProps) => {
     return (

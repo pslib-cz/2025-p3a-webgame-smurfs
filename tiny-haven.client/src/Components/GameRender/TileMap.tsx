@@ -11,7 +11,7 @@ import { usePlayerMovement } from "../../Hooks/usePlayerMovement"
 import { useInteractions } from "../../Hooks/useInteractions";
 import { useQuestActions } from "../../Hooks/useQuestActions";
 import { useInteractionContext } from "../../Contexts/InteractionContext";
-import { useGenerateItems } from "../../Contexts/RandomItemsContext";
+import { useRandomItems } from "../../Contexts/RandomItemsContext";
 import { Item } from "./Item";
 import { useInteractionMap } from "../../Contexts/InteractionMapContext";
 
@@ -23,7 +23,7 @@ export const TileMap = () => {
     const collisionMap = use(collisionMapPromise);
     const assetsData = use(assetsPromise);
 
-    const { generatedItems } = useGenerateItems();
+    const { generatedItems } = useRandomItems();
 
     const { location, facing } = usePlayerMovement( collisionMap, gridColumns, gridRows );
 

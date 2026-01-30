@@ -9,14 +9,14 @@ type ItemProps = {
 export const Item = memo(({ data }: ItemProps) => {
     
     return (
-        <figure 
+        <div 
             className={style.entity}
             style={{
                 gridColumn: `${data.x} / span ${data.spanX}`,
                 gridRow: `${data.y} / span ${data.spanY}`
             }}>
                 <img src={data.imageUrl ?? "images/game_assets/placeholder-image.svg"} alt={data.name} loading="lazy"/>
-        </figure>
+        </div>
     )
 }, (prevProps, nextProps) => {
     return (

@@ -10,7 +10,11 @@ namespace tiny_haven.Server.Data.Seeders
             var categories = new[]
             {
                 new MaterialsCategories { MaterialsCategoriesId = 1, Name = "Water" },
-                new MaterialsCategories { MaterialsCategoriesId = 2, Name = "Dirt" },
+                new MaterialsCategories { MaterialsCategoriesId = 2, Name = "Grass" },
+                new MaterialsCategories { MaterialsCategoriesId = 3, Name = "Meadow" },
+                new MaterialsCategories { MaterialsCategoriesId = 4, Name = "Darkgrass" },
+                new MaterialsCategories { MaterialsCategoriesId = 5, Name = "Darkmeadow" },
+                new MaterialsCategories { MaterialsCategoriesId = 6, Name = "Stone" },
             };
 
             foreach (var category in categories)
@@ -42,14 +46,12 @@ namespace tiny_haven.Server.Data.Seeders
                 }
             }
 
-            await context.SaveChangesAsync();
-
-            var dirtMaterialIds = new[]
+            var grassMaterialIds = new[]
             {
-                6
+                6, 7, 8
             };
 
-            foreach (var id in dirtMaterialIds)
+            foreach (var id in grassMaterialIds)
             {
                 if (!await context.Materials.AnyAsync(m => m.MaterialId == id))
                 {
@@ -57,6 +59,74 @@ namespace tiny_haven.Server.Data.Seeders
                     {
                         MaterialId = id,
                         MaterialCategoryId = 2
+                    });
+                }
+            }
+
+            var meadowMaterialIds = new[]
+            {
+                1, 2, 3, 4
+            };
+
+            foreach (var id in meadowMaterialIds)
+            {
+                if (!await context.Materials.AnyAsync(m => m.MaterialId == id))
+                {
+                    context.Materials.Add(new Materials
+                    {
+                        MaterialId = id,
+                        MaterialCategoryId = 3
+                    });
+                }
+            }
+
+            var darkgrassMaterialIds = new[]
+            {
+                46
+            };
+
+            foreach (var id in darkgrassMaterialIds)
+            {
+                if (!await context.Materials.AnyAsync(m => m.MaterialId == id))
+                {
+                    context.Materials.Add(new Materials
+                    {
+                        MaterialId = id,
+                        MaterialCategoryId = 4
+                    });
+                }
+            }
+
+            var darkmeadowMaterialIds = new[]
+            {
+                68, 70
+            };
+
+            foreach (var id in darkmeadowMaterialIds)
+            {
+                if (!await context.Materials.AnyAsync(m => m.MaterialId == id))
+                {
+                    context.Materials.Add(new Materials
+                    {
+                        MaterialId = id,
+                        MaterialCategoryId = 5
+                    });
+                }
+            }
+
+            var stoneMaterialIds = new[]
+            {
+                33, 40
+            };
+
+            foreach (var id in stoneMaterialIds)
+            {
+                if (!await context.Materials.AnyAsync(m => m.MaterialId == id))
+                {
+                    context.Materials.Add(new Materials
+                    {
+                        MaterialId = id,
+                        MaterialCategoryId = 6
                     });
                 }
             }

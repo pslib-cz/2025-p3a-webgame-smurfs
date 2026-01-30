@@ -85,6 +85,27 @@ namespace tiny_haven.Server.Controllers
                             .ToListAsync();
         }
 
+        [HttpGet("materials")]
+        public async Task<ActionResult<int[,]>> GetMaterials()
+        {
+            var grid = _materials.TileGrid;
+            int width = grid.GetLength(0);
+            int height = grid.GetLength(1);
+
+            int[][] jaggedArray = new int[width][];
+
+            for (int x = 0; x < width; x++)
+            {
+                jaggedArray[x] = new int[height];
+                for (int y = 0; y < height; y++)
+                {
+                    jaggedArray[x][y] = grid[x, y];
+                }
+            }
+
+            return Ok(jaggedArray);
+        }
+
         [HttpPost("generateItems")]
         public async Task<IActionResult> GenerateItems([FromBody] SpawnRequestDto request)
         {

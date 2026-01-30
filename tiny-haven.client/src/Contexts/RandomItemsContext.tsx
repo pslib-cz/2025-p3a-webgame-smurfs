@@ -118,7 +118,7 @@ export const RandomItemProvider = ({ children }: { children: React.ReactNode }) 
     );
 };
 
-export const useGenerateItems = () => {
+export const useRandomItems = () => {
     const context = useContext(RandomItemsContext);
     if (!context) throw new Error("useGameMap must be used within GameMapProvider");
     return context;
