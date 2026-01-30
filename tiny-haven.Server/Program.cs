@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using tiny_haven.Server.Data;
+using tiny_haven.Server.Data.Seeders;
 using tiny_haven.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,9 +14,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 builder.Services.AddMemoryCache();
-builder.Services.AddScoped<MaterialService>();
+builder.Services.AddSingleton<IMaterials, MaterialService>();
 builder.Services.AddTransient<MapSeederService>();
+builder.Services.AddScoped<IObjectMap, ObjectMap>();
 builder.Services.AddScoped<ICollisionMap, CollisionMap>();
+builder.Services.AddScoped<ISpawningLogic, SpawningLogic>();
 
 var app = builder.Build();
 
@@ -33,7 +36,10 @@ using (var scope = app.Services.CreateScope())
     var seeder = scope.ServiceProvider.GetRequiredService<MapSeederService>();
     await seeder.SeedMapAsync();
 
-    var materials = scope.ServiceProvider.GetRequiredService<MaterialService>();
+    var materials = scope.ServiceProvider.GetRequiredService<IMaterials>();
+
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await MaterialSeeder.SeedAsync(context);
 }
 
 app.UseHttpsRedirection();

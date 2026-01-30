@@ -33,6 +33,7 @@
             bottom: 25%;
             transform: translateY(50%);
             z-index: 1;
+            color: var(--color);
 
             font-size: 1.2rem;
             text-shadow: 

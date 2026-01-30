@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using System.Diagnostics;
 using tiny_haven.Server.Data;
 
 namespace tiny_haven.Server.Services
@@ -9,11 +10,9 @@ namespace tiny_haven.Server.Services
         private readonly AppDbContext _context;
         private readonly IMemoryCache _cache;
         private readonly IConfiguration _config;
-        private readonly MaterialService _materialService;
+        private readonly IMaterials _materialService;
 
-        private readonly int[] _waterIds = { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 42, 43, 44 };
-
-        public CollisionMap(AppDbContext context, IMemoryCache cache, IConfiguration config, MaterialService materialService)
+        public CollisionMap(AppDbContext context, IMemoryCache cache, IConfiguration config, IMaterials materialService)
         {
             _context = context;
             _cache = cache;
@@ -37,12 +36,17 @@ namespace tiny_haven.Server.Services
 
         private bool IsCollisionTile(string assetName, int x, int y, int spanX, int spanY)
         {
-            if (assetName == "oak_tree")
+            if (assetName == "oak_tree" || assetName == "dark_tree" ||assetName == "spruce_tree")
             {
-                bool isEdgeX = (x == 0 || x == spanX - 1);
+                bool isEdgeX = (x == 1 || x == 2);
                 bool isEdgeY = (y == spanY - 1);
+                if (!(isEdgeX && isEdgeY)) return false;
+            }
 
-                if (isEdgeX && isEdgeY) return false;
+            if (assetName == "house_red" || assetName == "house_blue")
+            {
+                bool isEdgeY = (y == spanY - 1);
+                if (!(isEdgeY)) return false;
             }
 
             return true;
@@ -53,6 +57,11 @@ namespace tiny_haven.Server.Services
             int rows = _config.GetValue<int>("GameSettings:GridRows");
             int cols = _config.GetValue<int>("GameSettings:GridColumns");
 
+            var _waterIds = await _context.Materials
+                .Where(m => m.MaterialCategoryId == 1)
+                .Select(m => m.MaterialId)
+                .ToListAsync();
+
             bool[][] map = new bool[rows][];
             for (int i = 0; i < rows; i++) map[i] = new bool[cols];
 
@@ -60,9 +69,7 @@ namespace tiny_haven.Server.Services
             int maxCsvX = tileGrid.GetLength(0);
             int maxCsvY = tileGrid.GetLength(1);
 
-            DebugTileAt(72, 39);
-            DebugTileAt(74, 37);
-            DebugTileAt(80, 34);
+            DebugTileAt(50, 70);
 
             for (int y = 0; y < rows; y++)
             {
@@ -130,24 +137,16 @@ namespace tiny_haven.Server.Services
 
             // 3. Get the ID
             int foundId = grid[arrayX, arrayY];
-            bool isCollision = _waterIds.Contains(foundId);
 
             // 4. Print the Result
             Console.WriteLine($"\n🔍 --- DEBUG INSPECTOR [{gameX}, {gameY}] ---");
             Console.WriteLine($"   Array Index: [{arrayX}, {arrayY}]");
             Console.WriteLine($"   Tile ID Found: {foundId}");
 
-            if (isCollision)
-            {
-                Console.WriteLine($"   Status: ✅ BLOCKED (ID {foundId} is in your list)");
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"   Status: ⚠️ WALKABLE (ID {foundId} is missing!)");
-                Console.WriteLine($"   >>> ACTION: Add {foundId} to your _waterIds array.");
-                Console.ResetColor();
-            }
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"   Status: ⚠️ WALKABLE (ID {foundId} is missing!)");
+            Console.WriteLine($"   >>> ACTION: Add {foundId} to your _waterIds array.");
+            Console.ResetColor();
             Console.WriteLine("------------------------------------------\n");
         }
     }

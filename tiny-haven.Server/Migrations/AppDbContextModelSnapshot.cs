@@ -101,10 +101,33 @@ namespace tiny_haven.Server.Migrations
                     b.ToTable("InteractionMaps");
                 });
 
+            modelBuilder.Entity("tiny_haven.Server.Models.ItemConfig", b =>
+                {
+                    b.Property<int>("ItemConfigId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("AllowedMaterialId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("AssetId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("GeneratingLimit")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ItemConfigId");
+
+                    b.HasIndex("AllowedMaterialId");
+
+                    b.HasIndex("AssetId");
+
+                    b.ToTable("ItemConfigs");
+                });
+
             modelBuilder.Entity("tiny_haven.Server.Models.LocationMap", b =>
                 {
                     b.Property<int>("LocationId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("AssetId")
@@ -121,6 +144,37 @@ namespace tiny_haven.Server.Migrations
                     b.HasIndex("AssetId");
 
                     b.ToTable("LocationMaps");
+                });
+
+            modelBuilder.Entity("tiny_haven.Server.Models.Materials", b =>
+                {
+                    b.Property<int>("MaterialId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MaterialCategoryId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("MaterialId");
+
+                    b.HasIndex("MaterialCategoryId");
+
+                    b.ToTable("Materials");
+                });
+
+            modelBuilder.Entity("tiny_haven.Server.Models.MaterialsCategories", b =>
+                {
+                    b.Property<int>("MaterialsCategoriesId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("MaterialsCategoriesId");
+
+                    b.ToTable("MaterialsCategories");
                 });
 
             modelBuilder.Entity("tiny_haven.Server.Models.Quest", b =>
@@ -198,6 +252,25 @@ namespace tiny_haven.Server.Migrations
                     b.Navigation("Quest");
                 });
 
+            modelBuilder.Entity("tiny_haven.Server.Models.ItemConfig", b =>
+                {
+                    b.HasOne("tiny_haven.Server.Models.MaterialsCategories", "MaterialCategory")
+                        .WithMany("ItemConfigs")
+                        .HasForeignKey("AllowedMaterialId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("tiny_haven.Server.Models.Asset", "Asset")
+                        .WithMany("ItemConfigs")
+                        .HasForeignKey("AssetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Asset");
+
+                    b.Navigation("MaterialCategory");
+                });
+
             modelBuilder.Entity("tiny_haven.Server.Models.LocationMap", b =>
                 {
                     b.HasOne("tiny_haven.Server.Models.Asset", "Asset")
@@ -207,6 +280,17 @@ namespace tiny_haven.Server.Migrations
                         .IsRequired();
 
                     b.Navigation("Asset");
+                });
+
+            modelBuilder.Entity("tiny_haven.Server.Models.Materials", b =>
+                {
+                    b.HasOne("tiny_haven.Server.Models.MaterialsCategories", "Category")
+                        .WithMany("Materials")
+                        .HasForeignKey("MaterialCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("tiny_haven.Server.Models.Quest", b =>
@@ -233,6 +317,8 @@ namespace tiny_haven.Server.Migrations
 
             modelBuilder.Entity("tiny_haven.Server.Models.Asset", b =>
                 {
+                    b.Navigation("ItemConfigs");
+
                     b.Navigation("LocationMaps");
 
                     b.Navigation("RewardInQuests");
@@ -248,6 +334,13 @@ namespace tiny_haven.Server.Migrations
             modelBuilder.Entity("tiny_haven.Server.Models.LocationMap", b =>
                 {
                     b.Navigation("InteractionMaps");
+                });
+
+            modelBuilder.Entity("tiny_haven.Server.Models.MaterialsCategories", b =>
+                {
+                    b.Navigation("ItemConfigs");
+
+                    b.Navigation("Materials");
                 });
 
             modelBuilder.Entity("tiny_haven.Server.Models.Quest", b =>

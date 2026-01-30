@@ -40,6 +40,7 @@ namespace tiny_haven.Server.DTOs
 
     public class TiledObjectDto
     {
+        [JsonPropertyName("id")] public int Id { get; set; }
         [JsonPropertyName("gid")] public uint Gid { get; set; }
         [JsonPropertyName("x")] public double X { get; set; }
         [JsonPropertyName("y")] public double Y { get; set; }
