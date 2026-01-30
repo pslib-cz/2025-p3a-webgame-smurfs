@@ -12,6 +12,9 @@ namespace tiny_haven.Server.Data
         public DbSet<InteractionMap> InteractionMaps { get; set; }
         public DbSet<LocationMap> LocationMaps { get; set; }
         public DbSet<Quest> Quests { get; set; }
+        public DbSet<ItemConfig> ItemConfigs { get; set; }
+        public DbSet<MaterialsCategories> MaterialsCategories { get; set; }
+        public DbSet<Materials> Materials { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -21,9 +24,12 @@ namespace tiny_haven.Server.Data
                 .HasForeignKey(q => q.NextQuestId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            //modelBuilder.Entity<Asset>()
-            //    .HasIndex(a => a.Name)
-            //    .IsUnique();
+            modelBuilder.Entity<LocationMap>(entity =>
+            {
+                entity.HasKey(e => e.LocationId);
+                entity.Property(e => e.LocationId)
+                      .ValueGeneratedNever();
+            });
         }
     }
 }

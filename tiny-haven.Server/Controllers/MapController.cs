@@ -13,11 +13,17 @@ namespace tiny_haven.Server.Controllers
     {
         private readonly AppDbContext _context;
         private readonly ICollisionMap _collisionMap;
+        private readonly IObjectMap _objectMap;
+        private readonly IMaterials _materials;
+        private readonly ISpawningLogic _spawner;
 
-        public MapController(AppDbContext context, ICollisionMap collisionMap)
+        public MapController(AppDbContext context, ICollisionMap collisionMap, IObjectMap objectMap, IMaterials materials, ISpawningLogic spawner)
         {
             _context = context;
             _collisionMap = collisionMap;
+            _objectMap = objectMap;
+            _materials = materials;
+            _spawner = spawner;
         }
 
         // GET: api/map/locations
@@ -77,6 +83,85 @@ namespace tiny_haven.Server.Controllers
                                 }
                             })
                             .ToListAsync();
+        }
+
+        [HttpGet("materials")]
+        public async Task<ActionResult<int[,]>> GetMaterials()
+        {
+            var grid = _materials.TileGrid;
+            int width = grid.GetLength(0);
+            int height = grid.GetLength(1);
+
+            int[][] jaggedArray = new int[width][];
+
+            for (int x = 0; x < width; x++)
+            {
+                jaggedArray[x] = new int[height];
+                for (int y = 0; y < height; y++)
+                {
+                    jaggedArray[x][y] = grid[x, y];
+                }
+            }
+
+            return Ok(jaggedArray);
+        }
+
+        [HttpPost("generateItems")]
+        public async Task<IActionResult> GenerateItems([FromBody] SpawnRequestDto request)
+        {
+            // Retrieve item configuration
+            var itemConfig = await _context.ItemConfigs.
+                                            Where(i => i.AssetId == request.ItemId)
+                                            .FirstOrDefaultAsync();
+            if (itemConfig == null) return NotFound($"Item with AssetId {request.ItemId} not found.");
+
+            // Get allowed tile IDs for spawning
+            var allowedTileIds = await _context.Materials
+                .Where(m => m.MaterialCategoryId == itemConfig.AllowedMaterialId)
+                .Select(m => m.MaterialId)
+                .ToListAsync();
+
+            // Get maps
+            var objectMap = await _objectMap.GetObjectMapAsync();
+            var materialMap = _materials.TileGrid;
+
+            // Prepare occupied locations set
+            var occupiedSet = new HashSet<(int, int)>();
+            foreach (var loc in request.ExistingItemLocations)
+                occupiedSet.Add((loc.X, loc.Y));
+
+            // Generate new item locations
+            var newItems = new List<GeneratedItemDto>();
+
+            for (int i = 0; i < (itemConfig.GeneratingLimit - request.CurrentAmount); i++)
+            {
+                int projectedTotal = request.CurrentAmount + newItems.Count;
+                if (projectedTotal >= itemConfig.GeneratingLimit) break;
+
+                if (!_spawner.ShouldSpawn(projectedTotal, itemConfig.GeneratingLimit)) continue;
+
+                var validCoord = _spawner.FindValidLocation(
+                    objectMap,
+                    materialMap,
+                    occupiedSet,
+                    allowedTileIds
+                );
+
+                if (validCoord != null)
+                {
+                    var newItem = new GeneratedItemDto
+                    {
+                        X = validCoord.X,
+                        Y = validCoord.Y,
+                        AssetId = request.ItemId
+                    };
+
+                    newItems.Add(newItem);
+                    occupiedSet.Add((validCoord.X, validCoord.Y));
+                }
+            }
+
+            return Ok(new { Success = newItems.Count > 0, NewItems = newItems });
         }
     }
 }

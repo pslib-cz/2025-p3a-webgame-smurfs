@@ -11,6 +11,9 @@ import { usePlayerMovement } from "../../Hooks/usePlayerMovement"
 import { useInteractions } from "../../Hooks/useInteractions";
 import { useQuestActions } from "../../Hooks/useQuestActions";
 import { useInteractionContext } from "../../Contexts/InteractionContext";
+import { useRandomItems } from "../../Contexts/RandomItemsContext";
+import { Item } from "./Item";
+import { useInteractionMap } from "../../Contexts/InteractionMapContext";
 
 export const TileMap = () => {
     const { tileSize, gridRows, gridColumns } = useGameSettings();
@@ -20,6 +23,8 @@ export const TileMap = () => {
     const collisionMap = use(collisionMapPromise);
     const assetsData = use(assetsPromise);
 
+    const { generatedItems } = useRandomItems();
+
     const { location, facing } = usePlayerMovement( collisionMap, gridColumns, gridRows );
 
     //const playerInventory = useInventory();
@@ -28,7 +33,7 @@ export const TileMap = () => {
     //---//
     //Interaction mapa
 
-    const interactions = use(InteractionMapPromise);
+    const { interactions } = useInteractionMap();
 
     const { setActiveInteraction } = useInteractionContext();
 
@@ -64,7 +69,7 @@ export const TileMap = () => {
       useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key.toLowerCase() === "e" && activeInteraction) {
-        handleQuest(activeInteraction.quest);
+        handleQuest(activeInteraction);
         }
     };
 
@@ -90,9 +95,13 @@ export const TileMap = () => {
                 <Entity key={entity.locationId} data={entity}/>
             ))}
 
+            {generatedItems.map(item => (
+                <Item key={item.id} data={item}/>
+            ))}
+
             <Player data={playerAsset} location={location} facing={facing}/>
 
-            {collisionMap.map((row: Boolean[], y: number) => (
+            {/* {collisionMap.map((row: Boolean[], y: number) => (
                 row.map((collision: Boolean, x: number) => (
                     collision && (
                         <div key={`${x}-${y}`} style={{
@@ -104,25 +113,7 @@ export const TileMap = () => {
                        }} />
                     )
                 ))
-            ))}
-
-            {/* //{activeInteraction && (
-            <div
-                style={{
-                position: "absolute",
-                left: "50%",
-                bottom: "45%",
-                transform: "translateX(100%)",
-                background: "rgba(0,0,0,0.6)",
-                color: "white",
-                padding: "2px 4px",
-                borderRadius: "2px",
-                fontSize: "6px"
-                }}
-            >
-                <b>Press [ E ]</b>
-            </div>
-            )} */}
+            ))} */}
         </div>
     )
 }

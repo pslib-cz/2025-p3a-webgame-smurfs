@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import styles from "./Game.module.css"
-import ErrorFallback from "../Components/GameRender/FetchFallback"
+import ErrorFallback from "../Components/Fallback/FetchFallback"
 import { ErrorBoundary } from 'react-error-boundary';
 import { TileMap } from "../Components/GameRender/TileMap";
 import { GameSettingsProvider } from "../Contexts/GameSettingsContext";
@@ -12,35 +12,52 @@ import { PlayerLocationProvider } from "../Contexts/PlayerLocationContext";
 import { DebugInfo } from "../Components/UI/DebugInfo";
 import { InteractionProvider } from "../Contexts/InteractionContext";
 import { InteractionButton } from "../Components/GameRender/InteractionButton"
+import { RandomItemProvider } from "../Contexts/RandomItemsContext";
+import GameLoader from "../Components/GameRender/GameLoader";
+import { SuspenseFallback } from "../Components/Fallback/SuspenseFallback";
+import { InteractionMapProvider } from "../Contexts/InteractionMapContext";
 
 export const MapDisplay = () => {
     return (
         <div className={styles.mapDisplay}>
             <ErrorBoundary FallbackComponent={ErrorFallback}>
-                <Suspense fallback={<p>Loading configuration...</p>}>
+                <Suspense fallback={<SuspenseFallback message="Loading configuration..." />}>
                     <GameSettingsProvider>
-                        <PlayerLocationProvider>
-                            <PlayerBalanceProvider>
-                                <InventoryProvider>
+                        <RandomItemProvider>
 
-                                    <InteractionProvider>
+                            <ErrorBoundary FallbackComponent={ErrorFallback}>
+                                <Suspense fallback={<SuspenseFallback message="Loading interactions..."/>}>
+                                    <InteractionMapProvider>
 
-                                        <ErrorBoundary FallbackComponent={ErrorFallback}>
-                                            <Suspense fallback={<p>Loading...</p>}>
-                                                <TileMap/>
-                                                <InventoryBar/>
-                                                <BalanceDisplay/>
-                                                <DebugInfo/>
-                                            </Suspense>
-                                        </ErrorBoundary>
+                                        <PlayerLocationProvider>
+                                            <PlayerBalanceProvider>
+                                                <InventoryProvider>
 
-                                        <InteractionButton />
+                                                    <InteractionProvider>
 
-                                    </InteractionProvider>
+                                                        <ErrorBoundary FallbackComponent={ErrorFallback}>
+                                                            <Suspense fallback={<SuspenseFallback message="Loading assets..." />}>
+                                                                <GameLoader/>
+                                                                <TileMap/>
+                                                                <InventoryBar/>
+                                                                <BalanceDisplay/>
+                                                                <DebugInfo/>
+                                                            </Suspense>
+                                                        </ErrorBoundary>
 
-                                </InventoryProvider>
-                            </PlayerBalanceProvider>
-                        </PlayerLocationProvider>
+                                                        <InteractionButton />
+
+                                                    </InteractionProvider>
+
+                                                </InventoryProvider>
+                                            </PlayerBalanceProvider>
+                                        </PlayerLocationProvider>
+
+                                    </InteractionMapProvider>
+                                </Suspense>
+                            </ErrorBoundary>
+
+                        </RandomItemProvider>
                     </GameSettingsProvider>
                 </Suspense>
             </ErrorBoundary>
