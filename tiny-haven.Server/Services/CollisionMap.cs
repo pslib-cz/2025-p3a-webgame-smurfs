@@ -43,9 +43,9 @@ namespace tiny_haven.Server.Services
                 if (!(isEdgeX && isEdgeY)) return false;
             }
 
-            if (assetName == "house_red" || assetName == "house_blue")
+            if (assetName == "house_red" || assetName == "house_blue" || assetName == "house_yellow")
             {
-                bool isEdgeY = (y == spanY - 1);
+                bool isEdgeY = (y == spanY - 1 || y == spanY - 2);
                 if (!(isEdgeY)) return false;
             }
 
@@ -59,6 +59,11 @@ namespace tiny_haven.Server.Services
 
             var _waterIds = await _context.Materials
                 .Where(m => m.MaterialCategoryId == 1)
+                .Select(m => m.MaterialId)
+                .ToListAsync();
+
+            var _wallIds = await _context.Materials
+                .Where(m => m.MaterialCategoryId == 7)
                 .Select(m => m.MaterialId)
                 .ToListAsync();
 
@@ -79,7 +84,7 @@ namespace tiny_haven.Server.Services
                     {
                         int tileId = tileGrid[x, y];
 
-                        if (_waterIds.Contains(tileId))
+                        if (_waterIds.Contains(tileId) || _wallIds.Contains(tileId))
                         {
                             map[y][x] = true;
                         }

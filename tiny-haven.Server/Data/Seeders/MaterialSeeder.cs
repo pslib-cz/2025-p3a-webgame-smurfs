@@ -15,6 +15,7 @@ namespace tiny_haven.Server.Data.Seeders
                 new MaterialsCategories { MaterialsCategoriesId = 4, Name = "Darkgrass" },
                 new MaterialsCategories { MaterialsCategoriesId = 5, Name = "Darkmeadow" },
                 new MaterialsCategories { MaterialsCategoriesId = 6, Name = "Stone" },
+                new MaterialsCategories { MaterialsCategoriesId = 7, Name = "Wall" }
             };
 
             foreach (var category in categories)
@@ -31,7 +32,7 @@ namespace tiny_haven.Server.Data.Seeders
             var waterMaterialIds = new[]
             {
                 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-                20, 21, 22, 23, 24, 25, 26, 27, 28, 43, 44, 45
+                20, 21, 22, 23, 24, 25, 26, 27, 28, 43, 44, 45, 90
             };
 
             foreach (var id in waterMaterialIds)
@@ -127,6 +128,23 @@ namespace tiny_haven.Server.Data.Seeders
                     {
                         MaterialId = id,
                         MaterialCategoryId = 6
+                    });
+                }
+            }
+
+            var wallMaterialIds = new[]
+            {
+                78, 75, 81, 84, 83, 77, 76, 94, 95, 96
+            };
+
+            foreach (var id in wallMaterialIds)
+            {
+                if (!await context.Materials.AnyAsync(m => m.MaterialId == id))
+                {
+                    context.Materials.Add(new Materials
+                    {
+                        MaterialId = id,
+                        MaterialCategoryId = 7
                     });
                 }
             }
