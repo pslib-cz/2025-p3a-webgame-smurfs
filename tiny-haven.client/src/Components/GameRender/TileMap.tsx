@@ -14,6 +14,8 @@ import { useInteractionContext } from "../../Contexts/InteractionContext";
 import { useRandomItems } from "../../Contexts/RandomItemsContext";
 import { Item } from "./Item";
 import { useInteractionMap } from "../../Contexts/InteractionMapContext";
+import { useQuest } from "../../Contexts/QuestContext";
+import { useQuestProgress } from "../../Hooks/useQuestProgress"
 
 export const TileMap = () => {
     const { tileSize, gridRows, gridColumns } = useGameSettings();
@@ -30,7 +32,6 @@ export const TileMap = () => {
     //const playerInventory = useInventory();
     //const playerBalance = usePlayerBalance();
 
-    //---//
     //Interaction mapa
 
     const { interactions } = useInteractionMap();
@@ -49,7 +50,7 @@ export const TileMap = () => {
 
       useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-          if (e.key.toLowerCase() === "e" && activeInteraction) {
+          if (e.key.toLowerCase() === "e" && activeInteraction?.quest) {
             console.log("Spouštím quest:", activeInteraction.quest.name);
             // tady později fetch na backend
           }
@@ -77,7 +78,13 @@ export const TileMap = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
     }, [activeInteraction]);
 
-    //---//
+
+    // spuštění questu
+
+    const { startQuest } = useQuest();
+
+    useQuestProgress();
+
 
     const pixelX = location.x * tileSize;
     const pixelY = location.y * tileSize;

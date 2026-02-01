@@ -3,14 +3,16 @@ import { usePlayerBalance } from "../Contexts/PlayerBalanceContext";
 import { useRandomItems } from "../Contexts/RandomItemsContext";
 import type { AssetDTO, InteractionMapDTO } from "../Types/database-types";
 import type { AssetInventory } from "../Types/player-data";
+import { useQuest } from "../Contexts/QuestContext";
 
 export const useQuestActions = (assets: AssetDTO[]) => {
-  const { addItemToInventory } = useInventory();
+  const { addItemToInventory, removeItemFromInventory, getItemAmount } = useInventory();
   const { addToBalance } = usePlayerBalance();
   const { despawnItem } = useRandomItems();
+  const { activeQuest, startQuest, finishQuest } = useQuest();
 
   const handleQuest = (interaction: InteractionMapDTO) => {
-    const { quest } = interaction;
+    const quest = interaction.quest;
 
     if (quest.type === "pickup_item") {
       if (!quest.rewardItemId) return false;
@@ -41,6 +43,35 @@ export const useQuestActions = (assets: AssetDTO[]) => {
       if (interaction.interactionId < 0) {
           despawnItem(interaction.locationX, interaction.locationY);
       }
+
+      // return quest
+
+      if (!activeQuest) {
+        startQuest(quest);
+        return;
+      }
+
+      if (
+        activeQuest.type === "RETURN" &&
+        quest.id === activeQuest.id
+      ) {
+        const amount = getItemAmount(activeQuest.requiredItemId);
+  
+        if (amount < activeQuest.requiredAmount) {
+          console.log("Nemáš dost itemů");
+          return;
+        }
+  
+        removeItemFromInventory(
+          activeQuest.requiredItemId,
+          activeQuest.requiredAmount
+        );
+  
+        addToBalance(activeQuest.rewardMoney);
+        finishQuest();
+        return;
+      }
+      console.log("Tenhle quest teď není aktivní");
 
       return true;
     }
