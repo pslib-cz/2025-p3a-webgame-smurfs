@@ -17,8 +17,8 @@ export const ActiveQuest = () => {
     }}>
       <strong>Aktivní quest</strong>
       <div>
-        Přines {activeQuest.npcName}{" "}
-        {activeQuest.requiredAmount}× item
+        Přines {activeQuest.wantedItemId}{" "}
+        {activeQuest.itemQuantity}×
       </div>
     </div>
   );

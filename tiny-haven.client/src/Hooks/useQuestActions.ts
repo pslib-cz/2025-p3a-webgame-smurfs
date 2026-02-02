@@ -6,6 +6,7 @@ import type { AssetInventory } from "../Types/player-data";
 import { useQuest } from "../Contexts/QuestContext";
 import { use, useEffect } from "react";
 import { assetsPromise } from "../api/gameResources";
+import { useInteractionMap } from "../Contexts/InteractionMapContext";
 
 export const useQuestActions = (assets: AssetDTO[]) => {
   const { addItemToInventory, removeItemFromInventory, getItemAmount } = useInventory();
@@ -13,6 +14,7 @@ export const useQuestActions = (assets: AssetDTO[]) => {
   const { despawnItem } = useRandomItems();
   const { activeQuest, startQuest, finishQuest } = useQuest();
   const assetsData = use(assetsPromise);
+  const { interactions } = useInteractionMap();
 
   const handleQuest = (interaction: InteractionMapDTO) => {
     const quest = interaction.quest;
@@ -50,26 +52,26 @@ export const useQuestActions = (assets: AssetDTO[]) => {
     useEffect(() => {
       if (!activeQuest) return;
 
-      if (activeQuest.type !== "quest_start") return;
+      if (activeQuest.type === "quest_start" && activeQuest.wantedItemId && activeQuest.itemQuantity) {
 
-      const amount = getItemAmount(activeQuest.wantedItemId);
+        const amount = getItemAmount(activeQuest.wantedItemId);
 
-      if (amount >= activeQuest.) {
-        // Collect quest splněn
-        finishQuest();
+        if (amount >= activeQuest.itemQuantity) {
+          finishQuest();
 
-        // Spuštění next questu (RETURN)
-        if (activeQuest.nextQuestId) {
-          const nextInteraction = interactions.find(
-            i => i.quest.id === activeQuest.nextQuestId
-          );
+          // Spuštění next questu (quest_end)
+          if (activeQuest.nextQuestId) {
+            const nextInteraction = interactions.find(
+              i => i.quest.questId === activeQuest.nextQuestId
+            );
 
           if (nextInteraction) {
             startQuest(nextInteraction.quest);
           }
         }
       }
-    }, [activeQuest, getItemAmount]);
+    } [activeQuest, getItemAmount]})
+
 
     // return quest
 
@@ -114,9 +116,6 @@ export const useQuestActions = (assets: AssetDTO[]) => {
     console.log("Tenhle quest teď není aktivní");
 
     return true;
-
-    console.warn("Unknown quest type:", quest.type);
-    return false;
   };
 
   return { handleQuest };
