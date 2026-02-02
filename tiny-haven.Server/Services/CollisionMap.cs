@@ -36,7 +36,7 @@ namespace tiny_haven.Server.Services
 
         private bool IsCollisionTile(string assetName, int x, int y, int spanX, int spanY)
         {
-            if (assetName == "oak_tree" || assetName == "dark_tree" ||assetName == "spruce_tree")
+            if (assetName == "oak_tree" || assetName == "dark_tree" || assetName == "spruce_tree" || assetName == "leafless_tree")
             {
                 bool isEdgeX = (x == 1 || x == 2);
                 bool isEdgeY = (y == spanY - 1);

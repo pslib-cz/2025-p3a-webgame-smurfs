@@ -7,5 +7,7 @@
         object-fit: contain;
         object-position: center;
         display: block;
+
+        image-rendering: pixelated;
     }
 }

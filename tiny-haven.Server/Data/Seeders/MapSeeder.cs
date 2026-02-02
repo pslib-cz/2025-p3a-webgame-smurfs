@@ -10,13 +10,21 @@ namespace tiny_haven.Server.Data.Seeders
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IWebHostEnvironment _env;
+        private readonly AppDbContext _context;
         private const uint ROTATION_MASK = 0x1FFFFFFF;
 
-        public MapSeederService(IServiceProvider serviceProvider, IWebHostEnvironment env)
+        public MapSeederService(IServiceProvider serviceProvider, IWebHostEnvironment env, AppDbContext context)
         {
             _serviceProvider = serviceProvider;
             _env = env;
+            _context = context;
         }
+
+        private bool IsVisibleTile(int assetId)
+        {
+            var asset = _context.Assets.Where(a => a.AssetId == assetId).FirstOrDefault();
+            return asset.Visible;
+        }  
 
         public async Task SeedMapAsync()
         {
@@ -67,6 +75,10 @@ namespace tiny_haven.Server.Data.Seeders
                             uint cleanGid = obj.Gid & ROTATION_MASK;
 
                             if (!gidToAssetId.TryGetValue(cleanGid, out int assetId))
+                                continue;
+
+                            // Check if the asset is visible
+                            if (!IsVisibleTile(assetId))
                                 continue;
 
                             int tiledObjectId = obj.Id;

@@ -9,13 +9,14 @@ import { InventoryBar } from "../Components/UI/InventoryBar";
 import { PlayerBalanceProvider } from "../Contexts/PlayerBalanceContext";
 import { BalanceDisplay } from "../Components/UI/BalanceDisplay";
 import { PlayerLocationProvider } from "../Contexts/PlayerLocationContext";
-import { DebugInfo } from "../Components/UI/DebugInfo";
+// import { DebugInfo } from "../Components/UI/DebugInfo";
 import { InteractionProvider } from "../Contexts/InteractionContext";
 import { InteractionButton } from "../Components/GameRender/InteractionButton"
 import { RandomItemProvider } from "../Contexts/RandomItemsContext";
 import GameLoader from "../Components/GameRender/GameLoader";
 import { SuspenseFallback } from "../Components/Fallback/SuspenseFallback";
 import { InteractionMapProvider } from "../Contexts/InteractionMapContext";
+import { CoordinatesDisplay } from "../Components/UI/CoordinatesDisplay";
 
 export const MapDisplay = () => {
     return (
@@ -41,7 +42,8 @@ export const MapDisplay = () => {
                                                                 <TileMap/>
                                                                 <InventoryBar/>
                                                                 <BalanceDisplay/>
-                                                                <DebugInfo/>
+                                                                {/* <DebugInfo/> */}
+                                                                <CoordinatesDisplay/>
                                                             </Suspense>
                                                         </ErrorBoundary>
 

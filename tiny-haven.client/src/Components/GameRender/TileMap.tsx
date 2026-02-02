@@ -100,20 +100,6 @@ export const TileMap = () => {
             ))}
 
             <Player data={playerAsset} location={location} facing={facing}/>
-
-            {collisionMap.map((row: Boolean[], y: number) => (
-                row.map((collision: Boolean, x: number) => (
-                    collision && (
-                        <div key={`${x}-${y}`} style={{
-                            gridColumn: x + 1,
-                            gridRow: y + 1,
-                            background: 'rgba(255, 0, 0, 0.2)',
-                            border: "1px solid rgba(255, 0, 0, 0.3)",
-                            zIndex: 999
-                       }} />
-                    )
-                ))
-            ))}
         </div>
     )
 }
