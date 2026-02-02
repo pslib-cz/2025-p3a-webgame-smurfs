@@ -38,44 +38,40 @@ export const TileMap = () => {
 
     const { setActiveInteraction } = useInteractionContext();
 
-    const activeInteraction = useInteractions(
-    location.x,
-    location.y,
-    interactions
-    );
+    const activeInteraction = useInteractions(location.x, location.y, interactions);
 
     useEffect(() => {
-    setActiveInteraction(activeInteraction);
+        setActiveInteraction(activeInteraction);
     }, [activeInteraction]);
 
-      useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-          if (e.key.toLowerCase() === "e" && activeInteraction?.quest) {
-            console.log("Spouštím quest:", activeInteraction.quest.name);
-            // tady později fetch na backend
-          }
-        };
-      
-        window.addEventListener("keydown", handleKeyDown);
-        return () => window.removeEventListener("keydown", handleKeyDown);
-      }, [activeInteraction]);
-
-
-      const { handleQuest } = useQuestActions(assetsData);
-
-
-      // ..........Pickup item........... //
-
-
-      useEffect(() => {
+    useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key.toLowerCase() === "e" && activeInteraction) {
-        handleQuest(activeInteraction);
+        if (e.key.toLowerCase() === "e" && activeInteraction?.quest) {
+        console.log("Spouštím quest:", activeInteraction.quest.name);
+        // tady později fetch na backend
         }
     };
-
+    
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [activeInteraction]);
+
+
+    const { handleQuest } = useQuestActions(assetsData);
+
+
+    // ..........Pickup item........... //
+
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key.toLowerCase() === "e" && activeInteraction) {
+            handleQuest(activeInteraction);
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
     }, [activeInteraction]);
 
 
