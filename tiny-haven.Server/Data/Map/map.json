@@ -116,6 +116,7 @@
         {
          "draworder":"topdown",
          "id":5,
+         "locked":true,
          "name":"Assets",
          "objects":[
                 {
@@ -11815,7 +11816,7 @@
                  "imagewidth":48,
                  "properties":[
                         {
-                         "name":"Game ID",
+                         "name":"game ID",
                          "type":"int",
                          "value":10
                         }]
@@ -11827,7 +11828,7 @@
                  "imagewidth":48,
                  "properties":[
                         {
-                         "name":"Game ID",
+                         "name":"game ID",
                          "type":"int",
                          "value":11
                         }]
@@ -11839,7 +11840,7 @@
                  "imagewidth":48,
                  "properties":[
                         {
-                         "name":"Game ID",
+                         "name":"game ID",
                          "type":"int",
                          "value":17
                         }]
@@ -11851,7 +11852,7 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"Game ID",
+                         "name":"game ID",
                          "type":"int",
                          "value":5
                         }]
@@ -11863,7 +11864,7 @@
                  "imagewidth":16,
                  "properties":[
                         {
-                         "name":"Game ID",
+                         "name":"game ID",
                          "type":"int",
                          "value":13
                         }]
@@ -11875,7 +11876,7 @@
                  "imagewidth":16,
                  "properties":[
                         {
-                         "name":"Game ID",
+                         "name":"game ID",
                          "type":"int",
                          "value":18
                         }]
