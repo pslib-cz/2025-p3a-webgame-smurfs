@@ -20,17 +20,24 @@ if (!fs.existsSync(baseFolder)) {
     fs.mkdirSync(baseFolder, { recursive: true });
 }
 
-if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
-    if (0 !== child_process.spawnSync('dotnet', [
-        'dev-certs',
-        'https',
-        '--export-path',
-        certFilePath,
-        '--format',
-        'Pem',
-        '--no-password',
-    ], { stdio: 'inherit', }).status) {
-        throw new Error("Could not create certificate.");
+if (env.NODE_ENV !== 'production') {
+    if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
+        // Wrap in try-catch just in case dotnet is missing in a non-prod env
+        try {
+            if (0 !== child_process.spawnSync('dotnet', [
+                'dev-certs',
+                'https',
+                '--export-path',
+                certFilePath,
+                '--format',
+                'Pem',
+                '--no-password',
+            ], { stdio: 'inherit', }).status) {
+                throw new Error("Could not create certificate.");
+            }
+        } catch (e) {
+            console.warn("Could not create SSL certs. Skipping (this is normal in Docker builds).");
+        }
     }
 }
 
@@ -57,9 +64,9 @@ export default defineConfig({
             }
         },
         port: parseInt(env.DEV_SERVER_PORT || '62799'),
-        https: {
+        https: fs.existsSync(keyFilePath) && fs.existsSync(certFilePath) ? {
             key: fs.readFileSync(keyFilePath),
             cert: fs.readFileSync(certFilePath),
-        }
+        } : undefined
     }
 })
