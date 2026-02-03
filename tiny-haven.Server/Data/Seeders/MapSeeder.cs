@@ -10,20 +10,34 @@ namespace tiny_haven.Server.Data.Seeders
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IWebHostEnvironment _env;
-        private readonly AppDbContext _context;
         private const uint ROTATION_MASK = 0x1FFFFFFF;
 
-        public MapSeederService(IServiceProvider serviceProvider, IWebHostEnvironment env, AppDbContext context)
+        public MapSeederService(IServiceProvider serviceProvider, IWebHostEnvironment env)
         {
             _serviceProvider = serviceProvider;
             _env = env;
-            _context = context;
+        }
+
+        private class TileMetadata
+        {
+            public int AssetId { get; set; }
+            public bool IsInteraction { get; set; }
+            public int QuestId { get; set; }
+            public int XOffStart { get; set; }
+            public int XOffEnd { get; set; }
+            public int YOffStart { get; set; }
+            public int YOffEnd { get; set; }
         }
 
         public async Task SeedMapAsync()
         {
+            // Load JSON
             string mapPath = Path.Combine(_env.ContentRootPath, "Data", "Map", "map.json");
-            if (!File.Exists(mapPath)) return;
+            if (!File.Exists(mapPath))
+            {
+                Console.WriteLine($"❌ Map file not found: {mapPath}");
+                return;
+            }
 
             string json = await File.ReadAllTextAsync(mapPath);
             var mapData = JsonSerializer.Deserialize<TiledMapDto>(json, new JsonSerializerOptions
@@ -33,31 +47,50 @@ namespace tiny_haven.Server.Data.Seeders
 
             if (mapData == null) return;
 
-            // Lookup table for GID to AssetId
-            var gidToAssetId = new Dictionary<uint, int>();
+            // Build lookup
+            var metadataLookup = new Dictionary<uint, TileMetadata>();
+
             foreach (var tileset in mapData.Tilesets)
             {
                 if (tileset.Tiles == null) continue;
+
                 foreach (var tile in tileset.Tiles)
                 {
                     uint globalId = (uint)(tileset.FirstGid + tile.Id);
-                    var prop = tile.Properties?.FirstOrDefault(p => p.Name == "game ID");
-                    if (prop != null && prop.Value.ValueKind == JsonValueKind.Number)
+
+                    var props = tile.Properties?.ToDictionary(p => p.Name.ToLower(), p => p.Value);
+
+                    if (props != null && props.TryGetValue("game id", out var gameIdVal))
                     {
-                        gidToAssetId[globalId] = prop.Value.GetInt32();
+                        var meta = new TileMetadata
+                        {
+                            AssetId = gameIdVal.GetInt32()
+                        };
+
+                        if (props.TryGetValue("questid", out var questIdVal))
+                        {
+                            meta.IsInteraction = true;
+                            meta.QuestId = questIdVal.GetInt32();
+
+                            meta.XOffStart = GetIntSafe(props, "xoffsetstart");
+                            meta.XOffEnd = GetIntSafe(props, "xoffsetend");
+                            meta.YOffStart = GetIntSafe(props, "yoffsetstart");
+                            meta.YOffEnd = GetIntSafe(props, "yoffsetend");
+                        }
+
+                        metadataLookup[globalId] = meta;
                     }
                 }
             }
 
+            // Sync to db
             using (var scope = _serviceProvider.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-                // Fetch existing LocationMap entries
-                var existingLocations = await context.LocationMaps
-                    .ToDictionaryAsync(x => x.LocationId);
+                var existingLocations = await context.LocationMaps.ToDictionaryAsync(x => x.LocationId);
+                var existingInteractions = await context.InteractionMaps.ToDictionaryAsync(x => x.LocationId);
 
-                // Check existing IDs
                 var processedIds = new HashSet<int>();
 
                 foreach (var layer in mapData.Layers)
@@ -68,62 +101,102 @@ namespace tiny_haven.Server.Data.Seeders
                         {
                             uint cleanGid = obj.Gid & ROTATION_MASK;
 
-                            if (!gidToAssetId.TryGetValue(cleanGid, out int assetId))
+                            if (!metadataLookup.TryGetValue(cleanGid, out var meta))
                                 continue;
 
                             int tiledObjectId = obj.Id;
                             processedIds.Add(tiledObjectId);
 
-                            // Convert pixel coordinates to grid coordinates
                             int gridX = (int)Math.Round(obj.X / mapData.TileWidth) + 1;
                             int gridY = (int)Math.Round(obj.Y / mapData.TileHeight) + 1;
 
-                            // Insert or Update
-                            if (existingLocations.TryGetValue(tiledObjectId, out var existingEntity))
+                            if (existingLocations.TryGetValue(tiledObjectId, out var locEntity))
                             {
-                                // Update
-                                bool hasChanged = existingEntity.LocationX != gridX ||
-                                                  existingEntity.LocationY != gridY ||
-                                                  existingEntity.AssetId != assetId;
-
-                                if (hasChanged)
+                                if (locEntity.LocationX != gridX ||
+                                    locEntity.LocationY != gridY ||
+                                    locEntity.AssetId != meta.AssetId)
                                 {
-                                    existingEntity.LocationX = gridX;
-                                    existingEntity.LocationY = gridY;
-                                    existingEntity.AssetId = assetId;
+                                    locEntity.LocationX = gridX;
+                                    locEntity.LocationY = gridY;
+                                    locEntity.AssetId = meta.AssetId;
                                 }
                             }
                             else
                             {
-                                // Insert
-                                var newEntity = new LocationMap
+                                var newLoc = new LocationMap
                                 {
                                     LocationId = tiledObjectId,
-                                    AssetId = assetId,
+                                    AssetId = meta.AssetId,
                                     LocationX = gridX,
                                     LocationY = gridY
                                 };
-                                context.LocationMaps.Add(newEntity);
+                                context.LocationMaps.Add(newLoc);
+                            }
+
+                            if (meta.IsInteraction)
+                            {
+                                if (existingInteractions.TryGetValue(tiledObjectId, out var intEntity))
+                                {
+                                    if (intEntity.QuestId != meta.QuestId ||
+                                        intEntity.xOffsetEnd != meta.XOffEnd)
+                                    {
+                                        intEntity.QuestId = meta.QuestId;
+                                        intEntity.xOffsetStart = meta.XOffStart;
+                                        intEntity.xOffsetEnd = meta.XOffEnd;
+                                        intEntity.yOffsetStart = meta.YOffStart;
+                                        intEntity.yOffsetEnd = meta.YOffEnd;
+                                    }
+                                }
+                                else
+                                {
+                                    context.InteractionMaps.Add(new InteractionMap
+                                    {
+                                        LocationId = tiledObjectId,
+                                        QuestId = meta.QuestId,
+                                        xOffsetStart = meta.XOffStart,
+                                        xOffsetEnd = meta.XOffEnd,
+                                        yOffsetStart = meta.YOffStart,
+                                        yOffsetEnd = meta.YOffEnd
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                if (existingInteractions.ContainsKey(tiledObjectId))
+                                {
+                                    context.InteractionMaps.Remove(existingInteractions[tiledObjectId]);
+                                }
                             }
                         }
                     }
                 }
 
-                // Delet removed entries
-                var idsToDelete = existingLocations.Keys
-                    .Where(id => !processedIds.Contains(id))
-                    .ToList();
+                // Delete removed
+                var idsToDelete = existingLocations.Keys.Where(id => !processedIds.Contains(id)).ToList();
 
                 if (idsToDelete.Any())
                 {
-                    var entitiesToDelete = existingLocations.Values
-                        .Where(e => idsToDelete.Contains(e.LocationId));
+                    var locsToDelete = existingLocations.Values.Where(x => idsToDelete.Contains(x.LocationId));
+                    context.LocationMaps.RemoveRange(locsToDelete);
 
-                    context.LocationMaps.RemoveRange(entitiesToDelete);
+                    var intsToDelete = existingInteractions.Values.Where(x => idsToDelete.Contains(x.LocationId));
+                    context.InteractionMaps.RemoveRange(intsToDelete);
+
+                    Console.WriteLine($"🗑️ Removed {idsToDelete.Count} deleted objects from DB.");
                 }
 
                 await context.SaveChangesAsync();
+                Console.WriteLine("✅ Map Sync Complete!");
             }
+        }
+
+        private int GetIntSafe(Dictionary<string, JsonElement> props, string key)
+        {
+            if (props.TryGetValue(key, out var val) && val.ValueKind == JsonValueKind.Number)
+            {
+                return val.GetInt32();
+            }
+            return 0;
         }
     }
 }

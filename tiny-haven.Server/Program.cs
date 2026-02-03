@@ -33,13 +33,13 @@ if (app.Environment.IsDevelopment())
 
 using (var scope = app.Services.CreateScope())
 {
-    var seeder = scope.ServiceProvider.GetRequiredService<MapSeederService>();
-    await seeder.SeedMapAsync();
-
-    var materials = scope.ServiceProvider.GetRequiredService<IMaterials>();
-
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     await MaterialSeeder.SeedAsync(context);
+
+    var mapSeeder = scope.ServiceProvider.GetRequiredService<MapSeederService>();
+    await mapSeeder.SeedMapAsync();
+
+    var materials = scope.ServiceProvider.GetRequiredService<IMaterials>();
 }
 
 app.UseHttpsRedirection();
