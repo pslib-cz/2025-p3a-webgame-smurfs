@@ -5,21 +5,26 @@ export const ActiveQuest = () => {
 
   if (!activeQuest) return null;
 
+  const text =
+    activeQuest.type === "quest_start"
+        ? `Najdi ${activeQuest.itemQuantity}× ${activeQuest.wantedItemId}`
+        : activeQuest.type === "quest_end"
+        ? `Přines zpět ${activeQuest.itemQuantity}× ${activeQuest.wantedItemId}`
+        : "";
+
+
   return (
     <div style={{
       position: "fixed",
-      top: 50,
-      right: 50,
+      top: 115,
+      right: 45,
       background: "rgba(0,0,0,0.7)",
       color: "white",
-      padding: "10px 14px",
+      padding: "10px 32px",
       borderRadius: 8
     }}>
       <strong>Aktivní quest</strong>
-      <div>
-        Přines {activeQuest.wantedItemId}{" "}
-        {activeQuest.itemQuantity}×
-      </div>
+      <div>{text}</div>
     </div>
   );
 };
