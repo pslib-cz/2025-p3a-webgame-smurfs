@@ -20,7 +20,7 @@ export const InteractionMapProvider = ({ children }: { children: React.ReactNode
         const map: Record<number, QuestDTO> = {};
         
         dbQuests.forEach(quest => {
-            if (quest.rewardItemId) {
+            if (quest.rewardItemId && (quest.type === "pickup_item" || quest.type === "add_to_balance")) {
                 map[quest.rewardItemId] = quest;
             } 
         });

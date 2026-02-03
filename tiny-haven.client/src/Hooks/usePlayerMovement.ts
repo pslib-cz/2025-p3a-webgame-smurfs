@@ -16,16 +16,16 @@ export const usePlayerMovement = (
 
     useEffect(() => {
         const down = (e: KeyboardEvent) => {
-            if (e.key === "w") keys.current.w = true;
-            if (e.key === "a") keys.current.a = true;
-            if (e.key === "s") keys.current.s = true;
-            if (e.key === "d") keys.current.d = true;
+            if (e.code === "KeyW") keys.current.w = true;
+            if (e.code === "KeyA") keys.current.a = true;
+            if (e.code === "KeyS") keys.current.s = true;
+            if (e.code === "KeyD") keys.current.d = true;
         };
         const up = (e: KeyboardEvent) => {
-            if (e.key === "w") keys.current.w = false;
-            if (e.key === "a") keys.current.a = false;
-            if (e.key === "s") keys.current.s = false;
-            if (e.key === "d") keys.current.d = false;
+            if (e.code === "KeyW") keys.current.w = false;
+            if (e.code === "KeyA") keys.current.a = false;
+            if (e.code === "KeyS") keys.current.s = false;
+            if (e.code === "KeyD") keys.current.d = false;
         };
         window.addEventListener("keydown", down);
         window.addEventListener("keyup", up);
