@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRandomItems } from '../../Contexts/RandomItemsContext';
 import { SuspenseFallback } from '../Fallback/SuspenseFallback';
 
-const INITIAL_SPAWN_LIST = [ 9, 8, 4, 14, 15, 16 ]
+const INITIAL_SPAWN_LIST = [ 9, 8, 4, 14, 15, 16, 22 ]
 
 const GameLoader = () => {
     const { spawnItems } = useRandomItems();
