@@ -29,8 +29,8 @@ Inspirace: *Stardew Valley*, *FNAF Into the Pit*, pixelová/kostičkovaná grafi
 - Interakce s NPC a objekty
 
 ### Gameplay
-- Pohyb klikáním na pozice na gridu  
-- Úkoly od vesničanů (ve vesnici i mimo ni)  
+- Pohyb wsad po gridu do stran   
+- Úkoly od vesničanů (ve vesnici)  
 - Konverzace s NPC  
 - ESC = menu / reset minihry  
 - **Cíl:** postavit vlastní domeček
