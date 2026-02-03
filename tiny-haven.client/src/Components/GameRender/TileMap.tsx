@@ -14,6 +14,7 @@ import { useInteractionContext } from "../../Contexts/InteractionContext";
 import { useRandomItems } from "../../Contexts/RandomItemsContext";
 import { Item } from "./Item";
 import { useInteractionMap } from "../../Contexts/InteractionMapContext";
+import type { AssetDTO, LocationMapDTO } from "../../Types/database-types";
 
 export const TileMap = () => {
     const { tileSize, gridRows, gridColumns } = useGameSettings();
@@ -91,15 +92,32 @@ export const TileMap = () => {
 
     return (
         <div className={styles.tileMap} style={worldStyle}>
-            {locationMapData.map((entity: any) => (
-                <Entity key={entity.locationId} data={entity}/>
-            ))}
+            {locationMapData.map((entity: LocationMapDTO) => {
+                const asset = assetsData.find((a: AssetDTO) => a.assetId === entity.assetId);
+                if (!asset) return;
+                if (asset.visible === false) { return null; }
+                return <Entity key={entity.locationId} data={entity}/>
+            })}
 
             {generatedItems.map(item => (
                 <Item key={item.id} data={item}/>
             ))}
 
             <Player data={playerAsset} location={location} facing={facing}/>
+
+            {collisionMap.map((row: Boolean[], y: number) => (
+                row.map((collision: Boolean, x: number) => (
+                    collision && (
+                        <div key={`${x}-${y}`} style={{
+                            gridColumn: x + 1,
+                            gridRow: y + 1,
+                            background: 'rgba(255, 0, 0, 0.2)',
+                            border: "1px solid rgba(255, 0, 0, 0.3)",
+                            zIndex: 999
+                       }} />
+                    )
+                ))
+            ))}
         </div>
     )
 }

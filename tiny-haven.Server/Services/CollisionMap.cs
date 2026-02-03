@@ -74,8 +74,6 @@ namespace tiny_haven.Server.Services
             int maxCsvX = tileGrid.GetLength(0);
             int maxCsvY = tileGrid.GetLength(1);
 
-            DebugTileAt(50, 70);
-
             for (int y = 0; y < rows; y++)
             {
                 for (int x = 0; x < cols; x++)
@@ -121,38 +119,6 @@ namespace tiny_haven.Server.Services
             }
 
             return map;
-        }
-
-        public void DebugTileAt(int gameX, int gameY)
-        {
-            // 1. Convert Game Coordinate (e.g. 68) to Array Index (e.g. 67)
-            // Your game uses 1-based coords, so we subtract 1.
-            int arrayX = gameX - 1;
-            int arrayY = gameY - 1;
-
-            var grid = _materialService.TileGrid;
-
-            // 2. Safety Check
-            if (arrayX < 0 || arrayX >= grid.GetLength(0) ||
-                arrayY < 0 || arrayY >= grid.GetLength(1))
-            {
-                Console.WriteLine($"❌ DEBUG [{gameX},{gameY}]: Coordinate out of bounds!");
-                return;
-            }
-
-            // 3. Get the ID
-            int foundId = grid[arrayX, arrayY];
-
-            // 4. Print the Result
-            Console.WriteLine($"\n🔍 --- DEBUG INSPECTOR [{gameX}, {gameY}] ---");
-            Console.WriteLine($"   Array Index: [{arrayX}, {arrayY}]");
-            Console.WriteLine($"   Tile ID Found: {foundId}");
-
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"   Status: ⚠️ WALKABLE (ID {foundId} is missing!)");
-            Console.WriteLine($"   >>> ACTION: Add {foundId} to your _waterIds array.");
-            Console.ResetColor();
-            Console.WriteLine("------------------------------------------\n");
         }
     }
 }

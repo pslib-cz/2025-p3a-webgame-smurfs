@@ -20,12 +20,6 @@ namespace tiny_haven.Server.Data.Seeders
             _context = context;
         }
 
-        private bool IsVisibleTile(int assetId)
-        {
-            var asset = _context.Assets.Where(a => a.AssetId == assetId).FirstOrDefault();
-            return asset.Visible;
-        }  
-
         public async Task SeedMapAsync()
         {
             string mapPath = Path.Combine(_env.ContentRootPath, "Data", "Map", "map.json");
@@ -75,10 +69,6 @@ namespace tiny_haven.Server.Data.Seeders
                             uint cleanGid = obj.Gid & ROTATION_MASK;
 
                             if (!gidToAssetId.TryGetValue(cleanGid, out int assetId))
-                                continue;
-
-                            // Check if the asset is visible
-                            if (!IsVisibleTile(assetId))
                                 continue;
 
                             int tiledObjectId = obj.Id;
