@@ -17,6 +17,7 @@ import GameLoader from "../Components/GameRender/GameLoader";
 import { SuspenseFallback } from "../Components/Fallback/SuspenseFallback";
 import { InteractionMapProvider } from "../Contexts/InteractionMapContext";
 import { QuestProvider } from "../Contexts/QuestContext";
+import { ActiveQuest } from "../Components/UI/ActiveQuest";
 
 export const MapDisplay = () => {
     return (
@@ -29,33 +30,34 @@ export const MapDisplay = () => {
                             <ErrorBoundary FallbackComponent={ErrorFallback}>
                                 <Suspense fallback={<SuspenseFallback message="Loading interactions..."/>}>
                                     <InteractionMapProvider>
+                                        <QuestProvider>
+                                            <PlayerLocationProvider>
+                                                <PlayerBalanceProvider>
+                                                    
+                                                        <InventoryProvider>
 
-                                        <PlayerLocationProvider>
-                                            <PlayerBalanceProvider>
-                                                <QuestProvider>
-                                                    <InventoryProvider>
+                                                            <InteractionProvider>
 
-                                                        <InteractionProvider>
+                                                                <ErrorBoundary FallbackComponent={ErrorFallback}>
+                                                                    <Suspense fallback={<SuspenseFallback message="Loading assets..." />}>
+                                                                        <GameLoader/>
+                                                                        <TileMap/>
+                                                                        <InventoryBar/>
+                                                                        <BalanceDisplay/>
+                                                                        <DebugInfo/>
+                                                                        <ActiveQuest />
+                                                                    </Suspense>
+                                                                </ErrorBoundary>
 
-                                                            <ErrorBoundary FallbackComponent={ErrorFallback}>
-                                                                <Suspense fallback={<SuspenseFallback message="Loading assets..." />}>
-                                                                    <GameLoader/>
-                                                                    <TileMap/>
-                                                                    <InventoryBar/>
-                                                                    <BalanceDisplay/>
-                                                                    <DebugInfo/>
-                                                                </Suspense>
-                                                            </ErrorBoundary>
+                                                                <InteractionButton />
 
-                                                            <InteractionButton />
+                                                            </InteractionProvider>
 
-                                                        </InteractionProvider>
-
-                                                    </InventoryProvider>
-                                                    </QuestProvider>
-                                            </PlayerBalanceProvider>
-                                        </PlayerLocationProvider>
-
+                                                        </InventoryProvider>
+                                                        
+                                                </PlayerBalanceProvider>
+                                            </PlayerLocationProvider>
+                                        </QuestProvider>
                                     </InteractionMapProvider>
                                 </Suspense>
                             </ErrorBoundary>

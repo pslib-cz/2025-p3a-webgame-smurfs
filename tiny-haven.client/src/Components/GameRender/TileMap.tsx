@@ -6,7 +6,7 @@ import { STEP_TIME, ZOOM_LEVEL } from "../../Data/GameData";
 import { useGameSettings } from "../../Contexts/GameSettingsContext";
 //import { useInventory } from "../../Contexts/InventoryContext";
 //import { usePlayerBalance } from "../../Contexts/PlayerBalanceContext";
-import { collisionMapPromise, locationMapPromise, playerAssetPromise, InteractionMapPromise, assetsPromise } from "../../api/gameResources";
+import { collisionMapPromise, locationMapPromise, playerAssetPromise, assetsPromise } from "../../api/gameResources";
 import { usePlayerMovement } from "../../Hooks/usePlayerMovement"
 import { useInteractions } from "../../Hooks/useInteractions";
 import { useQuestActions } from "../../Hooks/useQuestActions";
@@ -14,8 +14,6 @@ import { useInteractionContext } from "../../Contexts/InteractionContext";
 import { useRandomItems } from "../../Contexts/RandomItemsContext";
 import { Item } from "./Item";
 import { useInteractionMap } from "../../Contexts/InteractionMapContext";
-import { useQuest } from "../../Contexts/QuestContext";
-import { useQuestProgress } from "../../Hooks/useQuestProgress"
 
 export const TileMap = () => {
     const { tileSize, gridRows, gridColumns } = useGameSettings();
@@ -73,13 +71,6 @@ export const TileMap = () => {
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [activeInteraction]);
-
-
-    // spuštění questu
-
-    const { startQuest } = useQuest();
-
-    useQuestProgress();
 
 
     const pixelX = location.x * tileSize;
