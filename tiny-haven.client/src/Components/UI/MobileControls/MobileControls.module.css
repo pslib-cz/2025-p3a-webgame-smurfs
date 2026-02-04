@@ -1,0 +1,58 @@
+button {
+    background-image: url("/images/game_assets/ui/hud-bg-small.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    image-rendering: pixelated;
+
+    background-color: transparent;
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+.joystick {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-areas: 
+        "upLeft up upRight"
+        "left . right"
+        "downLeft down downRight"
+    ;
+    gap: 0.2rem;
+
+    position: absolute;
+    left: 1.5rem;
+    bottom: 1.5rem;
+
+    .up, .left, .down, .right {
+        width: 3.5rem;
+        height: 3.5rem;
+    };
+
+    .upLeft, .downLeft, .downRight, .upRight {
+        width: 3rem;
+        height: 3rem;
+    };
+
+    .up { grid-area: up; }
+    .left { grid-area: left; }
+    .down { grid-area: down; }
+    .right { grid-area: right; }
+
+    .upLeft { grid-area: upLeft; justify-self: end; align-self: end; }
+    .downLeft { grid-area: downLeft; justify-self: end; }
+    .downRight { grid-area: downRight; }
+    .upRight { grid-area: upRight; align-self: end; }
+}
+
+.actionButton {
+    width: 4rem;
+    height: 4rem;
+
+    position: absolute;
+    right: 4.5rem;
+    bottom: 4.5rem;
+}

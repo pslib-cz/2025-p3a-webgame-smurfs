@@ -2,7 +2,7 @@ import { use, useEffect } from "react";
 import styles from "./TileMap.module.css"
 import { Entity } from "./Entity";
 import { Player } from "./Player";
-import { STEP_TIME, ZOOM_LEVEL } from "../../Data/GameData";
+import { ZOOM_LEVEL } from "../../Data/GameData";
 import { useGameSettings } from "../../Contexts/GameSettingsContext";
 //import { useInventory } from "../../Contexts/InventoryContext";
 //import { usePlayerBalance } from "../../Contexts/PlayerBalanceContext";
@@ -17,7 +17,7 @@ import { useInteractionMap } from "../../Contexts/InteractionMapContext";
 import type { AssetDTO, LocationMapDTO } from "../../Types/database-types";
 
 export const TileMap = () => {
-    const { tileSize, gridRows, gridColumns } = useGameSettings();
+    const { config: { tileSize, gridRows, gridColumns } } = useGameSettings();
 
     const locationMapData = use(locationMapPromise);
     const playerAsset = use(playerAssetPromise);
@@ -28,11 +28,7 @@ export const TileMap = () => {
 
     const { location, facing } = usePlayerMovement( collisionMap, gridColumns, gridRows );
 
-    //const playerInventory = useInventory();
-    //const playerBalance = usePlayerBalance();
-
-    //---//
-    //Interaction mapa
+    const { stepTime } = useGameSettings();
 
     const { interactions } = useInteractionMap();
 
@@ -87,7 +83,7 @@ export const TileMap = () => {
     const worldStyle = {
         transform: `scale(${ZOOM_LEVEL}) translate3d(-${pixelX - offset}px, -${pixelY - offset}px, 0)`,
         transformOrigin: '0 0',
-        transition: `transform ${STEP_TIME}ms linear`
+        transition: `transform ${stepTime}ms linear`
     };
 
     return (

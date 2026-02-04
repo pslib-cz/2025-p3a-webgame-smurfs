@@ -14,7 +14,7 @@ const InventoryContext = createContext<InventoryContextType | null>(null);
 const STORAGE_KEY = 'player_inventory';
 
 export const InventoryProvider = ({ children }: { children: React.ReactNode }) => {
-    const { inventorySize } = useGameSettings();
+    const { config: { inventorySize } } = useGameSettings();
 
     const [slots, setSlots] = useState<InventorySlot[]>(() => {
         const saved = localStorage.getItem(STORAGE_KEY);

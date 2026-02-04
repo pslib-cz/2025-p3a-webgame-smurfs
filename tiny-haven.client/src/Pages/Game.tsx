@@ -5,18 +5,19 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { TileMap } from "../Components/GameRender/TileMap";
 import { GameSettingsProvider } from "../Contexts/GameSettingsContext";
 import { InventoryProvider } from "../Contexts/InventoryContext";
-import { InventoryBar } from "../Components/UI/InventoryBar";
+import { InventoryBar } from "../Components/UI/InventoryBar/InventoryBar";
 import { PlayerBalanceProvider } from "../Contexts/PlayerBalanceContext";
-import { BalanceDisplay } from "../Components/UI/BalanceDisplay";
+import { BalanceDisplay } from "../Components/UI/BalanceDisplay/BalanceDisplay";
 import { PlayerLocationProvider } from "../Contexts/PlayerLocationContext";
 // import { DebugInfo } from "../Components/UI/DebugInfo";
 import { InteractionProvider } from "../Contexts/InteractionContext";
-import { InteractionButton } from "../Components/GameRender/InteractionButton"
+import { InteractionButton } from "../Components/UI/InteractionButton"
 import { RandomItemProvider } from "../Contexts/RandomItemsContext";
 import GameLoader from "../Components/GameRender/GameLoader";
 import { SuspenseFallback } from "../Components/Fallback/SuspenseFallback";
 import { InteractionMapProvider } from "../Contexts/InteractionMapContext";
-import { CoordinatesDisplay } from "../Components/UI/CoordinatesDisplay";
+import { CoordinatesDisplay } from "../Components/UI/CoordinatesDisplay/CoordinatesDisplay";
+import { MobileControls } from "../Components/UI/MobileControls/MobileControls";
 
 export const MapDisplay = () => {
     return (
@@ -44,6 +45,7 @@ export const MapDisplay = () => {
                                                                 <BalanceDisplay/>
                                                                 {/* <DebugInfo/> */}
                                                                 <CoordinatesDisplay/>
+                                                                <MobileControls/>
                                                             </Suspense>
                                                         </ErrorBoundary>
 

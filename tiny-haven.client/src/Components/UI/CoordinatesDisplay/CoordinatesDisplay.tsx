@@ -1,4 +1,4 @@
-import { usePlayerLocation } from "../../Contexts/PlayerLocationContext";
+import { usePlayerLocation } from "../../../Contexts/PlayerLocationContext";
 import styles from "./CoordinatesDisplay.module.css"
 
 export const CoordinatesDisplay = () => {

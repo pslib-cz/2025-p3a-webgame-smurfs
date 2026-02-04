@@ -1,8 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import type { FacingDirection } from '../Types/player-data'
 import { usePlayerLocation } from '../Contexts/PlayerLocationContext';
-
-const STEP_TIME = 200;
+import { useGameSettings } from "../Contexts/GameSettingsContext"
 
 export const usePlayerMovement = (
     collisionMap: boolean[][],
@@ -13,6 +12,12 @@ export const usePlayerMovement = (
     const [ facing, setFacing ] = useState<FacingDirection>('right');
     
     const keys = useRef({ w: false, a: false, s: false, d: false });
+
+    const { stepTime } = useGameSettings();
+
+    const setKey = useCallback((key: 'w' | 'a' | 's' | 'd', value: boolean) => {
+        keys.current[key] = value;
+    }, []);
 
     useEffect(() => {
         const down = (e: KeyboardEvent) => {
@@ -61,10 +66,10 @@ export const usePlayerMovement = (
 
                 return { x: nx, y: ny };
             });
-        }, STEP_TIME);
+        }, stepTime);
 
         return () => clearInterval(moveInterval);
     }, [collisionMap, maxColumns, maxRows, setLocation]);
 
-    return { location, facing };
+    return { location, facing, setKey };
 };
