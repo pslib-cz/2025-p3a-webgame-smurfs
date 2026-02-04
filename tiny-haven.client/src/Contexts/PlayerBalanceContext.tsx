@@ -13,7 +13,7 @@ const PlayerBalanceContext = createContext<PlayerBalanceContextType | null>(null
 const STORAGE_KEY = 'player_balance';
 
 export const PlayerBalanceProvider = ({ children }: { children: React.ReactNode }) => {
-    const { startingBalance } = useGameSettings();
+    const { config: { startingBalance } } = useGameSettings();
 
     const [balance, setBalance] = useState<number>(() => {
         const saved = localStorage.getItem(STORAGE_KEY);

@@ -1,14 +1,14 @@
-import { useGameSettings } from "../../Contexts/GameSettingsContext";
-import { useInventory } from "../../Contexts/InventoryContext";
+import { useGameSettings } from "../../../Contexts/GameSettingsContext";
+import { useInventory } from "../../../Contexts/InventoryContext";
 import styles from "./InventoryBar.module.css";
 
 export const InventoryBar = () => {
     const { slots } = useInventory();
-    const { inventorySize } = useGameSettings();
+    const { config: { inventorySize } } = useGameSettings();
 
     return (
         <div className={styles.bar}
-            style={{ gridTemplateColumns: `repeat(${inventorySize}, 4rem)` }}>
+            style={{ gridTemplateColumns: `repeat(${inventorySize}, var(--slotSize))` }}>
 
             {slots.map(slot => {
                 const hasItem = !!slot.asset;

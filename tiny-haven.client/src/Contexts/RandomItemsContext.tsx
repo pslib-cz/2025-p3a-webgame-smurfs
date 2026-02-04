@@ -14,7 +14,7 @@ const RandomItemsContext = createContext<RandomItemsContextType | undefined>(und
 
 export const RandomItemProvider = ({ children }: { children: React.ReactNode }) => {
     const assets = use(assetsPromise);
-    const { gridColumns, gridRows } = useGameSettings();
+    const { config: { gridColumns, gridRows } } = useGameSettings();
 
     // Generate array
     const [itemsMap, setItemsMap] = useState<number[][]>(() => {

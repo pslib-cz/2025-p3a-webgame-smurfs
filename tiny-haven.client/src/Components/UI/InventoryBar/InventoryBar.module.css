@@ -1,13 +1,16 @@
 .bar {
+    --slotSize: 4rem;
+    --slotGap: 0.5rem;
+
     display: grid;
-    height: 4rem;
+    height: var(--slotSize);
 
     position: absolute;
     left: 50%;
     bottom: 2rem;
     transform: translateX(-50%);
 
-    column-gap: 0.5rem;
+    column-gap: var(--slotGap);
 
     .slot {
         background-image: url("/images/game_assets/ui/hud-bg-small.png");
@@ -59,5 +62,10 @@
 
     .slot:hover .tooltip {
         opacity: 1;
+    }
+
+    @media screen and (max-width: 852px) {
+        --slotSize: 2.5rem;
+        --slotGap: 0.2rem;
     }
 }

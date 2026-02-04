@@ -15,7 +15,7 @@ export const PlayerLocationProvider = ({ children }: { children: React.ReactNode
     // Načtení lokace z local storage
     const [location, setLocation] = useState<PlayerLocation>(() => {
         const saved = localStorage.getItem(STORAGE_KEY);
-        return saved ? JSON.parse(saved) : { x: 90, y: 50 };
+        return saved ? JSON.parse(saved) : { x: 36, y: 95 };
     });
 
     const lastSaved = useRef<number>(Date.now());

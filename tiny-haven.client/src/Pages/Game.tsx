@@ -2,21 +2,19 @@ import { Suspense } from "react";
 import styles from "./Game.module.css"
 import ErrorFallback from "../Components/Fallback/FetchFallback"
 import { ErrorBoundary } from 'react-error-boundary';
-import { TileMap } from "../Components/GameRender/TileMap";
 import { GameSettingsProvider } from "../Contexts/GameSettingsContext";
 import { InventoryProvider } from "../Contexts/InventoryContext";
-import { InventoryBar } from "../Components/UI/InventoryBar";
 import { PlayerBalanceProvider } from "../Contexts/PlayerBalanceContext";
-import { BalanceDisplay } from "../Components/UI/BalanceDisplay";
 import { PlayerLocationProvider } from "../Contexts/PlayerLocationContext";
 // import { DebugInfo } from "../Components/UI/DebugInfo";
 import { InteractionProvider } from "../Contexts/InteractionContext";
-import { InteractionButton } from "../Components/GameRender/InteractionButton"
+import { InteractionButton } from "../Components/UI/InteractionButton"
 import { RandomItemProvider } from "../Contexts/RandomItemsContext";
 import GameLoader from "../Components/GameRender/GameLoader";
 import { SuspenseFallback } from "../Components/Fallback/SuspenseFallback";
 import { InteractionMapProvider } from "../Contexts/InteractionMapContext";
-import { CoordinatesDisplay } from "../Components/UI/CoordinatesDisplay";
+import { ControlsProvider } from "../Contexts/ControlsContext";
+import { GameUI } from "../Components/UI/GameUI";
 
 export const MapDisplay = () => {
     return (
@@ -31,28 +29,26 @@ export const MapDisplay = () => {
                                     <InteractionMapProvider>
 
                                         <PlayerLocationProvider>
-                                            <PlayerBalanceProvider>
-                                                <InventoryProvider>
+                                            <ControlsProvider>
+                                                <PlayerBalanceProvider>
+                                                    <InventoryProvider>
 
-                                                    <InteractionProvider>
+                                                        <InteractionProvider>
 
-                                                        <ErrorBoundary FallbackComponent={ErrorFallback}>
-                                                            <Suspense fallback={<SuspenseFallback message="Loading assets..." />}>
-                                                                <GameLoader/>
-                                                                <TileMap/>
-                                                                <InventoryBar/>
-                                                                <BalanceDisplay/>
-                                                                {/* <DebugInfo/> */}
-                                                                <CoordinatesDisplay/>
-                                                            </Suspense>
-                                                        </ErrorBoundary>
+                                                            <ErrorBoundary FallbackComponent={ErrorFallback}>
+                                                                <Suspense fallback={<SuspenseFallback message="Loading assets..." />}>
+                                                                    <GameLoader/>
+                                                                    <GameUI/>
+                                                                </Suspense>
+                                                            </ErrorBoundary>
 
-                                                        <InteractionButton />
+                                                            <InteractionButton />
 
-                                                    </InteractionProvider>
+                                                        </InteractionProvider>
 
-                                                </InventoryProvider>
-                                            </PlayerBalanceProvider>
+                                                    </InventoryProvider>
+                                                </PlayerBalanceProvider>
+                                            </ControlsProvider>
                                         </PlayerLocationProvider>
 
                                     </InteractionMapProvider>
