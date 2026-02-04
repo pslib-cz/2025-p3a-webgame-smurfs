@@ -1,89 +1,45 @@
 import styles from "./MobileControls.module.css"
+import "../../../styles/globals.css"
+import { useControls, type ControlKey } from "../../../Contexts/ControlsContext";
 
-interface MobileControlsProps {
-    setKey: (key: 'w' | 'a' | 's' | 'd', value: boolean) => void;
-}
+export const MobileControls = () => {
+    const { setControl } = useControls();
 
-export const MobileControls = ({ setKey }: MobileControlsProps) => {
-    const handlePress = (keys: Array<'w' | 'a' | 's' | 'd'>) => {
-        keys.forEach(key => setKey(key, true));
+    const handlePress = (keys: ControlKey[]) => {
+        keys.forEach(k => setControl(k, true));
     };
 
-    const handleRelease = (keys: Array<'w' | 'a' | 's' | 'd'>) => {
-        keys.forEach(key => setKey(key, false));
+    const handleRelease = (keys: ControlKey[]) => {
+        keys.forEach(k => setControl(k, false));
     };
+
+    const bindBtn = (keys: ControlKey[]) => ({
+        onMouseDown: (e: any) => { e.preventDefault(); handlePress(keys); },
+        onMouseUp: (e: any) => { e.preventDefault(); handleRelease(keys); },
+        onMouseLeave: () => { handleRelease(keys); },
+        
+        onTouchStart: (e: any) => { e.preventDefault(); handlePress(keys); },
+        onTouchEnd: (e: any) => { e.preventDefault(); handleRelease(keys); }
+    });
 
     return (
         <div>
             <div className={styles.joystick}>
-                {/* <button className={styles.up}>⬆️</button>
-                <button className={styles.left}>⬅️</button>
-                <button className={styles.down}>⬇️</button>
-                <button className={styles.right}>➡️</button>
-
-                <button className={styles.upLeft}>↖️</button>
-                <button className={styles.downLeft}>↙️</button>
-                <button className={styles.downRight}>↘️</button>
-                <button className={styles.upRight}>↗️</button> */}
-
-                <button 
-                    className={styles.up}
-                    onPointerDown={() => handlePress(['w'])}
-                    onPointerUp={() => handleRelease(['w'])}
-                    onPointerLeave={() => handleRelease(['w'])}
-                >⬆️</button>
+                <button className={styles.up} {...bindBtn(['w'])}>⬆️</button>
+                <button className={styles.left} {...bindBtn(['a'])}>⬅️</button>
+                <button className={styles.down} {...bindBtn(['s'])}>⬇️</button>
+                <button className={styles.right} {...bindBtn(['d'])}>➡️</button>
                 
-                <button 
-                    className={styles.left}
-                    onPointerDown={() => handlePress(['a'])}
-                    onPointerUp={() => handleRelease(['a'])}
-                    onPointerLeave={() => handleRelease(['a'])}
-                >⬅️</button>
-                
-                <button 
-                    className={styles.down}
-                    onPointerDown={() => handlePress(['s'])}
-                    onPointerUp={() => handleRelease(['s'])}
-                    onPointerLeave={() => handleRelease(['s'])}
-                >⬇️</button>
-                
-                <button 
-                    className={styles.right}
-                    onPointerDown={() => handlePress(['d'])}
-                    onPointerUp={() => handleRelease(['d'])}
-                    onPointerLeave={() => handleRelease(['d'])}
-                >➡️</button>
-
-                <button 
-                    className={styles.upLeft}
-                    onPointerDown={() => handlePress(['w', 'a'])}
-                    onPointerUp={() => handleRelease(['w', 'a'])}
-                    onPointerLeave={() => handleRelease(['w', 'a'])}
-                >↖️</button>
-                
-                <button 
-                    className={styles.downLeft}
-                    onPointerDown={() => handlePress(['s', 'a'])}
-                    onPointerUp={() => handleRelease(['s', 'a'])}
-                    onPointerLeave={() => handleRelease(['s', 'a'])}
-                >↙️</button>
-                
-                <button 
-                    className={styles.downRight}
-                    onPointerDown={() => handlePress(['s', 'd'])}
-                    onPointerUp={() => handleRelease(['s', 'd'])}
-                    onPointerLeave={() => handleRelease(['s', 'd'])}
-                >↘️</button>
-                
-                <button 
-                    className={styles.upRight}
-                    onPointerDown={() => handlePress(['w', 'd'])}
-                    onPointerUp={() => handleRelease(['w', 'd'])}
-                    onPointerLeave={() => handleRelease(['w', 'd'])}
-                >↗️</button>
+                {/* Diagonals */}
+                <button className={styles.upLeft} {...bindBtn(['w', 'a'])}>↖️</button>
+                <button className={styles.upRight} {...bindBtn(['w', 'd'])}>↗️</button>
+                <button className={styles.downLeft} {...bindBtn(['s', 'a'])}>↙️</button>
+                <button className={styles.downRight} {...bindBtn(['s', 'd'])}>↘️</button>
             </div>
 
-            <button className={styles.actionButton}>⏺️</button>
+            <button className={styles.actionButton} {...bindBtn(['e'])}>
+                ⏺️
+            </button>
         </div>
     )
 }

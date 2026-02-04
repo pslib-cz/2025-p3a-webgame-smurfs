@@ -65,7 +65,7 @@
     }
 
     @media screen and (max-width: 852px) {
-        --slotSize: 3rem;
+        --slotSize: 2.5rem;
         --slotGap: 0.2rem;
     }
 }

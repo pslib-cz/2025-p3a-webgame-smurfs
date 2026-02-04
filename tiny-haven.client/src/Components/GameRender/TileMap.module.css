@@ -1,4 +1,6 @@
 .tileMap {
+    --scale: clamp(1.5, calc(7 * (100vw / 1920px)), 5);
+
     display: grid;
     grid-template-columns: repeat(180, 16px);
     grid-template-rows: repeat(100, 16px);
@@ -14,4 +16,7 @@
 
     background-color: #237946;
     background-image: url(/images/game_assets/ui/map.png);
+
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }

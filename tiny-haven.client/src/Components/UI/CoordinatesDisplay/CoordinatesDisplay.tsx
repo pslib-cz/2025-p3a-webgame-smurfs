@@ -1,5 +1,6 @@
 import { usePlayerLocation } from "../../../Contexts/PlayerLocationContext";
 import styles from "./CoordinatesDisplay.module.css"
+import "../../../styles/globals.css"
 
 export const CoordinatesDisplay = () => {
     const { location } = usePlayerLocation();

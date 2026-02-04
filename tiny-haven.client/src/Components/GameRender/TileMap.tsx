@@ -2,7 +2,6 @@ import { use, useEffect } from "react";
 import styles from "./TileMap.module.css"
 import { Entity } from "./Entity";
 import { Player } from "./Player";
-import { ZOOM_LEVEL } from "../../Data/GameData";
 import { useGameSettings } from "../../Contexts/GameSettingsContext";
 //import { useInventory } from "../../Contexts/InventoryContext";
 //import { usePlayerBalance } from "../../Contexts/PlayerBalanceContext";
@@ -15,24 +14,26 @@ import { useRandomItems } from "../../Contexts/RandomItemsContext";
 import { Item } from "./Item";
 import { useInteractionMap } from "../../Contexts/InteractionMapContext";
 import type { AssetDTO, LocationMapDTO } from "../../Types/database-types";
+import { useControls } from "../../Contexts/ControlsContext";
 
 export const TileMap = () => {
     const { config: { tileSize, gridRows, gridColumns } } = useGameSettings();
+    const { controls } = useControls();
 
     const locationMapData = use(locationMapPromise);
     const playerAsset = use(playerAssetPromise);
     const collisionMap = use(collisionMapPromise);
     const assetsData = use(assetsPromise);
-
     const { generatedItems } = useRandomItems();
-
-    const { location, facing } = usePlayerMovement( collisionMap, gridColumns, gridRows );
-
     const { stepTime } = useGameSettings();
 
-    const { interactions } = useInteractionMap();
+    // Movement
+    const { location, facing } = usePlayerMovement( collisionMap, gridColumns, gridRows );
 
+    // Interactions
+    const { interactions } = useInteractionMap();
     const { setActiveInteraction } = useInteractionContext();
+    const { handleQuest } = useQuestActions(assetsData);
 
     const activeInteraction = useInteractions(
     location.x,
@@ -44,46 +45,23 @@ export const TileMap = () => {
     setActiveInteraction(activeInteraction);
     }, [activeInteraction]);
 
-      useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-          if (e.key.toLowerCase() === "e" && activeInteraction) {
-            console.log("Spouštím quest:", activeInteraction.quest.name);
-            // tady později fetch na backend
-          }
-        };
-      
-        window.addEventListener("keydown", handleKeyDown);
-        return () => window.removeEventListener("keydown", handleKeyDown);
-      }, [activeInteraction]);
-
-
-      const { handleQuest } = useQuestActions(assetsData);
-
-
-      // ..........Pickup item........... //
-
-
-      useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key.toLowerCase() === "e" && activeInteraction) {
-        handleQuest(activeInteraction);
+    useEffect(() => {
+        if (controls.e && activeInteraction) {
+            console.log("Action triggered via Context");
+            handleQuest(activeInteraction);
         }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [activeInteraction]);
-
-    //---//
+    }, [controls.e, activeInteraction, handleQuest]);
 
     const pixelX = location.x * tileSize;
     const pixelY = location.y * tileSize;
     const offset = tileSize / 2;
 
     const worldStyle = {
-        transform: `scale(${ZOOM_LEVEL}) translate3d(-${pixelX - offset}px, -${pixelY - offset}px, 0)`,
+        transform: `scale(var(--scale)) translate3d(-${pixelX - offset}px, -${pixelY - offset}px, 0)`,
         transformOrigin: '0 0',
-        transition: `transform ${stepTime}ms linear`
+        willChange: 'transform',
+        transition: `transform ${stepTime}ms linear`,
+        transitionDelay: '0ms'
     };
 
     return (

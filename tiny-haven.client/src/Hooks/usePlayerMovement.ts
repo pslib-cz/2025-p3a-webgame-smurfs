@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import type { FacingDirection } from '../Types/player-data'
 import { usePlayerLocation } from '../Contexts/PlayerLocationContext';
 import { useGameSettings } from "../Contexts/GameSettingsContext"
+import { useControls } from '../Contexts/ControlsContext';
 
 export const usePlayerMovement = (
     collisionMap: boolean[][],
@@ -9,59 +10,29 @@ export const usePlayerMovement = (
     maxRows: number
 ) => {
     const { location, setLocation } = usePlayerLocation();
+    const { heldKeys } = useControls(); // Use the ref-based keys
     const [ facing, setFacing ] = useState<FacingDirection>('right');
-    
-    const keys = useRef({ w: false, a: false, s: false, d: false });
-
     const { stepTime } = useGameSettings();
 
-    const setKey = useCallback((key: 'w' | 'a' | 's' | 'd', value: boolean) => {
-        keys.current[key] = value;
-    }, []);
-
-    useEffect(() => {
-        const down = (e: KeyboardEvent) => {
-            if (e.code === "KeyW") keys.current.w = true;
-            if (e.code === "KeyA") keys.current.a = true;
-            if (e.code === "KeyS") keys.current.s = true;
-            if (e.code === "KeyD") keys.current.d = true;
-        };
-        const up = (e: KeyboardEvent) => {
-            if (e.code === "KeyW") keys.current.w = false;
-            if (e.code === "KeyA") keys.current.a = false;
-            if (e.code === "KeyS") keys.current.s = false;
-            if (e.code === "KeyD") keys.current.d = false;
-        };
-        window.addEventListener("keydown", down);
-        window.addEventListener("keyup", up);
-        return () => {
-            window.removeEventListener("keydown", down);
-            window.removeEventListener("keyup", up);
-        };
-    }, []);
-
-    // Game Loop
     useEffect(() => {
         const moveInterval = setInterval(() => {
+            const keys = heldKeys.current; 
             let dx = 0;
             let dy = 0;
 
-            // Logika pro směr (Facing)
-            if (keys.current.a) { dx -= 1; setFacing('left'); }
-            if (keys.current.d) { dx += 1; setFacing('right'); }
-            if (keys.current.w) dy -= 1;
-            if (keys.current.s) dy += 1;
+            if (keys.a) { dx -= 1; setFacing('left'); }
+            else if (keys.d) { dx += 1; setFacing('right'); }
+            
+            if (keys.w) dy -= 1; 
+            else if (keys.s) dy += 1; 
 
             if (dx === 0 && dy === 0) return;
 
             setLocation((prev) => {
-                const nx: number = prev.x + dx;
-                const ny: number = prev.y + dy;
+                const nx = prev.x + dx;
+                const ny = prev.y + dy;
 
-                // Hranice mapy
                 if (nx < 1 || ny < 1 || nx > maxColumns || ny > maxRows) return prev;
-
-                // Kolize
                 if (collisionMap[ny - 1]?.[nx - 1]) return prev;
 
                 return { x: nx, y: ny };
@@ -69,7 +40,7 @@ export const usePlayerMovement = (
         }, stepTime);
 
         return () => clearInterval(moveInterval);
-    }, [collisionMap, maxColumns, maxRows, setLocation]);
+    }, [collisionMap, maxColumns, maxRows, setLocation, stepTime, heldKeys]); 
 
-    return { location, facing, setKey };
+    return { location, facing };
 };
