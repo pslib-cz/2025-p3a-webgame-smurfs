@@ -37,9 +37,9 @@
     }
 
     @media screen and (max-width: 768px) {
-        width: 7rem;
-        height: calc(7rem / 3);
+        width: 6rem;
+        height: calc(6rem / 3);
 
-        p { font-size: 1.5rem; }
+        p { font-size: 1.2rem; }
     }
 }

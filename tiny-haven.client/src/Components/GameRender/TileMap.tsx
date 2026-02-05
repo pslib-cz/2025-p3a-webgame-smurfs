@@ -1,4 +1,4 @@
-import { use, useEffect } from "react";
+import { use, useEffect, useRef } from "react";
 import styles from "./TileMap.module.css"
 import { Entity } from "./Entity";
 import { Player } from "./Player";
@@ -34,19 +34,23 @@ export const TileMap = () => {
     const { interactions } = useInteractionMap();
     const { setActiveInteraction } = useInteractionContext();
     const { handleQuest } = useQuestActions(assetsData);
+    const isInteracting = useRef(false);
 
-    const activeInteraction = useInteractions(
-    location.x,
-    location.y,
-    interactions
-    );
+    const activeInteraction = useInteractions(location.x, location.y, interactions);
 
     useEffect(() => {
-    setActiveInteraction(activeInteraction);
+        setActiveInteraction(activeInteraction);
     }, [activeInteraction]);
 
     useEffect(() => {
-        if (controls.e && activeInteraction) {
+        if (!controls.e) {
+            isInteracting.current = false;
+            return;
+        }
+
+        if (controls.e && activeInteraction && !isInteracting.current) {
+            isInteracting.current = true;
+            
             console.log("Action triggered via Context");
             handleQuest(activeInteraction);
         }

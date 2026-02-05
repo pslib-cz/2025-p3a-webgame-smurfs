@@ -3,11 +3,14 @@ import { useGameSettings } from './GameSettingsContext';
 import { type SpawnRequestDto, type SpawnResultDto, type PointDto, type AssetDTO, type RenderableItem } from '../Types/database-types';
 import { assetsPromise } from '../api/gameResources';
 
+const INITIAL_SPAWN_LIST = [ 9, 8, 4, 14, 15, 16, 22 ]; 
+
 interface RandomItemsContextType {
     itemsMap: number[][];
     generatedItems: RenderableItem[];
     spawnItems: (itemId: number) => Promise<void>;
     despawnItem: (x: number, y: number) => void;
+    requestAllItems: () => Promise<void>;
 }
 
 const RandomItemsContext = createContext<RandomItemsContextType | undefined>(undefined);
@@ -53,6 +56,7 @@ export const RandomItemProvider = ({ children }: { children: React.ReactNode }) 
         let currentAmount = 0;
         const occupiedList: PointDto[] = [];
 
+        // Calculate occupied spots
         for (let x = 0; x < gridColumns; x++) {
             for (let y = 0; y < gridRows; y++) {
                 if (itemsMap[x][y] !== 0) {
@@ -111,8 +115,16 @@ export const RandomItemProvider = ({ children }: { children: React.ReactNode }) 
         });
     };
 
+    const requestAllItems = async () => {
+        console.log("Regenerating World items...");
+        
+        for (const itemId of INITIAL_SPAWN_LIST) {
+            await spawnItems(itemId);
+        }
+    };
+
     return (
-        <RandomItemsContext.Provider value={{ itemsMap, generatedItems, spawnItems, despawnItem }}>
+        <RandomItemsContext.Provider value={{ itemsMap, generatedItems, spawnItems, despawnItem, requestAllItems }}>
             {children}
         </RandomItemsContext.Provider>
     );
@@ -120,6 +132,6 @@ export const RandomItemProvider = ({ children }: { children: React.ReactNode }) 
 
 export const useRandomItems = () => {
     const context = useContext(RandomItemsContext);
-    if (!context) throw new Error("useGameMap must be used within GameMapProvider");
+    if (!context) throw new Error("useRandomItems must be used within RandomItemProvider");
     return context;
 };
