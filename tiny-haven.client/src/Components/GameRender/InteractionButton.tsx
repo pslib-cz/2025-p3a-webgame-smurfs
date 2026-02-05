@@ -2,7 +2,10 @@ import { useInteractionContext } from "../../Contexts/InteractionContext";
 
 export const InteractionButton = () => {
     const { activeInteraction } = useInteractionContext();
+    const { showControls } = useGameSettings();
+    
     if (!activeInteraction) return null;
+
 
     return (
         <div

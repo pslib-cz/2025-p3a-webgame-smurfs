@@ -35,4 +35,11 @@
         margin: 0;
         color: var(--color);
     }
+
+    @media screen and (max-width: 768px) {
+        width: 6rem;
+        height: calc(6rem / 3);
+
+        p { font-size: 1.2rem; }
+    }
 }
