@@ -4,7 +4,7 @@ import { useRandomItems } from "../Contexts/RandomItemsContext";
 import type { AssetDTO, InteractionMapDTO } from "../Types/database-types";
 import type { AssetInventory } from "../Types/player-data";
 import { useQuest } from "../Contexts/QuestContext";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useInteractionMap } from "../Contexts/InteractionMapContext";
 
 export const useQuestActions = (assets: AssetDTO[]) => {
@@ -12,10 +12,8 @@ export const useQuestActions = (assets: AssetDTO[]) => {
     useInventory();
   const { addToBalance } = usePlayerBalance();
   const { despawnItem, generatedItems, spawnItems } = useRandomItems();
-  const {
-    activeQuest, startQuest, finishQuest, isQuestCompleted } = useQuest();
+  const { activeQuest, pendingQuest, queueQuestStart, startQuest, finishQuest, isQuestCompleted } = useQuest();
   const { interactions } = useInteractionMap();
-
   useEffect(() => {
     if (!activeQuest) return;
   
@@ -33,8 +31,7 @@ export const useQuestActions = (assets: AssetDTO[]) => {
       ).length;
   
       if (currentOnMap < requiredAmount) {
-        console.log(
-          `Quest start: na mapě je ${currentOnMap}/${requiredAmount}, generuji…`
+        console.log( `Quest start: na mapě je ${currentOnMap} /${requiredAmount}, generuji…`
         );
   
         spawnItems(wantedId);
@@ -106,41 +103,43 @@ export const useQuestActions = (assets: AssetDTO[]) => {
     // ---------- QUEST END ----------
     if (activeQuest && activeQuest.type === "quest_end") {
       const amount = getItemAmount(activeQuest.wantedItemId!);
-
+    
       if (amount >= activeQuest.itemQuantity!) {
         removeItemFromInventory(
           activeQuest.wantedItemId!,
           activeQuest.itemQuantity!
         );
-
+    
+        
         const rewardId = activeQuest.rewardItemId;
         const rewardAmount = activeQuest.rewardAmount ?? 1;
-
+    
         if (rewardId === 1 || rewardId === 4) {
           addToBalance(rewardAmount);
         } else {
           const asset = assets.find(a => a.assetId === rewardId);
           const item: AssetInventory = {
-            assetId: rewardId!,
-            name: asset?.name || "Unknown Item",
-            imageUrl:
+                assetId: rewardId!,
+                name: asset?.name || "Unknown Item",
+                imageUrl:
               asset?.imageUrl ||
               "/images/game_assets/placeholder-image.svg"
           };
           addItemToInventory(item, rewardAmount);
         }
-
+                
         finishQuest();
         return true;
-      }
+    }
+    
 
       return false;
     }
 
     
-    if (!activeQuest) {
-      startQuest(quest);
-      return true;
+    if (!activeQuest && quest.type === "quest_start") {
+      queueQuestStart(quest);
+      return "started";
     }
 
     return true;

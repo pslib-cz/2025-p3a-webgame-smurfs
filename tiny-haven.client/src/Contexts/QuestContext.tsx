@@ -4,8 +4,10 @@ import { questsPromise } from "../api/gameResources";
 
 type QuestContextType = {
   activeQuest: QuestDTO | null;
+  pendingQuest: QuestDTO | null;
   completedQuestIds: number[];
 
+  queueQuestStart: (quest: QuestDTO) => void;
   startQuest: (quest: QuestDTO) => void;
   finishQuest: () => void;
   isQuestCompleted: (questId: number) => boolean;
@@ -16,6 +18,7 @@ const QuestContext = createContext<QuestContextType | null>(null);
 export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
   const [activeQuest, setActiveQuest] = useState<QuestDTO | null>(null);
   const [completedQuestIds, setCompletedQuestIds] = useState<number[]>([]);
+  const [pendingQuest, setPendingQuest] = useState<QuestDTO | null>(null);
 
   const questData = use(questsPromise);
 
@@ -33,6 +36,17 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
   const startQuest = (quest: QuestDTO) => {
     if (activeQuest) return; // jen jeden quest najednou
     setActiveQuest(quest);
+  };
+
+  const queueQuestStart = (quest: QuestDTO) => {
+    if (activeQuest || pendingQuest) return;
+  
+    setPendingQuest(quest);
+  
+    setTimeout(() => {
+      setActiveQuest(quest);
+      setPendingQuest(null);
+    }, 8000);
   };
 
   const finishQuest = () => {
@@ -68,7 +82,9 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
     <QuestContext.Provider
       value={{
         activeQuest,
+        pendingQuest,
         completedQuestIds,
+        queueQuestStart,
         startQuest,
         finishQuest,
         isQuestCompleted

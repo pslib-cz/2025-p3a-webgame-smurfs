@@ -60,13 +60,17 @@ export const TileMap = () => {
 
       const result = handleQuest(activeInteraction);
 
-      if (result === "completed") {
-        setQuestDoneMessage("Už pro tebe nemám žádný další úkol.");
-        setTimeout(() => setQuestDoneMessage(null), 3000);
+      if (result === "started") {
+        setQuestMessage("Hej! Potřebuju pomoct… dones mi pár věcí.");
+        setTimeout(() => setQuestMessage(null), 5000);
       }
       else if (result === "inProcess"){
-        setQuestMessage('Čekám, až mi přineseš věcičkyy.');
-        setTimeout(() => setQuestMessage(null), 3000)
+        setQuestMessage("Ještě u sebe nemáš věci co potřebuji, vrať se až je budeš mít.");
+        setTimeout(() => setQuestMessage(null), 5000)
+      }
+      else if (result === "completed") {
+        setQuestDoneMessage("Už pro tebe nemám žádný další úkol.");
+        setTimeout(() => setQuestDoneMessage(null), 3000);
       }
     };
 
@@ -143,7 +147,7 @@ export const TileMap = () => {
           transform: "translateX(-50%)",
           background: "rgba(0,0,0,0.75)",
           color: "white",
-          fontSize: "24px",
+          fontSize: "20px",
           padding: "12px 26px",
           zIndex: 9999
         }}
