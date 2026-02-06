@@ -44,7 +44,8 @@ export const TileMap = () => {
 
   const { handleQuest } = useQuestActions(assetsData);
 
-  const [infoMessage, setInfoMessage] = useState<string | null>(null);
+  const [questMessage, setQuestMessage] = useState<string | null>(null);
+  const [questDoneMessage, setQuestDoneMessage] = useState<string | null>(null);
 
   
   useEffect(() => {
@@ -60,8 +61,12 @@ export const TileMap = () => {
       const result = handleQuest(activeInteraction);
 
       if (result === "completed") {
-        setInfoMessage("Už pro tebe nemám žádný další úkol.");
-        setTimeout(() => setInfoMessage(null), 2500);
+        setQuestDoneMessage("Už pro tebe nemám žádný další úkol.");
+        setTimeout(() => setQuestDoneMessage(null), 3000);
+      }
+      else if (result === "inProcess"){
+        setQuestMessage('Čekám, až mi přineseš věcičkyy.');
+        setTimeout(() => setQuestMessage(null), 3000)
       }
     };
 
@@ -111,7 +116,7 @@ export const TileMap = () => {
         )}
       </div>
 
-      {infoMessage && (
+      {questDoneMessage && (
         <div
           style={{
             position: "fixed",
@@ -125,7 +130,25 @@ export const TileMap = () => {
             zIndex: 9999
           }}
         >
-          {infoMessage}
+          {questDoneMessage}
+        </div>
+      )}
+
+      {questMessage && (
+        <div
+        style={{
+          position: "fixed",
+          top: 10,
+          left: "50%",
+          transform: "translateX(-50%)",
+          background: "rgba(0,0,0,0.75)",
+          color: "white",
+          fontSize: "24px",
+          padding: "12px 26px",
+          zIndex: 9999
+        }}
+        >
+          {questMessage}
         </div>
       )}
     </>

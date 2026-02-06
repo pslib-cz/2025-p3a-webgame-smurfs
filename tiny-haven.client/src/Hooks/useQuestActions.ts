@@ -68,6 +68,9 @@ export const useQuestActions = (assets: AssetDTO[]) => {
     if (isQuestCompleted(quest.questId) && !activeQuest) {
       return "completed";
     }
+    else if (!isQuestCompleted(quest.questId) && activeQuest?.type === "quest_start") {
+      return "inProcess";
+    }
     
 
     // ---------- PICKUP ITEM ----------
