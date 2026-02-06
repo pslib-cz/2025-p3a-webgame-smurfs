@@ -11,15 +11,38 @@ export const useQuestActions = (assets: AssetDTO[]) => {
   const { addItemToInventory, removeItemFromInventory, getItemAmount } =
     useInventory();
   const { addToBalance } = usePlayerBalance();
-  const { despawnItem } = useRandomItems();
+  const { despawnItem, generatedItems, spawnItems } = useRandomItems();
   const {
-    activeQuest,
-    startQuest,
-    finishQuest,
-    isQuestCompleted
-  } = useQuest();
+    activeQuest, startQuest, finishQuest, isQuestCompleted } = useQuest();
   const { interactions } = useInteractionMap();
 
+  useEffect(() => {
+    if (!activeQuest) return;
+  
+    if (
+      activeQuest.type === "quest_start" &&
+      activeQuest.wantedItemId &&
+      activeQuest.itemQuantity
+    ) {
+      const wantedId = activeQuest.wantedItemId;
+      const requiredAmount = activeQuest.itemQuantity;
+  
+      // kolik itemů je aktuálně na mapě
+      const currentOnMap = generatedItems.filter(
+        item => item.assetId === wantedId
+      ).length;
+  
+      if (currentOnMap < requiredAmount) {
+        console.log(
+          `Quest start: na mapě je ${currentOnMap}/${requiredAmount}, generuji…`
+        );
+  
+        spawnItems(wantedId);
+      }
+    }
+  }, [activeQuest, generatedItems, spawnItems]);
+
+  
   useEffect(() => {
     if (!activeQuest) return;
 
@@ -29,6 +52,7 @@ export const useQuestActions = (assets: AssetDTO[]) => {
       activeQuest.wantedItemId &&
       activeQuest.itemQuantity
     ) {
+
       const amount = getItemAmount(activeQuest.wantedItemId);
 
       if (amount >= activeQuest.itemQuantity) {

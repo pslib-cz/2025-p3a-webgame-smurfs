@@ -62,6 +62,8 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
   completedQuestIds.includes(questId);
 
 
+  
+
   return (
     <QuestContext.Provider
       value={{
