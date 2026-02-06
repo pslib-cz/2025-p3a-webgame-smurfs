@@ -1,0 +1,30 @@
+.page {
+    width: 100dvw;
+    height: 100dvh;
+    background-image: "/images/game_assets/ui/backround.png";
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: rgba(0,0,0,0.62);
+    background-blend-mode: multiply; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #FFFFFF;
+}
+
+.h1 {
+    font-size: 6rem;
+}
+
+.headimage {
+    width: 9.75rem;
+    aspect-ratio: 1/1;
+    object-fit: contain;
+    object-position: center;
+}
+
+.button {
+    /* width: ; */
+    background-image: "/images/game_assets/ui/button-border.svg";
+}
