@@ -12,7 +12,7 @@ export const useQuestActions = (assets: AssetDTO[]) => {
     useInventory();
   const { addToBalance } = usePlayerBalance();
   const { despawnItem, generatedItems, spawnItems } = useRandomItems();
-  const { activeQuest, pendingQuest, queueQuestStart, startQuest, finishQuest, isQuestCompleted } = useQuest();
+  const { activeQuest, queueQuestStart, finishQuest, isQuestCompleted } = useQuest();
   const { interactions } = useInteractionMap();
   useEffect(() => {
     if (!activeQuest) return;
