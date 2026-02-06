@@ -43,7 +43,6 @@ namespace tiny_haven.Server.Services
 
             var entities = await _context.LocationMaps
                 .Include(x => x.Asset)
-                .Where(x => x.Asset.Collision == true)
                 .ToListAsync();
 
             foreach (var entity in entities)
