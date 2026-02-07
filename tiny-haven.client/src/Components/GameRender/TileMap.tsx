@@ -55,8 +55,8 @@ export const TileMap = () => {
 
       const result = handleQuest(activeInteraction);
 
-      if (result === "startQuestMsg") {
-        const desc = activeInteraction.quest.description || "Hej! Potřebuju pomoct… dones mi pár věcí.";
+      if (result && typeof result === "object" && result.type === "startQuestMsg") {
+        const desc = result.description || "Hej! Potřebuju pomoct… dones mi pár věcí.";
         setQuestMessage(desc);
         setTimeout(() => setQuestMessage(null), 5000);
       }
@@ -69,6 +69,12 @@ export const TileMap = () => {
       if (result === "completed") {
         setQuestDoneMessage("Už pro tebe nemám žádný další úkol.");
         setTimeout(() => setQuestDoneMessage(null), 3000);
+      }
+
+      if (result && typeof result === "object" && result.type === "endQuestMsg") {
+        const descEnd = result.description || "Díky za quest bráchoo.";
+        setQuestMessage(descEnd);
+        setTimeout(() => setQuestMessage(null), 5000);
       }
     };
 

@@ -58,7 +58,7 @@ export const useQuestActions = (assets: AssetDTO[]) => {
     }
   }, [activeQuest, getItemAmount, finishQuest]);
 
-  const handleQuest = (interaction: InteractionMapDTO) => {
+    const handleQuest = (interaction: InteractionMapDTO) => {
     const quest = interaction.quest;
 
 
@@ -72,7 +72,7 @@ export const useQuestActions = (assets: AssetDTO[]) => {
     
     if (!activeQuest && quest.type === "quest_start") {
       queueQuestStart(quest);
-      return "startQuestMsg";
+      return { type: "startQuestMsg", description: quest.description };
     }
 
 
@@ -112,6 +112,8 @@ export const useQuestActions = (assets: AssetDTO[]) => {
       const amount = getItemAmount(activeQuest.wantedItemId!);
       
       if (amount >= activeQuest.itemQuantity!) {
+        const endDescription = activeQuest.description;
+
         removeItemFromInventory(
               activeQuest.wantedItemId!,
               activeQuest.itemQuantity!
@@ -135,7 +137,7 @@ export const useQuestActions = (assets: AssetDTO[]) => {
             }
         
         finishQuest();
-        return true;
+        return { type: "endQuestMsg", description: endDescription };
       }
 
       return false;
