@@ -1,0 +1,34 @@
+.mapToggleBtn {
+    position: absolute;
+    top: 7rem;
+    right: 6.5rem;
+
+    height: 3.5rem;
+    aspect-ratio: 1 / 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-image: url("/images/game_assets/ui/hud-bg-small.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    img {
+        width: 50%;
+        aspect-ratio: 1 / 1;
+        object-fit: contain;
+        object-position: center;
+
+        transition: transform 0.2s;
+    }
+}
+
+.mapToggleBtn:hover {
+    cursor: pointer;
+
+    img {
+        transform: scale(1.1);
+    }
+}

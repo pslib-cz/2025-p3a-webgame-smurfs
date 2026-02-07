@@ -1,0 +1,72 @@
+.mapModal {
+    width: 75dvw;
+    height: auto;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.mapModal__map {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 180 / 100;
+
+    display: grid;
+    grid-template-columns: repeat(180, 1fr);
+    grid-template-rows: repeat(100, 1fr);
+
+    background-image: url("/images/game_assets/ui/map.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.mapModal__btn {
+    height: 3rem;
+    aspect-ratio: 1 / 1;
+
+    margin-left: auto;
+    margin-bottom: -3.5rem;
+    margin-right: 0.5rem;
+    z-index: 1;
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-image: url("/images/game_assets/ui/hud-bg-small.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    img {
+        width: 40%;
+        aspect-ratio: 1 / 1;
+        object-fit: contain;
+        object-position: center;
+
+        transition: transform 0.2s;
+    }
+}
+
+.mapModal__btn:hover {
+    cursor: pointer;
+
+    img {
+        transform: scale(1.1);
+    }
+}
+
+.playerIndicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+        width: 2.5rem;
+        aspect-ratio: 1 / 1;
+    }
+}
