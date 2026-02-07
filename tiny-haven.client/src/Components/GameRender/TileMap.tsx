@@ -55,8 +55,9 @@ export const TileMap = () => {
 
       const result = handleQuest(activeInteraction);
 
-      if (result === "started") {
-        setQuestMessage("Hej! Potřebuju pomoct… dones mi pár věcí.");
+      if (result === "startQuestMsg") {
+        const desc = activeInteraction.quest.description || "Hej! Potřebuju pomoct… dones mi pár věcí.";
+        setQuestMessage(desc);
         setTimeout(() => setQuestMessage(null), 5000);
       }
       

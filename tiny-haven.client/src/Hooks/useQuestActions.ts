@@ -72,12 +72,9 @@ export const useQuestActions = (assets: AssetDTO[]) => {
     
     if (!activeQuest && quest.type === "quest_start") {
       queueQuestStart(quest);
-      return "started";
+      return "startQuestMsg";
     }
-    
-    if (activeQuest && quest.type === "quest_end"){
-      
-    }
+
 
 
     // ---------- PICKUP ITEM ----------
@@ -113,41 +110,39 @@ export const useQuestActions = (assets: AssetDTO[]) => {
     // ---------- QUEST END ----------
     if (activeQuest && activeQuest.type === "quest_end") {
       const amount = getItemAmount(activeQuest.wantedItemId!);
-    
+      
       if (amount >= activeQuest.itemQuantity!) {
         removeItemFromInventory(
-          activeQuest.wantedItemId!,
-          activeQuest.itemQuantity!
-        );
-    
-        
-        const rewardId = activeQuest.rewardItemId;
-        const rewardAmount = activeQuest.rewardAmount ?? 1;
-    
-        if (rewardId === 1 || rewardId === 4) {
-          addToBalance(rewardAmount);
-        } else {
-          const asset = assets.find(a => a.assetId === rewardId);
-          const item: AssetInventory = {
+              activeQuest.wantedItemId!,
+              activeQuest.itemQuantity!
+            );
+
+            const rewardId = activeQuest.rewardItemId;
+            const rewardAmount = activeQuest.rewardAmount ?? 1;
+
+            if (rewardId === 1 || rewardId === 4) {
+              addToBalance(rewardAmount);
+            } else {
+              const asset = assets.find(a => a.assetId === rewardId);
+              const item: AssetInventory = {
                 assetId: rewardId!,
                 name: asset?.name || "Unknown Item",
                 imageUrl:
               asset?.imageUrl ||
               "/images/game_assets/placeholder-image.svg"
-          };
-          addItemToInventory(item, rewardAmount);
-        }
-                
+              };
+              addItemToInventory(item, rewardAmount);
+            }
+        
         finishQuest();
         return true;
-    }
+      }
 
       return false;
     }
-    
 
-    return true;
+    return true; 
   };
 
-  return { handleQuest };
+  return { handleQuest };  
 };

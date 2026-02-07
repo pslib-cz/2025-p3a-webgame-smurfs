@@ -20,7 +20,7 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
   const [completedQuestIds, setCompletedQuestIds] = useState<number[]>([]);
   
   const [pendingQuest, setPendingQuest] = useState<QuestDTO | null>(null);
-
+  
   const questData = use(questsPromise);
 
   const getRootQuestId = (quest: QuestDTO): number => {
@@ -80,6 +80,7 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
         activeQuest,
         pendingQuest,
         completedQuestIds,
+
         queueQuestStart,
         startQuest,
         finishQuest,
