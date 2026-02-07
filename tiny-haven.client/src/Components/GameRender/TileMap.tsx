@@ -4,12 +4,7 @@ import { Entity } from "./Entity";
 import { Player } from "./Player";
 import { STEP_TIME, ZOOM_LEVEL } from "../../Data/GameData";
 import { useGameSettings } from "../../Contexts/GameSettingsContext";
-import {
-  collisionMapPromise,
-  locationMapPromise,
-  playerAssetPromise,
-  assetsPromise
-} from "../../api/gameResources";
+import { collisionMapPromise, locationMapPromise, playerAssetPromise, assetsPromise } from "../../api/gameResources";
 import { usePlayerMovement } from "../../Hooks/usePlayerMovement";
 import { useInteractions } from "../../Hooks/useInteractions";
 import { useQuestActions } from "../../Hooks/useQuestActions";
@@ -64,11 +59,13 @@ export const TileMap = () => {
         setQuestMessage("Hej! Potřebuju pomoct… dones mi pár věcí.");
         setTimeout(() => setQuestMessage(null), 5000);
       }
-      else if (result === "inProcess"){
+      
+      if (result === "inProcess"){
         setQuestMessage("Ještě u sebe nemáš věci co potřebuji, vrať se až je budeš mít.");
         setTimeout(() => setQuestMessage(null), 5000)
       }
-      else if (result === "completed") {
+      
+      if (result === "completed") {
         setQuestDoneMessage("Už pro tebe nemám žádný další úkol.");
         setTimeout(() => setQuestDoneMessage(null), 3000);
       }

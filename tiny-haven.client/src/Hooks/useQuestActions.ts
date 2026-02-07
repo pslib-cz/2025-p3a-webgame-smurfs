@@ -4,7 +4,7 @@ import { useRandomItems } from "../Contexts/RandomItemsContext";
 import type { AssetDTO, InteractionMapDTO } from "../Types/database-types";
 import type { AssetInventory } from "../Types/player-data";
 import { useQuest } from "../Contexts/QuestContext";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useInteractionMap } from "../Contexts/InteractionMapContext";
 
 export const useQuestActions = (assets: AssetDTO[]) => {
@@ -49,7 +49,7 @@ export const useQuestActions = (assets: AssetDTO[]) => {
       activeQuest.wantedItemId &&
       activeQuest.itemQuantity
     ) {
-
+      
       const amount = getItemAmount(activeQuest.wantedItemId);
 
       if (amount >= activeQuest.itemQuantity) {
@@ -61,14 +61,24 @@ export const useQuestActions = (assets: AssetDTO[]) => {
   const handleQuest = (interaction: InteractionMapDTO) => {
     const quest = interaction.quest;
 
-    
+
     if (isQuestCompleted(quest.questId) && !activeQuest) {
       return "completed";
     }
-    else if (!isQuestCompleted(quest.questId) && activeQuest?.type === "quest_start") {
+    
+    if (!isQuestCompleted(quest.questId) && activeQuest?.type === "quest_start") {
       return "inProcess";
     }
     
+    if (!activeQuest && quest.type === "quest_start") {
+      queueQuestStart(quest);
+      return "started";
+    }
+    
+    if (activeQuest && quest.type === "quest_end"){
+      
+    }
+
 
     // ---------- PICKUP ITEM ----------
     if (quest.type === "pickup_item") {
@@ -131,16 +141,10 @@ export const useQuestActions = (assets: AssetDTO[]) => {
         finishQuest();
         return true;
     }
-    
 
       return false;
     }
-
     
-    if (!activeQuest && quest.type === "quest_start") {
-      queueQuestStart(quest);
-      return "started";
-    }
 
     return true;
   };

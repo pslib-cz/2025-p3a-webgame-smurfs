@@ -18,20 +18,16 @@ const QuestContext = createContext<QuestContextType | null>(null);
 export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
   const [activeQuest, setActiveQuest] = useState<QuestDTO | null>(null);
   const [completedQuestIds, setCompletedQuestIds] = useState<number[]>([]);
+  
   const [pendingQuest, setPendingQuest] = useState<QuestDTO | null>(null);
 
   const questData = use(questsPromise);
 
   const getRootQuestId = (quest: QuestDTO): number => {
-    let current = quest;
-  
-    while (true) {
-      const prev = questData.find((q: QuestDTO) => q.nextQuestId === current.questId);
-      if (!prev) return current.questId;
-      current = prev;
-    }
-  };
-  
+    const prev = questData.find((q: QuestDTO) => q.nextQuestId === quest.questId);
+    if (!prev) return quest.questId;
+    return getRootQuestId(prev);
+  }  
 
   const startQuest = (quest: QuestDTO) => {
     if (activeQuest) return; // jen jeden quest najednou
@@ -46,7 +42,7 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
     setTimeout(() => {
       setActiveQuest(quest);
       setPendingQuest(null);
-    }, 8000);
+    }, 5000);
   };
 
   const finishQuest = () => {
