@@ -16,7 +16,7 @@
     background-size: contain;
 
     img {
-        width: 50%;
+        width: 60%;
         aspect-ratio: 1 / 1;
         object-fit: contain;
         object-position: center;
