@@ -41,7 +41,7 @@ export const RandomItemProvider = ({ children }: { children: React.ReactNode }) 
                             y: y + 1,
                             assetId: itemId,
                             name: asset.name,
-                            imageUrl: asset.imageUrl ?? "images/placeholder.svg",
+                            imageUrl: asset.imageUrl ?? "images/game_assets/placeholder-image.svg",
                             spanX: asset.spanX,
                             spanY: asset.spanY
                         });

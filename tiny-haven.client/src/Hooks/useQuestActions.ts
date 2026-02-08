@@ -6,15 +6,30 @@ import type { AssetDTO, InteractionMapDTO } from "../Types/database-types";
 import type { AssetInventory } from "../Types/player-data";
 import { useQuest } from "../Contexts/QuestContext";
 import { useEffect } from "react";
-import { useInteractionMap } from "../Contexts/InteractionMapContext";
 
 export const useQuestActions = (assets: AssetDTO[]) => {
-  const { addItemToInventory, removeItemFromInventory, getItemAmount } =
-    useInventory();
+  const { addItemToInventory, removeItemFromInventory, getItemAmount } = useInventory();
   const { addToBalance } = usePlayerBalance();
-  const { despawnItem, generatedItems, spawnItems } = useRandomItems();
+  const { despawnItem, generatedItems, spawnItems, requestAllItems } = useRandomItems();
   const { activeQuest, queueQuestStart, finishQuest, isQuestCompleted } = useQuest();
-  const { interactions } = useInteractionMap();
+
+  const pickupCount = useRef(0);
+
+  const checkBackgroundRegeneration = () => {
+    pickupCount.current += 1;
+    console.log(`Generated items collected: ${pickupCount.current}`);
+
+    if (pickupCount.current > 0 && pickupCount.current % 30 === 0) {
+      console.log("20th item reached. Requesting new items in background...");
+
+      if (requestAllItems) {
+        requestAllItems().catch((err: unknown) => 
+          console.error("Silent regeneration failed:", err)
+        );
+      }
+    }
+  };
+
   useEffect(() => {
     if (!activeQuest) return;
   
@@ -59,9 +74,8 @@ export const useQuestActions = (assets: AssetDTO[]) => {
     }
   }, [activeQuest, getItemAmount, finishQuest]);
 
-    const handleQuest = (interaction: InteractionMapDTO) => {
+  const handleQuest = (interaction: InteractionMapDTO) => {
     const quest = interaction.quest;
-
 
     if (isQuestCompleted(quest.questId) && !activeQuest) {
       return "completed";
@@ -75,8 +89,6 @@ export const useQuestActions = (assets: AssetDTO[]) => {
       queueQuestStart(quest);
       return { type: "startQuestMsg", description: quest.description };
     }
-
-
 
     // ---------- PICKUP ITEM ----------
     if (quest.type === "pickup_item") {
@@ -95,16 +107,10 @@ export const useQuestActions = (assets: AssetDTO[]) => {
       console.log("Adding item to inventory:", item);
 
       const success = addItemToInventory(item, quest.rewardAmount ?? 1);
-      
-      if (success) {
-        if (interaction.interactionId < 0) {
-            despawnItem(interaction.locationX, interaction.locationY);
-            checkBackgroundRegeneration();
-        }
-      const success = addItemToInventory(item, quest.rewardAmount ?? 1);
 
       if (success && interaction.interactionId < 0) {
         despawnItem(interaction.locationX, interaction.locationY);
+        checkBackgroundRegeneration();
       }
 
       return success;
@@ -118,13 +124,6 @@ export const useQuestActions = (assets: AssetDTO[]) => {
           despawnItem(interaction.locationX, interaction.locationY);
           checkBackgroundRegeneration();
       }
-
-
-    // ---------- ADD TO BALANCE ----------
-    if (quest.type === "add_to_balance") {
-      const random = Math.floor(Math.random() * (20 - 5 + 1)) + 5;
-      addToBalance(random);
-      return true;
     }
 
     // ---------- QUEST END ----------

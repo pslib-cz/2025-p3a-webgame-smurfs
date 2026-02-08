@@ -15,7 +15,7 @@ export const Entity = memo(({ data }: EntityProps) => {
                 gridRow: `${data.locationY} / span ${data.spanY}`,
                 zIndex: `calc(${data.locationY} + 10)`
             }}>
-                <img src={data.imageUrl ?? "images/placeholder-image.svg"} alt={data.name} loading="lazy"/>
+                <img src={data.imageUrl ?? "images/game_assets/placeholder-image.svg"} alt={data.name} loading="lazy"/>
         </div>
     );
 }, (prevProps, nextProps) => {

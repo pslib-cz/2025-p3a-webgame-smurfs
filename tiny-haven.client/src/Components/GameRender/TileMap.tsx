@@ -2,19 +2,22 @@ import { use, useEffect, useState, useRef } from "react";
 import styles from "./TileMap.module.css";
 import { Entity } from "./AssetsDisplay/Entity";
 import { Player } from "./AssetsDisplay/Player";
+import { Item } from "./AssetsDisplay/Item";
 import { useGameSettings } from "../../Contexts/GameSettingsContext";
+import { useControls } from "../../Contexts/ControlsContext";
+import { useInteractionContext } from "../../Contexts/InteractionContext";
+import { useRandomItems } from "../../Contexts/RandomItemsContext";
+import { useInteractionMap } from "../../Contexts/InteractionMapContext";
 import { collisionMapPromise, locationMapPromise, playerAssetPromise, assetsPromise } from "../../api/gameResources";
 import { usePlayerMovement } from "../../Hooks/usePlayerMovement";
 import { useInteractions } from "../../Hooks/useInteractions";
 import { useQuestActions } from "../../Hooks/useQuestActions";
-import { useInteractionContext } from "../../Contexts/InteractionContext";
-import { useRandomItems } from "../../Contexts/RandomItemsContext";
-import { Item } from "./AssetsDisplay/Item";
-import { useInteractionMap } from "../../Contexts/InteractionMapContext";
 import { useHandyQuestActions } from "../../Hooks/useHandyQuestActions";
+import type { AssetDTO, LocationMapDTO } from "../../Types/database-types";
 
 export const TileMap = () => {
-  const { tileSize, gridRows, gridColumns } = useGameSettings();
+  const { config: { tileSize, gridRows, gridColumns }, stepTime } = useGameSettings();
+  const { controls } = useControls();
 
   const locationMapData = use(locationMapPromise);
   const playerAsset = use(playerAssetPromise);
@@ -24,7 +27,7 @@ export const TileMap = () => {
   const { generatedItems } = useRandomItems();
   const { interactions } = useInteractionMap();
 
-  const { location, facing } = usePlayerMovement( collisionMap, gridColumns, gridRows );
+  const { location, facing } = usePlayerMovement(collisionMap, gridColumns, gridRows);
 
   const { setActiveInteraction } = useInteractionContext();
   const activeInteraction = useInteractions(
@@ -34,23 +37,25 @@ export const TileMap = () => {
   );
 
   const { handleQuest } = useQuestActions(assetsData);
-
-  const { handleHandyQuestInteraction }  = useHandyQuestActions();
+  const { handleHandyQuestInteraction } = useHandyQuestActions();
 
   const [questMessage, setQuestMessage] = useState<string | null>(null);
   const [questDoneMessage, setQuestDoneMessage] = useState<string | null>(null);
 
-  
+  // Track previous E key state to detect single press (edge detection)
+  const prevEPressed = useRef(false);
+
   useEffect(() => {
     setActiveInteraction(activeInteraction);
-  }, [activeInteraction]);
+  }, [activeInteraction, setActiveInteraction]);
 
-  
+  // Handle E key press using ControlsContext with edge detection
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() !== "e") return;
-      if (!activeInteraction) return;
+    const isEPressed = controls.e;
 
+    // Detect rising edge (key just pressed, not held)
+    // This ensures the quest logic only fires ONCE per key press
+    if (isEPressed && !prevEPressed.current && activeInteraction) {
       const result = handleQuest(activeInteraction);
 
       if (result && typeof result === "object" && result.type === "startQuestMsg") {
@@ -58,12 +63,12 @@ export const TileMap = () => {
         setQuestMessage(desc);
         setTimeout(() => setQuestMessage(null), 5000);
       }
-      
-      if (result === "inProcess"){
+
+      if (result === "inProcess") {
         setQuestMessage("Ještě u sebe nemáš věci co potřebuji, vrať se až je budeš mít.");
-        setTimeout(() => setQuestMessage(null), 5000)
+        setTimeout(() => setQuestMessage(null), 5000);
       }
-      
+
       if (result === "completed") {
         setQuestDoneMessage("Už pro tebe nemám žádný další úkol.");
         setTimeout(() => setQuestDoneMessage(null), 3000);
@@ -76,52 +81,56 @@ export const TileMap = () => {
       }
 
       // .......... HANDY QUEST ...........
-
-      if (activeInteraction.quest && 
-        (activeInteraction.quest.type === "quest_handy_smurf" || 
-         activeInteraction.quest.type === "quest_handy_smurf_2")) {
-
+      if (
+        activeInteraction.quest &&
+        (activeInteraction.quest.type === "quest_handy_smurf" ||
+          activeInteraction.quest.type === "quest_handy_smurf_2")
+      ) {
         const handyResult = handleHandyQuestInteraction(activeInteraction.quest);
-        
+
         if (handyResult) {
           if (handyResult.type === "start") {
             setQuestMessage(handyResult.description);
             setTimeout(() => setQuestMessage(null), 5000);
           }
-          
+
           if (handyResult.type === "missingItems") {
             setQuestMessage("Nemáš ještě dostatek bobulek.");
             setTimeout(() => setQuestMessage(null), 5000);
           }
-          
+
           if (handyResult.type === "done") {
             setQuestMessage(handyResult.description);
             setTimeout(() => setQuestMessage(null), 5000);
           }
         }
       }
-    };
+    }
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [activeInteraction, handleQuest]);
+    // Update previous state for next cycle
+    prevEPressed.current = isEPressed;
+  }, [controls.e, activeInteraction, handleQuest, handleHandyQuestInteraction]);
 
   const pixelX = location.x * tileSize;
   const pixelY = location.y * tileSize;
   const offset = tileSize / 2;
 
   const worldStyle = {
-    transform: `scale(${ZOOM_LEVEL}) translate3d(-${pixelX - offset}px, -${pixelY - offset}px, 0)`,
-    transformOrigin: "0 0",
-    transition: `transform ${STEP_TIME}ms linear`
+    transform: `scale(var(--scale)) translate3d(-${pixelX - offset}px, -${pixelY - offset}px, 0)`,
+    transformOrigin: '0 0',
+    transition: `transform ${stepTime}ms linear`,
+    transitionDelay: '0ms'
   };
 
   return (
     <>
       <div className={styles.tileMap} style={worldStyle}>
-        {locationMapData.map((entity: any) => (
-          <Entity key={entity.locationId} data={entity} />
-        ))}
+        {locationMapData.map((entity: LocationMapDTO) => {
+          const asset = assetsData.find((a: AssetDTO) => a.assetId === entity.assetId);
+          if (!asset) return null;
+          if (asset.visible === false) return null;
+          return <Entity key={entity.locationId} data={entity} />;
+        })}
 
         {generatedItems.map(item => (
           <Item key={item.id} data={item} />
@@ -129,7 +138,8 @@ export const TileMap = () => {
 
         <Player data={playerAsset} location={location} facing={facing} />
 
-        {collisionMap.map((row: Boolean[], y: number) =>
+        {/* Collision map visualization - uncomment for debugging */}
+        {/* {collisionMap.map((row: Boolean[], y: number) =>
           row.map(
             (collision: Boolean, x: number) =>
               collision && (
@@ -145,7 +155,7 @@ export const TileMap = () => {
                 />
               )
           )
-        )}
+        )} */}
       </div>
 
       {questDoneMessage && (
@@ -168,17 +178,17 @@ export const TileMap = () => {
 
       {questMessage && (
         <div
-        style={{
-          position: "fixed",
-          top: 10,
-          left: "50%",
-          transform: "translateX(-50%)",
-          background: "rgba(0,0,0,0.75)",
-          color: "white",
-          fontSize: "20px",
-          padding: "12px 26px",
-          zIndex: 9999
-        }}
+          style={{
+            position: "fixed",
+            top: 10,
+            left: "50%",
+            transform: "translateX(-50%)",
+            background: "rgba(0,0,0,0.75)",
+            color: "white",
+            fontSize: "20px",
+            padding: "12px 26px",
+            zIndex: 9999
+          }}
         >
           {questMessage}
         </div>

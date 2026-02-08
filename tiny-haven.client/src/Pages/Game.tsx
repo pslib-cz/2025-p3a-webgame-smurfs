@@ -16,6 +16,8 @@ import { InteractionMapProvider } from "../Contexts/InteractionMapContext";
 import { QuestProvider } from "../Contexts/QuestContext";
 import { ActiveQuest } from "../Components/UI/ActiveQuest";
 import { HandyQuestDisplay } from "../Components/UI/HandyQuestDisplay";
+import { ControlsProvider } from "../Contexts/ControlsContext";
+import { GameUI } from "../Components/UI/GameUI";
 
 export const MapDisplay = () => {
     return (
@@ -24,65 +26,33 @@ export const MapDisplay = () => {
                 <Suspense fallback={<SuspenseFallback message="Loading configuration..." />}>
                     <GameSettingsProvider>
                         <RandomItemProvider>
-
                             <ErrorBoundary FallbackComponent={ErrorFallback}>
-                                <Suspense fallback={<SuspenseFallback message="Loading interactions..."/>}>
+                                <Suspense fallback={<SuspenseFallback message="Loading interactions..." />}>
                                     <InteractionMapProvider>
                                         <QuestProvider>
                                             <PlayerLocationProvider>
-                                                <PlayerBalanceProvider>
-                                                    
+                                                <ControlsProvider>
+                                                    <PlayerBalanceProvider>
                                                         <InventoryProvider>
-
-                                        <PlayerLocationProvider>
-                                            <ControlsProvider>
-                                                <PlayerBalanceProvider>
-                                                    <InventoryProvider>
-
-                                                        <InteractionProvider>
-
-                                                            <ErrorBoundary FallbackComponent={ErrorFallback}>
-                                                                <Suspense fallback={<SuspenseFallback message="Loading assets..." />}>
-                                                                    <GameLoader/>
-                                                                    <GameUI/>
-                                                                </Suspense>
-                                                            </ErrorBoundary>
-
-                                                            <InteractionButton />
-
-                                                        </InteractionProvider>
-
-                                                    </InventoryProvider>
-                                                </PlayerBalanceProvider>
-                                            </ControlsProvider>
-                                        </PlayerLocationProvider>
                                                             <InteractionProvider>
-
                                                                 <ErrorBoundary FallbackComponent={ErrorFallback}>
                                                                     <Suspense fallback={<SuspenseFallback message="Loading assets..." />}>
-                                                                        <GameLoader/>
-                                                                        <TileMap/>
-                                                                        <InventoryBar/>
-                                                                        <BalanceDisplay/>
-                                                                        <DebugInfo/>
+                                                                        <GameLoader />
+                                                                        <GameUI />
+                                                                        <InteractionButton />
                                                                         <ActiveQuest />
                                                                         <HandyQuestDisplay />
                                                                     </Suspense>
                                                                 </ErrorBoundary>
-
-                                                                <InteractionButton />
-
                                                             </InteractionProvider>
-
                                                         </InventoryProvider>
-                                                        
-                                                </PlayerBalanceProvider>
+                                                    </PlayerBalanceProvider>
+                                                </ControlsProvider>
                                             </PlayerLocationProvider>
                                         </QuestProvider>
                                     </InteractionMapProvider>
                                 </Suspense>
                             </ErrorBoundary>
-
                         </RandomItemProvider>
                     </GameSettingsProvider>
                 </Suspense>

@@ -27,7 +27,7 @@ export const Player: React.FC<PlayerProps> = ({ data, location, facing }) => {
                 transform: `translate3d(${pixelX}px, ${pixelY}px, 0)`,
                 transition: `transform ${stepTime}ms linear`
             }}>
-                <img src={data.imageUrl ?? "images/placeholder-image.svg"} alt={data.name} 
+                <img src={data.imageUrl ?? "images/game_assets/placeholder-image.svg"} alt={data.name} 
                     style={{
                         transform: `scaleX(${facing === 'left' ? -1 : 1})`,
                     }}/>

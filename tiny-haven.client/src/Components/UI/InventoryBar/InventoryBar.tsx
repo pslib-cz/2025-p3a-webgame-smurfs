@@ -1,7 +1,7 @@
 import { useGameSettings } from "../../../Contexts/GameSettingsContext";
 import { useInventory } from "../../../Contexts/InventoryContext";
 import styles from "./InventoryBar.module.css";
-import { itemTranslations } from "../../Data/itemTranslations";
+import { itemTranslations } from "../../../Data/itemTranslations";
 
 export const InventoryBar = () => {
     const { slots } = useInventory();
