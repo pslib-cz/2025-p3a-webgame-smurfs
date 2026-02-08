@@ -6,6 +6,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+
+    z-index: 1000;
 }
 
 .mapModal__map {
@@ -27,11 +29,10 @@
     height: 3rem;
     aspect-ratio: 1 / 1;
 
-    margin-left: auto;
-    margin-bottom: -3.5rem;
-    margin-right: 0.5rem;
     z-index: 1;
-    position: relative;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
 
     display: flex;
     justify-content: center;
@@ -69,4 +70,18 @@
         width: 2.5rem;
         aspect-ratio: 1 / 1;
     }
+}
+
+.backdrop {
+    display: block;
+    width: 100dvw;
+    height: 100dvw;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+
+    background-color: var(--black-background);
 }

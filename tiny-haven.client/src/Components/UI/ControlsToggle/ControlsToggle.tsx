@@ -15,6 +15,8 @@ export const ControlsToggle = () => {
             <img 
             src={showControls ? "images/game_assets/ui/controls_on.svg" : "images/game_assets/ui/controls_off.svg"} 
             alt={showControls ? "Viditelná tlačítka pro ovládání" : "Skrytá tlačítka pro ovládání"} />
+
+            <span>Ovládání</span>
         </button>
     )
 }

@@ -23,6 +23,14 @@
 
         transition: transform 0.2s;
     }
+
+    span {
+        display: none;
+        position: absolute;
+        top: calc(100% + 0.5rem);
+        font-family: var(--font);
+        color: #ffffff;
+    }
 }
 
 .controlsToggleBtn:hover {
@@ -30,5 +38,15 @@
 
     img {
         transform: scale(1.1);
+    }
+
+    span { display: inline; }
+}
+
+@media screen and (max-width: 768px) {
+    .controlsToggleBtn {
+        height: 2rem;
+        top: 3.7rem;
+        right: 1.2rem;
     }
 }

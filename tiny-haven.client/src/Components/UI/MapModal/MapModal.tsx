@@ -15,6 +15,8 @@ export const MapModal: React.FC<MapModalProps> = ({ setMapOpen }) => {
 
     return (
         <div className={styles.mapModal}>
+            <span className={styles.backdrop}></span>
+
             <button className={styles.mapModal__btn} onClick={handleClick}>
                 <img src="images/game_assets/ui/x-mark.svg" alt="Zavřít" />
             </button>

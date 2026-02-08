@@ -1,5 +1,5 @@
 import { memo } from "react";
-import type { LocationMapDTO } from "../../Types/database-types"
+import type { LocationMapDTO } from "../../../Types/database-types"
 import style from "./Entity.module.css"
 
 type EntityProps = {
