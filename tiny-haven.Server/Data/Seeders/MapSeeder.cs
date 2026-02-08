@@ -176,11 +176,11 @@ namespace tiny_haven.Server.Data.Seeders
 
                 if (idsToDelete.Any())
                 {
-                    var locsToDelete = existingLocations.Values.Where(x => idsToDelete.Contains(x.LocationId));
-                    context.LocationMaps.RemoveRange(locsToDelete);
-
                     var intsToDelete = existingInteractions.Values.Where(x => idsToDelete.Contains(x.LocationId));
                     context.InteractionMaps.RemoveRange(intsToDelete);
+
+                    var locsToDelete = existingLocations.Values.Where(x => idsToDelete.Contains(x.LocationId));
+                    context.LocationMaps.RemoveRange(locsToDelete);
 
                     Console.WriteLine($"🗑️ Removed {idsToDelete.Count} deleted objects from DB.");
                 }

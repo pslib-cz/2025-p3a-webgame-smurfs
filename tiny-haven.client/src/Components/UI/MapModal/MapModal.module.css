@@ -1,6 +1,9 @@
 .mapModal {
+    aspect-ratio: 180 / 100;
+
     width: 75dvw;
-    height: auto;
+    max-width: 90dvw;
+    max-height: 90dvh;
 
     position: absolute;
     top: 50%;
@@ -19,7 +22,7 @@
     grid-template-columns: repeat(180, 1fr);
     grid-template-rows: repeat(100, 1fr);
 
-    background-image: url("/images/game_assets/ui/map.png");
+    background-image: url("/images/game_assets/ui/minimap.png");
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -67,8 +70,9 @@
     align-items: center;
 
     img {
-        width: 2.5rem;
+        width: 3rem;
         aspect-ratio: 1 / 1;
+        image-rendering: pixelated;
     }
 }
 
