@@ -5,8 +5,16 @@
 
 * {
   box-sizing: border-box;
+  image-rendering: pixelated;
 }
 
 html, body {
   margin: 0;
+}
+
+button {
+  border: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
 }

@@ -1,6 +1,6 @@
-import { useGameSettings } from "../../Contexts/GameSettingsContext";
-import type { AssetDTO } from "../../Types/database-types";
-import type { FacingDirection, PlayerLocation } from "../../Types/player-data"
+import { useGameSettings } from "../../../Contexts/GameSettingsContext";
+import type { AssetDTO } from "../../../Types/database-types";
+import type { FacingDirection, PlayerLocation } from "../../../Types/player-data"
 import style from "./Player.module.css"
 
 type PlayerProps = {

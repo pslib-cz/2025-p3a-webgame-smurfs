@@ -25,20 +25,20 @@ export const MobileControls = () => {
     return (
         <div>
             <div className={styles.joystick}>
-                <button className={styles.up} {...bindBtn(['w'])}>⬆️</button>
-                <button className={styles.left} {...bindBtn(['a'])}>⬅️</button>
-                <button className={styles.down} {...bindBtn(['s'])}>⬇️</button>
-                <button className={styles.right} {...bindBtn(['d'])}>➡️</button>
+                <button className={styles.up} {...bindBtn(['w'])}> <img src="images/game_assets/ui/arrow.svg" alt="Šipka nahoru" /> </button>
+                <button className={styles.left} {...bindBtn(['a'])}> <img src="images/game_assets/ui/arrow.svg" alt="Šipka doleva" /> </button>
+                <button className={styles.down} {...bindBtn(['s'])}> <img src="images/game_assets/ui/arrow.svg" alt="Šipka dolů" /> </button>
+                <button className={styles.right} {...bindBtn(['d'])}> <img src="images/game_assets/ui/arrow.svg" alt="Šipka doprava" /> </button>
                 
                 {/* Diagonals */}
-                <button className={styles.upLeft} {...bindBtn(['w', 'a'])}>↖️</button>
-                <button className={styles.upRight} {...bindBtn(['w', 'd'])}>↗️</button>
-                <button className={styles.downLeft} {...bindBtn(['s', 'a'])}>↙️</button>
-                <button className={styles.downRight} {...bindBtn(['s', 'd'])}>↘️</button>
+                <button className={styles.upLeft} {...bindBtn(['w', 'a'])}> <img src="images/game_assets/ui/arrow.svg" alt="Šipka nahoru doleva" /> </button>
+                <button className={styles.upRight} {...bindBtn(['w', 'd'])}> <img src="images/game_assets/ui/arrow.svg" alt="Šipka nahoru doprava" /> </button>
+                <button className={styles.downLeft} {...bindBtn(['s', 'a'])}> <img src="images/game_assets/ui/arrow.svg" alt="Šipka dolů doleva" /> </button>
+                <button className={styles.downRight} {...bindBtn(['s', 'd'])}> <img src="images/game_assets/ui/arrow.svg" alt="Šipka dolů doprava" /> </button>
             </div>
 
             <button className={styles.actionButton} {...bindBtn(['e'])}>
-                ⏺️
+                <img src="images/game_assets/ui/interaction.svg" alt="Akční tlačítko" />
             </button>
         </div>
     )

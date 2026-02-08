@@ -10,7 +10,7 @@ export const GameMenu = () => {
                 <img className={styles.headimage} src="images/game_assets/ui/head.svg" alt="hlava" />
                 <h1>Tiny Haven</h1>
             </div>
-            <button onClick={() => navigate("/play")}>Spustit hru</button>
+            <button className={styles.startButton} onClick={() => navigate("/play")}>Spustit hru</button>
         </div>
     )
 } 

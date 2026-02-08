@@ -40,6 +40,9 @@
         width: 6rem;
         height: calc(6rem / 3);
 
+        top: 1.2rem;
+        right: 1.2rem;
+
         p { font-size: 1.2rem; }
     }
 }

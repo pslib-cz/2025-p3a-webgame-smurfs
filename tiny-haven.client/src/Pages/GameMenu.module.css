@@ -34,7 +34,7 @@ h1 {
     object-position: center;
 }
 
-button {
+.startButton {
     aspect-ratio: 4 / 1;
     height: 6rem;
     background-image: url("/images/game_assets/ui/button-border.svg");
@@ -50,7 +50,16 @@ button {
     transition: transform 0.2s;
 }
 
-button:hover {
+.startButton:hover {
     cursor: pointer;
     transform: scale(1.03);
+}
+
+@media screen and (max-width: 852px) {
+    .page { gap: 2rem; }
+
+    h1 { font-size: 3rem; }
+    .headimage { width: 6rem; }
+
+    .startButton { height: 3.5rem; font-size: 1.2rem; }
 }

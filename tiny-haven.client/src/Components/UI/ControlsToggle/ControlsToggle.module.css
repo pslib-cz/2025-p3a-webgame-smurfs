@@ -1,0 +1,52 @@
+.controlsToggleBtn {
+    position: absolute;
+    top: 7rem;
+    right: 2rem;
+
+    height: 3.5rem;
+    aspect-ratio: 1 / 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-image: url("/images/game_assets/ui/hud-bg-small.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    img {
+        width: 50%;
+        aspect-ratio: 1 / 1;
+        object-fit: contain;
+        object-position: center;
+
+        transition: transform 0.2s;
+    }
+
+    span {
+        display: none;
+        position: absolute;
+        top: calc(100% + 0.5rem);
+        font-family: var(--font);
+        color: #ffffff;
+    }
+}
+
+.controlsToggleBtn:hover {
+    cursor: pointer;
+
+    img {
+        transform: scale(1.1);
+    }
+
+    span { display: inline; }
+}
+
+@media screen and (max-width: 768px) {
+    .controlsToggleBtn {
+        height: 2rem;
+        top: 3.7rem;
+        right: 1.2rem;
+    }
+}

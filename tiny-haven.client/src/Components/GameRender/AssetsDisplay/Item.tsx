@@ -1,5 +1,5 @@
 import { memo } from "react";
-import type { RenderableItem } from "../../Types/database-types";
+import type { RenderableItem } from "../../../Types/database-types";
 import style from "./Item.module.css"
 
 type ItemProps = {

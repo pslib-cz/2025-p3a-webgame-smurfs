@@ -1,7 +1,7 @@
 import { use, useEffect, useRef } from "react";
 import styles from "./TileMap.module.css"
-import { Entity } from "./Entity";
-import { Player } from "./Player";
+import { Entity } from "./AssetsDisplay/Entity";
+import { Player } from "./AssetsDisplay/Player";
 import { useGameSettings } from "../../Contexts/GameSettingsContext";
 //import { useInventory } from "../../Contexts/InventoryContext";
 //import { usePlayerBalance } from "../../Contexts/PlayerBalanceContext";
@@ -11,7 +11,7 @@ import { useInteractions } from "../../Hooks/useInteractions";
 import { useQuestActions } from "../../Hooks/useQuestActions";
 import { useInteractionContext } from "../../Contexts/InteractionContext";
 import { useRandomItems } from "../../Contexts/RandomItemsContext";
-import { Item } from "./Item";
+import { Item } from "./AssetsDisplay/Item";
 import { useInteractionMap } from "../../Contexts/InteractionMapContext";
 import type { AssetDTO, LocationMapDTO } from "../../Types/database-types";
 import { useControls } from "../../Contexts/ControlsContext";
@@ -63,7 +63,7 @@ export const TileMap = () => {
     const worldStyle = {
         transform: `scale(var(--scale)) translate3d(-${pixelX - offset}px, -${pixelY - offset}px, 0)`,
         transformOrigin: '0 0',
-        willChange: 'transform',
+        // willChange: 'transform',
         transition: `transform ${stepTime}ms linear`,
         transitionDelay: '0ms'
     };
