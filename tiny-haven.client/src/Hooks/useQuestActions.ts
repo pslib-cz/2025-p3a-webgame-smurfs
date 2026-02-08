@@ -66,7 +66,7 @@ export const useQuestActions = (assets: AssetDTO[]) => {
       return "completed";
     }
     
-    if (!isQuestCompleted(quest.questId) && activeQuest?.type === "quest_start") {
+    if (!isQuestCompleted(quest.questId) && quest.type === "quest_start") {
       return "inProcess";
     }
     
