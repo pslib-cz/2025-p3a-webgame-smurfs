@@ -10,5 +10,6 @@
         public int LocationX { get; set; }
         public int LocationY { get; set; }
         public QuestDTO Quest { get; set; }
+        public AssetDTO Asset { get; set; }
     }
 }

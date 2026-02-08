@@ -54,6 +54,7 @@ export interface InteractionMapDTO {
   locationX: number;
   locationY: number;
   quest: QuestDTO;
+  asset?: AssetDTO;
 }
 
 // Collision map DTO

@@ -80,6 +80,16 @@ namespace tiny_haven.Server.Controllers
                                     ItemQuantity = im.Quest.ItemQuantity,
                                     RewardAmount = im.Quest.RewardAmount,
                                     NextQuestId = im.Quest.NextQuestId
+                                },
+                                Asset = new AssetDTO
+                                {
+                                    AssetId = im.LocationMap.Asset.AssetId,
+                                    Name = im.LocationMap.Asset.Name,
+                                    ImageUrl = im.LocationMap.Asset.ImageUrl,
+                                    SpanX = im.LocationMap.Asset.SpanX,
+                                    SpanY = im.LocationMap.Asset.SpanY,
+                                    Collision = im.LocationMap.Asset.Collision,
+                                    Visible = im.LocationMap.Asset.Visible
                                 }
                             })
                             .ToListAsync();

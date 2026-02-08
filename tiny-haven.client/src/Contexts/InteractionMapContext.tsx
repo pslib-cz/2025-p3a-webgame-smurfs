@@ -15,7 +15,7 @@ export const InteractionMapProvider = ({ children }: { children: React.ReactNode
 
     const { generatedItems } = useRandomItems(); 
 
-    // Lookup AssetId to QuestId
+    // Lookup AssetId to QuestId for automaticaly generated items
     const itemToQuestLookup = useMemo(() => {
         const map: Record<number, QuestDTO> = {};
         
