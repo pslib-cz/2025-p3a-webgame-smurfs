@@ -10,9 +10,14 @@ export const usePlayerMovement = (
     maxRows: number
 ) => {
     const { location, setLocation } = usePlayerLocation();
-    const { heldKeys } = useControls(); // Use the ref-based keys
+    const { heldKeys } = useControls();
     const [ facing, setFacing ] = useState<FacingDirection>('right');
     const { stepTime } = useGameSettings();
+
+    // Helper function to check if a tile is in the restricted area
+    const isRestrictedTile = (x: number, y: number): boolean => {
+        return x >= 30 && x <= 33 && y >= 91 && y <= 92;
+    };
 
     useEffect(() => {
         const moveInterval = setInterval(() => {
@@ -34,6 +39,7 @@ export const usePlayerMovement = (
 
                 if (nx < 1 || ny < 1 || nx > maxColumns || ny > maxRows) return prev;
                 if (collisionMap[ny - 1]?.[nx - 1]) return prev;
+                if (isRestrictedTile(nx, ny)) return prev; // Check restricted tiles
 
                 return { x: nx, y: ny };
             });

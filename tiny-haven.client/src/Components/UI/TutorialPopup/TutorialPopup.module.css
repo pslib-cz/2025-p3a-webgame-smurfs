@@ -1,3 +1,85 @@
 .tutorialPopup {
-    background-color: var(--background-color);
+    background-color: var(--black-background);
+
+    border-radius: 0.5rem;
+
+    position: absolute;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+
+    padding: 1rem;
+}
+
+.tutorialPopup > div {
+    display: grid;
+    grid-template-columns: 40% 60%;
+}
+
+.tutorialPopup__image {
+    margin: 0;
+    padding-right: 1rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+        width: 100%;
+        image-rendering: pixelated;
+    }
+}
+
+.tutorialPopup__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-left: 1rem;
+
+    p { margin: 0; }
+}
+
+.tutorialPopup__btn {
+    color: var(--color);
+    background-image: url("/images/game_assets/ui/balance-ui.png");
+    aspect-ratio: 3 / 1;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 3rem;
+    margin-left: auto;
+
+    font-family: var(--font);
+    font-size: 1.5rem;
+    transition: font-size 0.2s;
+
+    margin-top: 1rem;
+}
+
+.tutorialPopup__btn:hover {
+    cursor: pointer;
+
+    font-size: 1.6rem;
+}
+
+.step2 {
+    .tutorialPopup__content p {
+        margin: 0;
+    }
+
+    .tutorialPopup__content P:last-of-type {
+        margin-top: 2rem;
+        font-size: 1.5rem;
+        margin-left: auto;
+    }
+
+    .tutorialPopup__image img {
+        width: 40%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .tutorialPopup__content p {
+        font-size: 1rem;
+    }
 }
