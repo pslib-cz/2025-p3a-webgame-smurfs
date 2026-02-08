@@ -50,7 +50,7 @@ export const HandyQuestDisplay = () => {
   return (
     <div style={{
       position: "fixed",
-      top: 105,
+      top: 180,
       right: 35,
       background: "rgba(0,0,0,0.7)",
       borderRadius: 8,

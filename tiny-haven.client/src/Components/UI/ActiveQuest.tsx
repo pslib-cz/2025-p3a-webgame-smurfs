@@ -27,7 +27,7 @@ export const ActiveQuest = () => {
   return (
     <div style={{
       position: "fixed",
-      top: 180,
+      top: 250,
       right: 35,
       background: "rgba(0,0,0,0.7)",
       color: "white",
