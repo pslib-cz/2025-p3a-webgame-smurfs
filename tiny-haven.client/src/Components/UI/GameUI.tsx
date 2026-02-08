@@ -8,6 +8,8 @@ import { InventoryBar } from "./InventoryBar/InventoryBar";
 import { MobileControls } from "./MobileControls/MobileControls";
 import { MapToggle } from "./MapToggle/MapToggle";
 import { MapModal } from "./MapModal/MapModal";
+import { TutorialPopup } from "./TutorialPopup/TutorialPopup";
+import { DebugInfo } from "./DebugInfo";
 
 export const GameUI = () => {
     const { showControls } = useGameSettings();
@@ -20,6 +22,8 @@ export const GameUI = () => {
             <BalanceDisplay />
             <CoordinatesDisplay />
             <ControlsToggle />
+            <TutorialPopup />
+            <DebugInfo/>
 
             <MapToggle setMapOpen={setIsMapOpen} />
             {isMapOpen && <MapModal setMapOpen={setIsMapOpen}/>}

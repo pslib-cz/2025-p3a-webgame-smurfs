@@ -8,7 +8,7 @@ export const TutorialPopup = () => {
     const { controls } = useControls();
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const [step, setStep] = useState<number>(1);
-    const [timer, setTimer] = useState<number>(5);
+    const [timer, setTimer] = useState<number>(3);
     const [canInteract, setCanInteract] = useState<boolean>(false);
     const { showControls } = useGameSettings();
 

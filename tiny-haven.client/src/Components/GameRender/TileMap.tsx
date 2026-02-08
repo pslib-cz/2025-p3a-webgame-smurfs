@@ -1,4 +1,4 @@
-import { use, useEffect, useState, useRef } from "react";
+import { use, useEffect, useState, useRef, useMemo } from "react";
 import styles from "./TileMap.module.css";
 import { Entity } from "./AssetsDisplay/Entity";
 import { Player } from "./AssetsDisplay/Player";
@@ -14,6 +14,8 @@ import { useInteractions } from "../../Hooks/useInteractions";
 import { useQuestActions } from "../../Hooks/useQuestActions";
 import { useHandyQuestActions } from "../../Hooks/useHandyQuestActions";
 import type { AssetDTO, LocationMapDTO } from "../../Types/database-types";
+import { useQuest } from "../../Contexts/QuestContext";
+import { SmurfHouse } from "./AssetsDisplay/SmurfHouse";
 
 export const TileMap = () => {
   const { config: { tileSize, gridRows, gridColumns }, stepTime } = useGameSettings();
@@ -38,23 +40,19 @@ export const TileMap = () => {
 
   const { handleQuest } = useQuestActions(assetsData);
   const { handleHandyQuestInteraction } = useHandyQuestActions();
+  const { completedQuestIds, isQuestCompleted } = useQuest();
 
   const [questMessage, setQuestMessage] = useState<string | null>(null);
   const [questDoneMessage, setQuestDoneMessage] = useState<string | null>(null);
 
-  // Track previous E key state to detect single press (edge detection)
   const prevEPressed = useRef(false);
 
   useEffect(() => {
     setActiveInteraction(activeInteraction);
   }, [activeInteraction, setActiveInteraction]);
 
-  // Handle E key press using ControlsContext with edge detection
   useEffect(() => {
     const isEPressed = controls.e;
-
-    // Detect rising edge (key just pressed, not held)
-    // This ensures the quest logic only fires ONCE per key press
     if (isEPressed && !prevEPressed.current && activeInteraction) {
       const result = handleQuest(activeInteraction);
 
@@ -107,7 +105,6 @@ export const TileMap = () => {
       }
     }
 
-    // Update previous state for next cycle
     prevEPressed.current = isEPressed;
   }, [controls.e, activeInteraction, handleQuest, handleHandyQuestInteraction]);
 
@@ -122,6 +119,28 @@ export const TileMap = () => {
     transitionDelay: '0ms'
   };
 
+  const isHandySmurfQuestFinished = useMemo(() => 
+    isQuestCompleted(12),
+    [completedQuestIds]
+  );
+  
+  const smurfHouseAsset: AssetDTO = assetsData.find((a: AssetDTO) => a.assetId === 25)
+
+  const smurfHouseData: LocationMapDTO = {
+    locationId: 9999,
+    locationX: 30,
+    locationY: 89,
+    assetId: smurfHouseAsset.assetId,
+    imageUrl: isHandySmurfQuestFinished
+    ? "images/game_assets/buildings/smurf_house.svg"
+    : smurfHouseAsset?.imageUrl ?? null,
+    name: smurfHouseAsset.name,
+    spanX: smurfHouseAsset.spanX,
+    spanY: smurfHouseAsset.spanY,
+    collision: true,
+    visible: true
+  }
+
   return (
     <>
       <div className={styles.tileMap} style={worldStyle}>
@@ -135,8 +154,16 @@ export const TileMap = () => {
         {generatedItems.map(item => (
           <Item key={item.id} data={item} />
         ))}
-
+        
+        <SmurfHouse data={smurfHouseData}/>
         <Player data={playerAsset} location={location} facing={facing} />
+
+        {/* <figure className={styles.smurfHouse} style={{
+          gridColumn: `30 span ${smurfHouse.spanX}`,
+          gridRow: `89 span ${smurfHouse.spanY}`,
+        }}>
+          <img src={isHandySmurfQuestFinished ? "images/game_assets/smurf_house.svg" : smurfHouse.imageUrl || "images/game_assets/placeholder-image.svg"} alt={smurfHouse.name}></img>
+        </figure> */}
 
         {/* Collision map visualization - uncomment for debugging */}
         {/* {collisionMap.map((row: Boolean[], y: number) =>
@@ -193,6 +220,8 @@ export const TileMap = () => {
           {questMessage}
         </div>
       )}
+
+
     </>
   );
 };
