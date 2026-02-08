@@ -18,6 +18,7 @@ import { SuspenseFallback } from "../Components/Fallback/SuspenseFallback";
 import { InteractionMapProvider } from "../Contexts/InteractionMapContext";
 import { QuestProvider } from "../Contexts/QuestContext";
 import { ActiveQuest } from "../Components/UI/ActiveQuest";
+import { HandyQuestDisplay } from "../Components/UI/HandyQuestDisplay";
 
 export const MapDisplay = () => {
     return (
@@ -46,6 +47,7 @@ export const MapDisplay = () => {
                                                                         <BalanceDisplay/>
                                                                         <DebugInfo/>
                                                                         <ActiveQuest />
+                                                                        <HandyQuestDisplay />
                                                                     </Suspense>
                                                                 </ErrorBoundary>
 

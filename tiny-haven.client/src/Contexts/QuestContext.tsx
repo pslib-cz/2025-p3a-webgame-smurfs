@@ -4,11 +4,18 @@ import { questsPromise } from "../api/gameResources";
 
 type QuestContextType = {
   activeQuest: QuestDTO | null;
+  handyQuest: QuestDTO | null;
+
   pendingQuest: QuestDTO | null;
   completedQuestIds: number[];
 
   queueQuestStart: (quest: QuestDTO) => void;
   startQuest: (quest: QuestDTO) => void;
+
+  startHandyQuest: (quest: QuestDTO) => void;
+  finishHandyQuest: () => void;
+  progressHandyQuest: (quest: QuestDTO) => void;
+
   finishQuest: () => void;
   isQuestCompleted: (questId: number) => boolean;
 };
@@ -20,6 +27,7 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
   const [completedQuestIds, setCompletedQuestIds] = useState<number[]>([]);
   
   const [pendingQuest, setPendingQuest] = useState<QuestDTO | null>(null);
+  const [handyQuest, setHandyQuest] = useState<QuestDTO | null>(null);
   
   const questData = use(questsPromise);
 
@@ -29,6 +37,7 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
     return getRootQuestId(prev);
   }  
 
+  // ......... NORMAL QUESTS ........... 
   const startQuest = (quest: QuestDTO) => {
     if (activeQuest) return; // jen jeden quest najednou
     setActiveQuest(quest);
@@ -56,34 +65,55 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
       setActiveQuest(nextQuest ?? null);
       return;
     }
-  
-    
     const rootQuestId = getRootQuestId(activeQuest);
   
     setCompletedQuestIds(prev =>
       prev.includes(rootQuestId) ? prev : [...prev, rootQuestId]
     );
-  
+    
     setActiveQuest(null);
-  };
-  
+  }  
 
+  // .............. HANDY QUEST ........... 
+
+  const startHandyQuest = (quest: QuestDTO) => {
+    if (handyQuest) return;
+    setHandyQuest(quest);
+  };
+
+  const progressHandyQuest = (nextQuest: QuestDTO) => {
+    setHandyQuest(nextQuest);
+  };
+
+  const finishHandyQuest = () => {
+    if (!handyQuest) return;
+    
+    const rootQuestId = getRootQuestId(handyQuest);
+    setCompletedQuestIds(prev => 
+      prev.includes(rootQuestId) ? prev : [...prev, rootQuestId]
+    );
+    
+    setHandyQuest(null);
+  };
+    
   const isQuestCompleted = (questId: number) =>
   completedQuestIds.includes(questId);
-
-
-  
+    
 
   return (
     <QuestContext.Provider
       value={{
         activeQuest,
         pendingQuest,
+        handyQuest,
         completedQuestIds,
 
         queueQuestStart,
         startQuest,
+        startHandyQuest,
+        progressHandyQuest,
         finishQuest,
+        finishHandyQuest,
         isQuestCompleted
       }}
     >

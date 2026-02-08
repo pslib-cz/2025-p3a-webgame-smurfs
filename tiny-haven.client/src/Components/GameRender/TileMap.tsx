@@ -12,6 +12,7 @@ import { useInteractionContext } from "../../Contexts/InteractionContext";
 import { useRandomItems } from "../../Contexts/RandomItemsContext";
 import { Item } from "./Item";
 import { useInteractionMap } from "../../Contexts/InteractionMapContext";
+import { useHandyQuestActions } from "../../Hooks/useHandyQuestActions";
 
 export const TileMap = () => {
   const { tileSize, gridRows, gridColumns } = useGameSettings();
@@ -24,11 +25,7 @@ export const TileMap = () => {
   const { generatedItems } = useRandomItems();
   const { interactions } = useInteractionMap();
 
-  const { location, facing } = usePlayerMovement(
-    collisionMap,
-    gridColumns,
-    gridRows
-  );
+  const { location, facing } = usePlayerMovement( collisionMap, gridColumns, gridRows );
 
   const { setActiveInteraction } = useInteractionContext();
   const activeInteraction = useInteractions(
@@ -38,6 +35,8 @@ export const TileMap = () => {
   );
 
   const { handleQuest } = useQuestActions(assetsData);
+
+  const { handleHandyQuestInteraction }  = useHandyQuestActions();
 
   const [questMessage, setQuestMessage] = useState<string | null>(null);
   const [questDoneMessage, setQuestDoneMessage] = useState<string | null>(null);
@@ -75,6 +74,32 @@ export const TileMap = () => {
         const descEnd = result.description || "Díky za quest bráchoo.";
         setQuestMessage(descEnd);
         setTimeout(() => setQuestMessage(null), 5000);
+      }
+
+      // .......... HANDY QUEST ...........
+
+      if (activeInteraction.quest && 
+        (activeInteraction.quest.type === "quest_handy_smurf" || 
+         activeInteraction.quest.type === "quest_handy_smurf_2")) {
+          
+        const handyResult = handleHandyQuestInteraction(activeInteraction.quest);
+        
+        if (handyResult) {
+          if (handyResult.type === "start") {
+            setQuestMessage(handyResult.description);
+            setTimeout(() => setQuestMessage(null), 5000);
+          }
+          
+          if (handyResult.type === "missingItems") {
+            setQuestMessage("Nemáš ještě dostatek bobulek.");
+            setTimeout(() => setQuestMessage(null), 5000);
+          }
+          
+          if (handyResult.type === "done") {
+            setQuestMessage(handyResult.description);
+            setTimeout(() => setQuestMessage(null), 5000);
+          }
+        }
       }
     };
 
