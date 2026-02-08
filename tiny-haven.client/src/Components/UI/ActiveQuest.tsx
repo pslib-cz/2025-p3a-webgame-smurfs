@@ -27,14 +27,14 @@ export const ActiveQuest = () => {
   return (
     <div style={{
       position: "fixed",
-      top: 115,
-      right: 45,
+      top: 180,
+      right: 35,
       background: "rgba(0,0,0,0.7)",
       color: "white",
       padding: "10px 32px",
       borderRadius: 8
     }}>
-      <strong>Aktivní quest</strong>
+      <strong>Aktivní úkol</strong>
       <div>{text}</div>
     </div>
   );

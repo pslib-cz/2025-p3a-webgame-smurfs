@@ -49,7 +49,6 @@ export const useHandyQuestActions = () => {
         return { type: "missingItems" };
       }
       
-      console.log("Already progressed (shouldn't happen)");
       return { type: "alreadyProgressed" };
     }
 

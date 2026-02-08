@@ -78,7 +78,9 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
 
   const startHandyQuest = (quest: QuestDTO) => {
     if (handyQuest) return;
-    setHandyQuest(quest);
+    setTimeout(() => {
+      setHandyQuest(quest);
+    }, 5000)
   };
 
   const progressHandyQuest = (nextQuest: QuestDTO) => {

@@ -81,7 +81,7 @@ export const TileMap = () => {
       if (activeInteraction.quest && 
         (activeInteraction.quest.type === "quest_handy_smurf" || 
          activeInteraction.quest.type === "quest_handy_smurf_2")) {
-          
+
         const handyResult = handleHandyQuestInteraction(activeInteraction.quest);
         
         if (handyResult) {
