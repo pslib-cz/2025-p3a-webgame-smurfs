@@ -1,19 +1,21 @@
-import { useRef } from "react";
+import { useRef, use } from "react";
 import { useInventory } from "../Contexts/InventoryContext";
 import { usePlayerBalance } from "../Contexts/PlayerBalanceContext";
 import { useRandomItems } from "../Contexts/RandomItemsContext";
-import type { AssetDTO, InteractionMapDTO } from "../Types/database-types";
+import type { AssetDTO, InteractionMapDTO, QuestDTO } from "../Types/database-types";
 import type { AssetInventory } from "../Types/player-data";
 import { useQuest } from "../Contexts/QuestContext";
 import { useEffect } from "react";
+import { questsPromise } from "../api/gameResources";
 
 export const useQuestActions = (assets: AssetDTO[]) => {
   const { addItemToInventory, removeItemFromInventory, getItemAmount } = useInventory();
   const { addToBalance } = usePlayerBalance();
   const { despawnItem, generatedItems, spawnItems, requestAllItems } = useRandomItems();
-  const { activeQuest, queueQuestStart, finishQuest, isQuestCompleted } = useQuest();
-
+  const { activeQuest, queueQuestStart, finishQuest, isQuestCompleted, questStartLocation } = useQuest();
   const pickupCount = useRef(0);
+  
+  const questData = use(questsPromise);
 
   const checkBackgroundRegeneration = () => {
     pickupCount.current += 1;
@@ -41,15 +43,12 @@ export const useQuestActions = (assets: AssetDTO[]) => {
       const wantedId = activeQuest.wantedItemId;
       const requiredAmount = activeQuest.itemQuantity;
   
-      // kolik itemů je aktuálně na mapě
       const currentOnMap = generatedItems.filter(
         item => item.assetId === wantedId
       ).length;
   
       if (currentOnMap < requiredAmount) {
-        console.log( `Quest start: na mapě je ${currentOnMap} /${requiredAmount}, generuji…`
-        );
-  
+        console.log(`Quest start: na mapě je ${currentOnMap} /${requiredAmount}, generuji…`);
         spawnItems(wantedId);
       }
     }
@@ -59,13 +58,11 @@ export const useQuestActions = (assets: AssetDTO[]) => {
   useEffect(() => {
     if (!activeQuest) return;
 
-    // ---------- QUEST START ----------
     if (
       activeQuest.type === "quest_start" &&
       activeQuest.wantedItemId &&
       activeQuest.itemQuantity
     ) {
-      
       const amount = getItemAmount(activeQuest.wantedItemId);
 
       if (amount >= activeQuest.itemQuantity) {
@@ -82,15 +79,22 @@ export const useQuestActions = (assets: AssetDTO[]) => {
     }
     
     if (!isQuestCompleted(quest.questId) && quest.type === "quest_start" && activeQuest?.type === "quest_start") {
+      if (
+        !questStartLocation ||
+        questStartLocation.x !== interaction.locationX ||
+        questStartLocation.y !== interaction.locationY
+      ) {
+        return false;
+      }
+      
       return "inProcess";
     }
     
     if (!activeQuest && quest.type === "quest_start") {
-      queueQuestStart(quest);
+      queueQuestStart(quest, interaction.locationX, interaction.locationY);
       return { type: "startQuestMsg", description: quest.description };
     }
 
-    // ---------- PICKUP ITEM ----------
     if (quest.type === "pickup_item") {
       if (!quest.rewardItemId) return false;
 
@@ -104,8 +108,6 @@ export const useQuestActions = (assets: AssetDTO[]) => {
           "/images/game_assets/placeholder-image.svg"
       };
 
-      console.log("Adding item to inventory:", item);
-
       const success = addItemToInventory(item, quest.rewardAmount ?? 1);
 
       if (success && interaction.interactionId < 0) {
@@ -116,46 +118,65 @@ export const useQuestActions = (assets: AssetDTO[]) => {
       return success;
     }
     
-    else if (quest.type === "add_to_balance") {
+    if (quest.type === "add_to_balance") {
       const random = Math.floor(Math.random() * (20 - 5 + 1)) + 5;
       addToBalance(random);
 
       if (interaction.interactionId < 0) {
-          despawnItem(interaction.locationX, interaction.locationY);
-          checkBackgroundRegeneration();
+        despawnItem(interaction.locationX, interaction.locationY);
+        checkBackgroundRegeneration();
       }
     }
 
     // ---------- QUEST END ----------
     if (activeQuest && activeQuest.type === "quest_end") {
+      if (
+        !questStartLocation ||
+        questStartLocation.x !== interaction.locationX ||
+        questStartLocation.y !== interaction.locationY
+      ) {
+        return false;
+      }
+
       const amount = getItemAmount(activeQuest.wantedItemId!);
       
       if (amount >= activeQuest.itemQuantity!) {
         const endDescription = activeQuest.description;
 
         removeItemFromInventory(
-              activeQuest.wantedItemId!,
-              activeQuest.itemQuantity!
-            );
+          activeQuest.wantedItemId!,
+          activeQuest.itemQuantity!
+        );
 
-            const rewardId = activeQuest.rewardItemId;
-            const rewardAmount = activeQuest.rewardAmount ?? 1;
+        const rewardId = activeQuest.rewardItemId;
+        const rewardAmount = activeQuest.rewardAmount ?? 1;
 
-            if (rewardId === 1 || rewardId === 4) {
-              addToBalance(rewardAmount);
-            } else {
-              const asset = assets.find(a => a.assetId === rewardId);
-              const item: AssetInventory = {
-                assetId: rewardId!,
-                name: asset?.name || "Unknown Item",
-                imageUrl:
-              asset?.imageUrl ||
-              "/images/game_assets/placeholder-image.svg"
-              };
-              addItemToInventory(item, rewardAmount);
-            }
+        if (rewardId === 1 || rewardId === 4) {
+          addToBalance(rewardAmount);
+        } else {
+          const asset = assets.find(a => a.assetId === rewardId);
+          const item: AssetInventory = {
+            assetId: rewardId!,
+            name: asset?.name || "Unknown Item",
+            imageUrl: asset?.imageUrl || "/images/game_assets/placeholder-image.svg"
+          };
+          addItemToInventory(item, rewardAmount);
+        }
+
+        // Najdi další quest_start se stejným wantedItemId
+        const nextQuestStart = questData.find(
+          (q: QuestDTO) => 
+            q.type === "quest_start" && 
+            q.wantedItemId === activeQuest.wantedItemId &&
+            q.questId > activeQuest.questId
+        );
+
+        finishQuest(
+          nextQuestStart?.questId, 
+          interaction.locationX, 
+          interaction.locationY
+        );
         
-        finishQuest();
         return { type: "endQuestMsg", description: endDescription };
       }
 

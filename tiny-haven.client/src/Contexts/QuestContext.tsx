@@ -9,14 +9,16 @@ type QuestContextType = {
   pendingQuest: QuestDTO | null;
   completedQuestIds: number[];
 
-  queueQuestStart: (quest: QuestDTO) => void;
+  questStartLocation: { x: number; y: number } | null;
+
+  queueQuestStart: (quest: QuestDTO, locationX: number, locationY: number) => void;
   startQuest: (quest: QuestDTO) => void;
 
   startHandyQuest: (quest: QuestDTO) => void;
   finishHandyQuest: () => void;
   progressHandyQuest: (quest: QuestDTO) => void;
 
-  finishQuest: () => void;
+  finishQuest: (nextQuestIdOverride?: number, newLocationX?: number, newLocationY?: number) => void;
   isQuestCompleted: (questId: number) => boolean;
 };
 
@@ -28,6 +30,7 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
   
   const [pendingQuest, setPendingQuest] = useState<QuestDTO | null>(null);
   const [handyQuest, setHandyQuest] = useState<QuestDTO | null>(null);
+  const [questStartLocation, setQuestStartLocation] = useState<{ x: number; y: number } | null>(null);
   
   const questData = use(questsPromise);
 
@@ -37,16 +40,18 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
     return getRootQuestId(prev);
   }  
 
-  // ......... NORMAL QUESTS ........... 
+  // ............ NORMAL QUESTS ...........
+
   const startQuest = (quest: QuestDTO) => {
-    if (activeQuest) return; // jen jeden quest najednou
+    if (activeQuest) return;
     setActiveQuest(quest);
   };
 
-  const queueQuestStart = (quest: QuestDTO) => {
+  const queueQuestStart = (quest: QuestDTO, locationX: number, locationY: number) => {
     if (activeQuest || pendingQuest) return;
   
     setPendingQuest(quest);
+    setQuestStartLocation({ x: locationX, y: locationY });
   
     setTimeout(() => {
       setActiveQuest(quest);
@@ -57,7 +62,6 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
   const finishQuest = () => {
     if (!activeQuest) return;
   
-    
     if (activeQuest.nextQuestId) {
       const nextQuest = questData.find(
         (q: QuestDTO) => q.questId === activeQuest.nextQuestId
@@ -72,9 +76,10 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
     );
     
     setActiveQuest(null);
+    setQuestStartLocation(null);
   }  
 
-  // .............. HANDY QUEST ........... 
+  // ......... HANDY QUEST ........
 
   const startHandyQuest = (quest: QuestDTO) => {
     if (handyQuest) return;
@@ -99,8 +104,7 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
   };
     
   const isQuestCompleted = (questId: number) =>
-  completedQuestIds.includes(questId);
-    
+    completedQuestIds.includes(questId);
 
   return (
     <QuestContext.Provider
@@ -116,7 +120,8 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
         progressHandyQuest,
         finishQuest,
         finishHandyQuest,
-        isQuestCompleted
+        isQuestCompleted,
+        questStartLocation
       }}
     >
       {children}
