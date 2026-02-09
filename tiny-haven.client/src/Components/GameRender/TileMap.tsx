@@ -205,9 +205,10 @@ export const TileMap = () => {
             transform: "translateX(-50%)",
             background: "rgba(0,0,0,0.75)",
             color: "white",
-            fontSize: "20px",
+            fontSize: "1.5rem",
             padding: "12px 26px",
-            zIndex: 9999
+            zIndex: 9999,
+            fontFamily: "var(--font-secondary)"
           }}
         >
           {questMessage}

@@ -32,7 +32,6 @@ type QuestContextType = {
 const QuestContext = createContext<QuestContextType | null>(null);
 
 export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
-  // We initialize as null/empty, then hydrate from storage in a useEffect
   const [activeQuest, setActiveQuest] = useState<QuestDTO | null>(null);
   const [completedQuestIds, setCompletedQuestIds] = useState<number[]>([]);
   
@@ -40,12 +39,8 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
   const [handyQuest, setHandyQuest] = useState<QuestDTO | null>(null);
   const [questStartLocation, setQuestStartLocation] = useState<{ x: number; y: number } | null>(null);
   
-  // 'use' suspends until data is ready, so questData is guaranteed available below
   const questData = use(questsPromise);
 
-  // ------------------------------------------------------------------
-  // 1. HYDRATION (Load from Local Storage on Mount)
-  // ------------------------------------------------------------------
   useEffect(() => {
     try {
       // Load Completed Quests
@@ -54,14 +49,14 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
         setCompletedQuestIds(JSON.parse(storedCompleted));
       }
 
-      // Load Active Quest (Find the object by ID)
+      // Load Active Quest
       const storedActiveId = localStorage.getItem(STORAGE_KEYS.ACTIVE_QUEST);
       if (storedActiveId) {
         const foundActive = questData.find((q: QuestDTO) => q.questId === Number(storedActiveId));
         if (foundActive) setActiveQuest(foundActive);
       }
 
-      // Load Handy Quest (Find the object by ID)
+      // Load Handy Quest
       const storedHandyId = localStorage.getItem(STORAGE_KEYS.HANDY_QUEST);
       if (storedHandyId) {
         const foundHandy = questData.find((q: QuestDTO) => q.questId === Number(storedHandyId));
@@ -72,10 +67,6 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [questData]);
 
-  // ------------------------------------------------------------------
-  // 2. PERSISTENCE (Save to Local Storage on Change)
-  // ------------------------------------------------------------------
-  
   // Save Active Quest
   useEffect(() => {
     if (activeQuest) {
@@ -98,11 +89,6 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.COMPLETED_IDS, JSON.stringify(completedQuestIds));
   }, [completedQuestIds]);
-
-
-  // ------------------------------------------------------------------
-  // LOGIC (Unchanged)
-  // ------------------------------------------------------------------
 
   const getRootQuestId = (quest: QuestDTO): number => {
     const prev = questData.find((q: QuestDTO) => q.nextQuestId === quest.questId);
