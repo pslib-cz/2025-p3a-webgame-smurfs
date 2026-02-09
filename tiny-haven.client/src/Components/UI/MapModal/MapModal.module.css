@@ -1,9 +1,7 @@
 .mapModal {
     aspect-ratio: 180 / 100;
 
-    width: 75dvw;
-    max-width: 90dvw;
-    max-height: 90dvh;
+    height: 80dvh;
 
     position: absolute;
     top: 50%;
