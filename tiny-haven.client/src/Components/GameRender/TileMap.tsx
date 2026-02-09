@@ -59,7 +59,7 @@ export const TileMap = () => {
       if (result && typeof result === "object" && result.type === "startQuestMsg") {
         const desc = result.description || "Hej! Potřebuju pomoct… dones mi pár věcí.";
         setQuestMessage(desc);
-        setTimeout(() => setQuestMessage(null), 5000);
+        setTimeout(() => setQuestMessage(null), 15000);
       }
 
       if (result === "inProcess") {
@@ -75,7 +75,7 @@ export const TileMap = () => {
       if (result && typeof result === "object" && result.type === "endQuestMsg") {
         const descEnd = result.description || "Díky za quest bráchoo.";
         setQuestMessage(descEnd);
-        setTimeout(() => setQuestMessage(null), 5000);
+        setTimeout(() => setQuestMessage(null), 10000);
       }
 
       // .......... HANDY QUEST ...........
@@ -89,7 +89,7 @@ export const TileMap = () => {
         if (handyResult) {
           if (handyResult.type === "start") {
             setQuestMessage(handyResult.description);
-            setTimeout(() => setQuestMessage(null), 5000);
+            setTimeout(() => setQuestMessage(null), 15000);
           }
 
           if (handyResult.type === "missingItems") {
@@ -99,7 +99,7 @@ export const TileMap = () => {
 
           if (handyResult.type === "done") {
             setQuestMessage(handyResult.description);
-            setTimeout(() => setQuestMessage(null), 5000);
+            setTimeout(() => setQuestMessage(null), 15000);
           }
         }
       }
@@ -129,7 +129,7 @@ export const TileMap = () => {
   const smurfHouseData: LocationMapDTO = {
     locationId: 9999,
     locationX: 30,
-    locationY: 89,
+    locationY: 90,
     assetId: smurfHouseAsset.assetId,
     imageUrl: isHandySmurfQuestFinished
     ? "images/game_assets/buildings/smurf_house.svg"
@@ -157,13 +157,6 @@ export const TileMap = () => {
         
         <SmurfHouse data={smurfHouseData}/>
         <Player data={playerAsset} location={location} facing={facing} />
-
-        {/* <figure className={styles.smurfHouse} style={{
-          gridColumn: `30 span ${smurfHouse.spanX}`,
-          gridRow: `89 span ${smurfHouse.spanY}`,
-        }}>
-          <img src={isHandySmurfQuestFinished ? "images/game_assets/smurf_house.svg" : smurfHouse.imageUrl || "images/game_assets/placeholder-image.svg"} alt={smurfHouse.name}></img>
-        </figure> */}
 
         {/* Collision map visualization - uncomment for debugging */}
         {/* {collisionMap.map((row: Boolean[], y: number) =>

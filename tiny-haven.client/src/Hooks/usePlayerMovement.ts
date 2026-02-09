@@ -16,7 +16,7 @@ export const usePlayerMovement = (
 
     // Helper function to check if a tile is in the restricted area
     const isRestrictedTile = (x: number, y: number): boolean => {
-        return x >= 30 && x <= 33 && y >= 91 && y <= 92;
+        return x >= 30 && x <= 33 && y >= 92 && y <= 93;
     };
 
     useEffect(() => {

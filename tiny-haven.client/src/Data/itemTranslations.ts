@@ -5,6 +5,8 @@ export const itemTranslations: Record<string, string> = {
     stone: "kámen",
     pink_tulip: "růžový tulipán",
     red_mushroom: "červená houba",
-    brown_mushroom: "hnědá houba"
+    brown_mushroom: "hnědá houba",
+    smurfette_necklace: "šmoulinky náhrdelník",
+    black_lili: "černá lilie"
   };
   
