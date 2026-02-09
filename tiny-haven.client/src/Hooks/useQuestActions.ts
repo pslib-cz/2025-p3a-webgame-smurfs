@@ -79,6 +79,14 @@ export const useQuestActions = (assets: AssetDTO[]) => {
     }
     
     if (!isQuestCompleted(quest.questId) && quest.type === "quest_start" && activeQuest?.type === "quest_start") {
+      if (
+        !questStartLocation ||
+        questStartLocation.x !== interaction.locationX ||
+        questStartLocation.y !== interaction.locationY
+      ) {
+        return false;
+      }
+      
       return "inProcess";
     }
     
