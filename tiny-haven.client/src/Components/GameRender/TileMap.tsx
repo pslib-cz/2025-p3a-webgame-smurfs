@@ -115,7 +115,7 @@ export const TileMap = () => {
   const worldStyle = {
     transform: `scale(var(--scale)) translate3d(-${pixelX - offset}px, -${pixelY - offset}px, 0)`,
     transformOrigin: '0 0',
-    transition: `transform ${stepTime}ms linear`,
+    transition: `transform ${stepTime - 20}ms linear`,
     transitionDelay: '0ms'
   };
 

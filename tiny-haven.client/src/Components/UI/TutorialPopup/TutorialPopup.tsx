@@ -64,12 +64,12 @@ export const TutorialPopup = () => {
                         <img src={!showControls ? "images/game_assets/ui/e_key.svg" : "images/game_assets/ui/interaction_showcase.svg"} alt="Ukázka spuštění interakce" />
                     </figure>
                     <div className={styles.tutorialPopup__content}>
-                        <p>{!showControls ? "Intraguješ pomocí klávesy [E]" : "Intraguješ pomocí klávesy [Action Button]"} Zajdi za Kutilou a interaguj s ním.</p>
+                        <p>{!showControls ? "Intraguješ pomocí klávesy [E]" : "Intraguješ pomocí klávesy [Action Button]"} Zajdi za Kutilem a interaguj s ním.</p>
 
                         {!canInteract ? (
                             <p className={styles.timer}>Počkej {timer}s...</p>
                         ) : (
-                            <p className={styles.timer}>Interaguj se Šikulou...</p>
+                            <p className={styles.timer}>Interaguj s Kutilem...</p>
                         )}
                     </div>
                 </div>

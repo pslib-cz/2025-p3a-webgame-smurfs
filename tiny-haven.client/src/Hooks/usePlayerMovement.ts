@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import type { FacingDirection } from '../Types/player-data'
+import { useState, useEffect, useRef } from 'react';
+import type { FacingDirection } from '../Types/player-data';
 import { usePlayerLocation } from '../Contexts/PlayerLocationContext';
-import { useGameSettings } from "../Contexts/GameSettingsContext"
+import { useGameSettings } from "../Contexts/GameSettingsContext";
 import { useControls } from '../Contexts/ControlsContext';
 
 export const usePlayerMovement = (
@@ -14,38 +14,55 @@ export const usePlayerMovement = (
     const [ facing, setFacing ] = useState<FacingDirection>('right');
     const { stepTime } = useGameSettings();
 
-    // Helper function to check if a tile is in the restricted area
+    const lastMoveTime = useRef<number>(0);
+
     const isRestrictedTile = (x: number, y: number): boolean => {
         return x >= 30 && x <= 33 && y >= 92 && y <= 93;
     };
 
     useEffect(() => {
-        const moveInterval = setInterval(() => {
-            const keys = heldKeys.current; 
-            let dx = 0;
-            let dy = 0;
+        let animationFrameId: number;
 
-            if (keys.a) { dx -= 1; setFacing('left'); }
-            else if (keys.d) { dx += 1; setFacing('right'); }
-            
-            if (keys.w) dy -= 1; 
-            else if (keys.s) dy += 1; 
+        const update = (currentTime: number) => {
+            const keys = heldKeys.current;
+            const isMoving = keys.w || keys.a || keys.s || keys.d;
 
-            if (dx === 0 && dy === 0) return;
+            if (!isMoving) {
+                lastMoveTime.current = 0;
+            } else {
+                if (currentTime - lastMoveTime.current >= stepTime) {
+                    let dx = 0;
+                    let dy = 0;
 
-            setLocation((prev) => {
-                const nx = prev.x + dx;
-                const ny = prev.y + dy;
+                    if (keys.a) { dx -= 1; setFacing('left'); }
+                    else if (keys.d) { dx += 1; setFacing('right'); }
+                    
+                    if (keys.w) dy -= 1; 
+                    else if (keys.s) dy += 1; 
 
-                if (nx < 1 || ny < 1 || nx > maxColumns || ny > maxRows) return prev;
-                if (collisionMap[ny - 1]?.[nx - 1]) return prev;
-                if (isRestrictedTile(nx, ny)) return prev; // Check restricted tiles
+                    if (dx !== 0 || dy !== 0) {
+                        setLocation((prev) => {
+                            const nx = prev.x + dx;
+                            const ny = prev.y + dy;
 
-                return { x: nx, y: ny };
-            });
-        }, stepTime);
+                            if (nx < 1 || ny < 1 || nx > maxColumns || ny > maxRows) return prev;
+                            if (collisionMap[ny - 1]?.[nx - 1]) return prev;
+                            if (isRestrictedTile(nx, ny)) return prev;
 
-        return () => clearInterval(moveInterval);
+                            return { x: nx, y: ny };
+                        });
+
+                        lastMoveTime.current = currentTime;
+                    }
+                }
+            }
+
+            animationFrameId = requestAnimationFrame(update);
+        };
+
+        animationFrameId = requestAnimationFrame(update);
+
+        return () => cancelAnimationFrame(animationFrameId);
     }, [collisionMap, maxColumns, maxRows, setLocation, stepTime, heldKeys]); 
 
     return { location, facing };
