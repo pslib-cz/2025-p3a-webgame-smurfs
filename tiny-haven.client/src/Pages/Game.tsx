@@ -18,7 +18,6 @@ import { ActiveQuest } from "../Components/UI/ActiveQuest";
 import { HandyQuestDisplay } from "../Components/UI/HandyQuestDisplay";
 import { ControlsProvider } from "../Contexts/ControlsContext";
 import { GameUI } from "../Components/UI/GameUI";
-import { DebugInfo } from "../Components/UI/DebugInfo";
 
 export const MapDisplay = () => {
     return (
