@@ -1,12 +1,12 @@
-import { useRef, use } from "react";
+import { useRef } from "react";
 import { useInventory } from "../Contexts/InventoryContext";
 import { usePlayerBalance } from "../Contexts/PlayerBalanceContext";
 import { useRandomItems } from "../Contexts/RandomItemsContext";
-import type { AssetDTO, InteractionMapDTO, QuestDTO } from "../Types/database-types";
+import type { AssetDTO, InteractionMapDTO } from "../Types/database-types";
 import type { AssetInventory } from "../Types/player-data";
 import { useQuest } from "../Contexts/QuestContext";
 import { useEffect } from "react";
-import { questsPromise } from "../api/gameResources";
+// import { questsPromise } from "../api/gameResources";
 
 export const useQuestActions = (assets: AssetDTO[]) => {
   const { addItemToInventory, removeItemFromInventory, getItemAmount } = useInventory();
@@ -15,7 +15,7 @@ export const useQuestActions = (assets: AssetDTO[]) => {
   const { activeQuest, queueQuestStart, finishQuest, isQuestCompleted, questStartLocation } = useQuest();
   const pickupCount = useRef(0);
   
-  const questData = use(questsPromise);
+  // const questData = use(questsPromise);
 
   const checkBackgroundRegeneration = () => {
     pickupCount.current += 1;
@@ -166,15 +166,15 @@ export const useQuestActions = (assets: AssetDTO[]) => {
         }
 
         // Najdi další quest_start se stejným wantedItemId
-        const nextQuestStart = questData.find(
-          (q: QuestDTO) => 
-            q.type === "quest_start" && 
-            q.wantedItemId === activeQuest.wantedItemId &&
-            q.questId > activeQuest.questId
-        );
+        // const nextQuestStart = questData.find(
+        //   (q: QuestDTO) => 
+        //     q.type === "quest_start" && 
+        //     q.wantedItemId === activeQuest.wantedItemId &&
+        //     q.questId > activeQuest.questId
+        // );
 
         finishQuest(
-          nextQuestStart?.questId, 
+          // nextQuestStart?.questId, 
           interaction.locationX, 
           interaction.locationY
         );
