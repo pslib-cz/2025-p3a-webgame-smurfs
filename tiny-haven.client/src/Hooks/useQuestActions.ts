@@ -34,7 +34,7 @@ export const useQuestActions = (assets: AssetDTO[]) => {
 
   useEffect(() => {
     if (!activeQuest) return;
-  
+
     if (
       activeQuest.type === "quest_start" &&
       activeQuest.wantedItemId &&
@@ -42,17 +42,19 @@ export const useQuestActions = (assets: AssetDTO[]) => {
     ) {
       const wantedId = activeQuest.wantedItemId;
       const requiredAmount = activeQuest.itemQuantity;
-  
+
       const currentOnMap = generatedItems.filter(
         item => item.assetId === wantedId
       ).length;
-  
-      if (currentOnMap < requiredAmount) {
-        console.log(`Quest start: na mapě je ${currentOnMap} /${requiredAmount}, generuji…`);
+
+      const currentInInventory = getItemAmount(wantedId);
+
+      if ((currentOnMap + currentInInventory) < requiredAmount) {
+        console.log(`Quest start: Spawning missing items. Map: ${currentOnMap}, Inventory: ${currentInInventory}, Required: ${requiredAmount}`);
         spawnItems(wantedId);
       }
     }
-  }, [activeQuest, generatedItems, spawnItems]);
+  }, [activeQuest, generatedItems, spawnItems, getItemAmount]);
 
   
   useEffect(() => {
