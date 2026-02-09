@@ -27,9 +27,13 @@ export const ActiveQuest = () => {
   return (
     <div style={{
       position: "fixed",
-      top: 250,
+      top: 282,
       right: 35,
       background: "rgba(0,0,0,0.7)",
+      // backgroundImage: "url(/images/game_assets/ui/active_quest.png)",
+      // backgroundSize: "contain",
+      // backgroundPosition: "center",
+      // backgroundRepeat: "no-repeat",
       color: "white",
       padding: "10px 32px",
       borderRadius: 8

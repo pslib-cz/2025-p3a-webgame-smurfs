@@ -1,6 +1,13 @@
-import { createContext, use, useContext, useState } from "react";
+import { createContext, use, useContext, useState, useEffect } from "react";
 import type { QuestDTO } from "../Types/database-types";
 import { questsPromise } from "../api/gameResources";
+
+// Define keys to avoid typos
+const STORAGE_KEYS = {
+  ACTIVE_QUEST: "rpg_active_quest_id",
+  HANDY_QUEST: "rpg_handy_quest_id",
+  COMPLETED_IDS: "rpg_completed_quest_ids",
+};
 
 type QuestContextType = {
   activeQuest: QuestDTO | null;
@@ -25,6 +32,7 @@ type QuestContextType = {
 const QuestContext = createContext<QuestContextType | null>(null);
 
 export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
+  // We initialize as null/empty, then hydrate from storage in a useEffect
   const [activeQuest, setActiveQuest] = useState<QuestDTO | null>(null);
   const [completedQuestIds, setCompletedQuestIds] = useState<number[]>([]);
   
@@ -32,7 +40,69 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
   const [handyQuest, setHandyQuest] = useState<QuestDTO | null>(null);
   const [questStartLocation, setQuestStartLocation] = useState<{ x: number; y: number } | null>(null);
   
+  // 'use' suspends until data is ready, so questData is guaranteed available below
   const questData = use(questsPromise);
+
+  // ------------------------------------------------------------------
+  // 1. HYDRATION (Load from Local Storage on Mount)
+  // ------------------------------------------------------------------
+  useEffect(() => {
+    try {
+      // Load Completed Quests
+      const storedCompleted = localStorage.getItem(STORAGE_KEYS.COMPLETED_IDS);
+      if (storedCompleted) {
+        setCompletedQuestIds(JSON.parse(storedCompleted));
+      }
+
+      // Load Active Quest (Find the object by ID)
+      const storedActiveId = localStorage.getItem(STORAGE_KEYS.ACTIVE_QUEST);
+      if (storedActiveId) {
+        const foundActive = questData.find((q: QuestDTO) => q.questId === Number(storedActiveId));
+        if (foundActive) setActiveQuest(foundActive);
+      }
+
+      // Load Handy Quest (Find the object by ID)
+      const storedHandyId = localStorage.getItem(STORAGE_KEYS.HANDY_QUEST);
+      if (storedHandyId) {
+        const foundHandy = questData.find((q: QuestDTO) => q.questId === Number(storedHandyId));
+        if (foundHandy) setHandyQuest(foundHandy);
+      }
+    } catch (error) {
+      console.error("Failed to load quest progress from local storage", error);
+    }
+  }, [questData]);
+
+  // ------------------------------------------------------------------
+  // 2. PERSISTENCE (Save to Local Storage on Change)
+  // ------------------------------------------------------------------
+  
+  // Save Active Quest
+  useEffect(() => {
+    if (activeQuest) {
+      localStorage.setItem(STORAGE_KEYS.ACTIVE_QUEST, activeQuest.questId.toString());
+    } else {
+      localStorage.removeItem(STORAGE_KEYS.ACTIVE_QUEST);
+    }
+  }, [activeQuest]);
+
+  // Save Handy Quest
+  useEffect(() => {
+    if (handyQuest) {
+      localStorage.setItem(STORAGE_KEYS.HANDY_QUEST, handyQuest.questId.toString());
+    } else {
+      localStorage.removeItem(STORAGE_KEYS.HANDY_QUEST);
+    }
+  }, [handyQuest]);
+
+  // Save Completed IDs
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.COMPLETED_IDS, JSON.stringify(completedQuestIds));
+  }, [completedQuestIds]);
+
+
+  // ------------------------------------------------------------------
+  // LOGIC (Unchanged)
+  // ------------------------------------------------------------------
 
   const getRootQuestId = (quest: QuestDTO): number => {
     const prev = questData.find((q: QuestDTO) => q.nextQuestId === quest.questId);
