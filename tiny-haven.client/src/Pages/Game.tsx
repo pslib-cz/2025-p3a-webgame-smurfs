@@ -42,7 +42,6 @@ export const MapDisplay = () => {
                                                                         <GameUI />
                                                                         <InteractionButton />
                                                                         <ActiveQuest />
-                                                                        <DebugInfo />
                                                                         <HandyQuestDisplay />
                                                                     </Suspense>
                                                                 </ErrorBoundary>
