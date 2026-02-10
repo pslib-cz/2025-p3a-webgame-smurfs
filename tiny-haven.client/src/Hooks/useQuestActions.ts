@@ -12,7 +12,7 @@ export const useQuestActions = (assets: AssetDTO[]) => {
   const { addItemToInventory, removeItemFromInventory, getItemAmount } = useInventory();
   const { addToBalance } = usePlayerBalance();
   const { despawnItem, generatedItems, spawnItems, requestAllItems } = useRandomItems();
-  const { activeQuest, queueQuestStart, finishQuest, isQuestCompleted, questStartLocation } = useQuest();
+  const { activeQuest, queueQuestStart, finishQuest, isQuestCompleted, questStartLocation, questStartInteractionId  } = useQuest();
   const pickupCount = useRef(0);
   
   // const questData = use(questsPromise);
@@ -84,16 +84,17 @@ export const useQuestActions = (assets: AssetDTO[]) => {
       if (
         !questStartLocation ||
         questStartLocation.x !== interaction.locationX ||
-        questStartLocation.y !== interaction.locationY
+        questStartLocation.y !== interaction.locationY &&
+        activeQuest.questId > quest.questId
       ) {
-        return false;
+        return "inProcess";
       }
       
-      return "inProcess";
+      return false;
     }
     
     if (!activeQuest && quest.type === "quest_start") {
-      queueQuestStart(quest, interaction.locationX, interaction.locationY);
+      queueQuestStart(quest, interaction.locationX, interaction.locationY, interaction.interactionId);
       return { type: "startQuestMsg", description: quest.description };
     }
 
@@ -132,6 +133,10 @@ export const useQuestActions = (assets: AssetDTO[]) => {
 
     // ---------- QUEST END ----------
     if (activeQuest && activeQuest.type === "quest_end") {
+      if (questStartInteractionId !== interaction.interactionId) {
+        return false;
+      }
+
       if (
         !questStartLocation ||
         questStartLocation.x !== interaction.locationX ||

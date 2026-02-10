@@ -28,8 +28,8 @@ export const MapDisplay = () => {
                         <RandomItemProvider>
                             <ErrorBoundary FallbackComponent={ErrorFallback}>
                                 <Suspense fallback={<SuspenseFallback message="Loading interactions..." />}>
-                                    <InteractionMapProvider>
-                                        <QuestProvider>
+                                    <QuestProvider>
+                                        <InteractionMapProvider>
                                             <PlayerLocationProvider>
                                                 <ControlsProvider>
                                                     <PlayerBalanceProvider>
@@ -49,8 +49,8 @@ export const MapDisplay = () => {
                                                     </PlayerBalanceProvider>
                                                 </ControlsProvider>
                                             </PlayerLocationProvider>
-                                        </QuestProvider>
-                                    </InteractionMapProvider>
+                                        </InteractionMapProvider>
+                                    </QuestProvider>
                                 </Suspense>
                             </ErrorBoundary>
                         </RandomItemProvider>
