@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useMemo, use } from 'react';
 import { type InteractionMapDTO, type QuestDTO } from '../Types/database-types';
 import { useRandomItems } from './RandomItemsContext'; 
+import { useQuest } from './QuestContext';
 import { InteractionMapPromise, questsPromise } from '../api/gameResources';
 
 interface InteractionMapContextType {
@@ -14,8 +15,8 @@ export const InteractionMapProvider = ({ children }: { children: React.ReactNode
     const dbQuests = use(questsPromise) as QuestDTO[];
 
     const { generatedItems } = useRandomItems(); 
+    const { getCurrentQuestIdAtLocation } = useQuest();
 
-    // Lookup AssetId to QuestId for automaticaly generated items
     const itemToQuestLookup = useMemo(() => {
         const map: Record<number, QuestDTO> = {};
         
@@ -27,25 +28,49 @@ export const InteractionMapProvider = ({ children }: { children: React.ReactNode
         return map;
     }, [dbQuests]);
 
-    // Merge db interactions with local
     const interactions = useMemo(() => {
-        const combinedList: InteractionMapDTO[] = [...dbInteractions];
+        const combinedList: InteractionMapDTO[] = [];
 
+        // Process database interactions - use the active quest ID if one exists at this location
+        dbInteractions.forEach(interaction => {
+            const activeQuestId = getCurrentQuestIdAtLocation(
+                interaction.locationX, 
+                interaction.locationY, 
+                interaction.interactionId
+            );
+
+            if (activeQuestId !== null) {
+                // Find the quest with this ID
+                const activeQuestData = dbQuests.find((q: QuestDTO) => q.questId === activeQuestId);
+                
+                if (activeQuestData) {
+                    // Use the active quest data instead of the default
+                    combinedList.push({
+                        ...interaction,
+                        type: activeQuestData.type,
+                        quest: activeQuestData
+                    });
+                    return;
+                }
+            }
+            
+            // No active quest at this location - use default
+            combinedList.push(interaction);
+        });
+
+        // Add generated items
         generatedItems.forEach(item => {
             const linkedQuest = itemToQuestLookup[item.assetId];
             
             if (linkedQuest) {
                 combinedList.push({
                     interactionId: -1 * ((item.x * 1000) + item.y),
-                    
                     locationX: item.x,
                     locationY: item.y,
-                    
                     xOffsetStart: 1, 
                     xOffsetEnd: 1, 
                     yOffsetStart: 1, 
                     yOffsetEnd: 1,
-                    
                     type: linkedQuest.type,
                     quest: linkedQuest
                 });
@@ -53,7 +78,7 @@ export const InteractionMapProvider = ({ children }: { children: React.ReactNode
         });
 
         return combinedList;
-    }, [dbInteractions, generatedItems, itemToQuestLookup]);
+    }, [dbInteractions, generatedItems, itemToQuestLookup, getCurrentQuestIdAtLocation, dbQuests]);
 
     return (
         <InteractionMapContext.Provider value={{ interactions }}>
