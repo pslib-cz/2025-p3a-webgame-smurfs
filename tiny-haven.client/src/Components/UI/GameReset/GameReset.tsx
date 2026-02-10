@@ -14,6 +14,9 @@ export const GameReset = () => {
             localStorage.removeItem("rpg_handy_quest_id");
             localStorage.removeItem("rpg_completed_quest_ids");
             localStorage.removeItem("hasSeenTutorial");
+            localStorage.removeItem("rpg_quest_start_location");
+            localStorage.removeItem("rpg_quest_start_interaction_id");
+            localStorage.removeItem("rpg_active_quest_ids_map");
 
             setLocation({ x: 36, y: 95 })
             

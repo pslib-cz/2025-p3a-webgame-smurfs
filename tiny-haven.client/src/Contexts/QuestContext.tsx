@@ -8,7 +8,7 @@ const STORAGE_KEYS = {
   COMPLETED_IDS: "rpg_completed_quest_ids",
   QUEST_START_LOCATION: "rpg_quest_start_location",
   QUEST_START_INTERACTION_ID: "rpg_quest_start_interaction_id",
-  ACTIVE_QUEST_IDS_MAP: "rpg_active_quest_ids_map" // NEW - just quest IDs at locations
+  ACTIVE_QUEST_IDS_MAP: "rpg_active_quest_ids_map"
 };
 
 type QuestContextType = {
@@ -27,7 +27,6 @@ type QuestContextType = {
   finishQuest: (nextQuestIdOverride?: number, newLocationX?: number, newLocationY?: number) => void;
   isQuestCompleted: (questId: number) => boolean;
   
-  // NEW - just get the current quest ID at a location
   getCurrentQuestIdAtLocation: (x: number, y: number, interactionId: number) => number | null;
 };
 
@@ -41,13 +40,10 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
   const [questStartLocation, setQuestStartLocation] = useState<{ x: number; y: number } | null>(null);
   const [questStartInteractionId, setQuestStartInteractionId] = useState<number | null>(null);
   
-  // NEW: Map of location -> current questId at that location
-  // Key: "x,y,interactionId" -> Value: questId
   const [activeQuestIdsMap, setActiveQuestIdsMap] = useState<Map<string, number>>(new Map());
   
   const questData = use(questsPromise);
 
-  // Load from localStorage
   useEffect(() => {
     try {
       const storedCompleted = localStorage.getItem(STORAGE_KEYS.COMPLETED_IDS);
@@ -77,7 +73,6 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
         setQuestStartInteractionId(Number(storedInteractionId));
       }
 
-      // NEW: Load active quest IDs map
       const storedQuestIdsMap = localStorage.getItem(STORAGE_KEYS.ACTIVE_QUEST_IDS_MAP);
       if (storedQuestIdsMap) {
         const mapArray = JSON.parse(storedQuestIdsMap);
@@ -88,7 +83,6 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [questData]);
 
-  // Save to localStorage
   useEffect(() => {
     if (activeQuest) {
       localStorage.setItem(STORAGE_KEYS.ACTIVE_QUEST, activeQuest.questId.toString());
@@ -125,7 +119,6 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [questStartInteractionId]);
 
-  // NEW: Save active quest IDs map
   useEffect(() => {
     const mapArray = Array.from(activeQuestIdsMap.entries());
     localStorage.setItem(STORAGE_KEYS.ACTIVE_QUEST_IDS_MAP, JSON.stringify(mapArray));
@@ -137,7 +130,6 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
     return getRootQuestId(prev);
   };
 
-  // NEW: Get current quest ID at a location
   const getCurrentQuestIdAtLocation = (x: number, y: number, interactionId: number): number | null => {
     const key = `${x},${y},${interactionId}`;
     return activeQuestIdsMap.get(key) || null;
@@ -155,7 +147,6 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
     setQuestStartLocation({ x: locationX, y: locationY });
     setQuestStartInteractionId(interactionId);
   
-    // NEW: Save the current quest ID at this location
     const key = `${locationX},${locationY},${interactionId}`;
     setActiveQuestIdsMap(prev => {
       const newMap = new Map(prev);
@@ -177,7 +168,6 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
         (q: QuestDTO) => q.questId === activeQuest.nextQuestId
       );
       
-      // NEW: Update the quest ID at the location when progressing to next quest
       if (questStartLocation && questStartInteractionId !== null) {
         const key = `${questStartLocation.x},${questStartLocation.y},${questStartInteractionId}`;
         setActiveQuestIdsMap(prev => {
@@ -203,7 +193,6 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
     setQuestStartLocation(null);
     setQuestStartInteractionId(null);
     
-    // NEW: Clear the quest ID at this location when quest chain completes
     if (questStartLocation && questStartInteractionId !== null) {
       const key = `${questStartLocation.x},${questStartLocation.y},${questStartInteractionId}`;
       setActiveQuestIdsMap(prev => {
@@ -255,7 +244,7 @@ export const QuestProvider = ({ children }: { children: React.ReactNode }) => {
         isQuestCompleted,
         questStartLocation,
         questStartInteractionId,
-        getCurrentQuestIdAtLocation, // NEW
+        getCurrentQuestIdAtLocation,
       }}
     >
       {children}
