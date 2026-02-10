@@ -9,6 +9,7 @@ import { MobileControls } from "./MobileControls/MobileControls";
 import { MapToggle } from "./MapToggle/MapToggle";
 import { MapModal } from "./MapModal/MapModal";
 import { TutorialPopup } from "./TutorialPopup/TutorialPopup";
+import { GameReset } from "./GameReset/GameReset";
 
 export const GameUI = () => {
     const { showControls } = useGameSettings();
@@ -22,6 +23,7 @@ export const GameUI = () => {
             <CoordinatesDisplay />
             <ControlsToggle />
             <TutorialPopup />
+            <GameReset />
 
             <MapToggle setMapOpen={setIsMapOpen} />
             {isMapOpen && <MapModal setMapOpen={setIsMapOpen}/>}

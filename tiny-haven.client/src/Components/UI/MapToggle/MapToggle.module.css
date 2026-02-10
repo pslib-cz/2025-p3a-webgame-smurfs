@@ -1,7 +1,7 @@
 .mapToggleBtn {
     position: absolute;
-    top: 7rem;
-    right: 6.5rem;
+    top: 6.75rem;
+    right: 10.5rem;
 
     height: 3.5rem;
     aspect-ratio: 1 / 1;
@@ -46,7 +46,7 @@
 @media screen and (max-width: 768px) {
     .mapToggleBtn {
         height: 2rem;
-        right: 3.7rem;
+        right: 6.2rem;
         top: 3.7rem;
     }
 }
